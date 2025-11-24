@@ -20,6 +20,8 @@ public class Player : MonoBehaviour
     [Header("Movement details")] 
     public float moveSpeed;//移动速度
 
+    private bool facingRight = true;
+
     // 在对象初始化时调用，进行必要的设置
     private void Awake()
     {
@@ -59,6 +61,21 @@ public class Player : MonoBehaviour
 
     public void SetVelocity(float xVelocity, float yVelocity)
     {
-        rb.linearVelocity = new Vector2(xVelocity, yVelocity);
+        rb.linearVelocity = new Vector2(xVelocity, yVelocity);// 设置角色的速度，水平速度和垂直速度
+        HandleFlip(xVelocity);// 根据水平速度来判断是否需要翻转角色
+    }
+
+    private void HandleFlip(float xVelocity)
+    {
+        if(xVelocity > 0 && facingRight == false)// 如果角色向右移动但当前面朝左
+            Flip();// 进行翻转
+        else if(xVelocity < 0 && facingRight)// 如果角色向左移动但当前面朝右
+            Flip();// 进行翻转
+    }
+
+    private void Flip()
+    {
+        transform.Rotate(0,180,0);// 通过旋转角色的 transform 来实现翻转
+        facingRight = !facingRight;// 更新角色当前朝向的状态
     }
 }
