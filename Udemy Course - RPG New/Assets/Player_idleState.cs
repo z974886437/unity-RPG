@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Player_idleState : EntityState
 {
-    public Player_idleState(Player player, StateMachine stateMachine, string stateName) : base(player, stateMachine, stateName)
+    public Player_idleState(Player player, StateMachine stateMachine, string animBoolName) : base(player, stateMachine, animBoolName)
     {
     }
     

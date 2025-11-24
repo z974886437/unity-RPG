@@ -4,6 +4,8 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     //public StateMachine stateMachine { get; private set; }
+
+    public Animator anim { get; private set; }
     
     private PlayerInputSet input;//输入
     private StateMachine stateMachine;//状态机
@@ -16,10 +18,12 @@ public class Player : MonoBehaviour
     // 在对象初始化时调用，进行必要的设置
     private void Awake()
     {
+        anim = GetComponentInChildren<Animator>();
+        
         stateMachine = new StateMachine();// 创建状态机实例
         input = new PlayerInputSet();// 创建玩家输入设置实例
 
-        idleState = new Player_idleState(this,stateMachine, "Idle");// 创建并初始化玩家空闲状态
+        idleState = new Player_idleState(this,stateMachine, "idle");// 创建并初始化玩家空闲状态
         moveState = new Player_MoveState(this,stateMachine, "move");// 创建并初始化玩家移动状态
     }
 
