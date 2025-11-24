@@ -6,7 +6,8 @@ public abstract class EntityState
    protected StateMachine stateMachine;//状态机
    protected string animBoolName;
 
-   protected Animator anim;
+   protected Animator anim;//动画师
+   protected Rigidbody2D rb;
 
 
    public EntityState(Player player,StateMachine stateMachine,string animBoolName)
@@ -16,6 +17,7 @@ public abstract class EntityState
       this.animBoolName = animBoolName;
 
       anim = player.anim;
+      rb = player.rb;
    }
 
    public virtual void Enter()//进入

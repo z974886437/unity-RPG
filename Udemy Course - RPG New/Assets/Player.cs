@@ -5,7 +5,9 @@ public class Player : MonoBehaviour
 {
     //public StateMachine stateMachine { get; private set; }
 
-    public Animator anim { get; private set; }
+    public Animator anim { get; private set; }//动画师
+    
+    public Rigidbody2D rb { get; private set; }//二维刚体
     
     private PlayerInputSet input;//输入
     private StateMachine stateMachine;//状态机
@@ -15,10 +17,14 @@ public class Player : MonoBehaviour
 
     public Vector2 moveInput { get; private set; }//移动输入
 
+    [Header("Movement details")] 
+    public float moveSpeed;//移动速度
+
     // 在对象初始化时调用，进行必要的设置
     private void Awake()
     {
         anim = GetComponentInChildren<Animator>();
+        rb = GetComponent<Rigidbody2D>();
         
         stateMachine = new StateMachine();// 创建状态机实例
         input = new PlayerInputSet();// 创建玩家输入设置实例
@@ -49,5 +55,10 @@ public class Player : MonoBehaviour
     private void Update()
     {
         stateMachine.UpdateActiveState();
+    }
+
+    public void SetVelocity(float xVelocity, float yVelocity)
+    {
+        rb.linearVelocity = new Vector2(xVelocity, yVelocity);
     }
 }
