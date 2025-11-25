@@ -130,7 +130,7 @@ GameObject:
   - component: {fileID: 261333717}
   - component: {fileID: 261333716}
   - component: {fileID: 261333715}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Pilatform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -616,6 +616,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 8
+  jumpForce: 12
+  inAirMoveMultiplier: 0.65
+  groundCheckDistance: 1.4
+  whatIsGround:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!4 &763083633
 Transform:
   m_ObjectHideFlags: 0
@@ -625,7 +631,7 @@ Transform:
   m_GameObject: {fileID: 763083631}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.12, y: -4.206, z: 0}
+  m_LocalPosition: {x: 3.12, y: -4.231, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -666,8 +672,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.031874537, y: -0.29240036}
-  m_Size: {x: 0.760937, y: 2.1194992}
+  m_Offset: {x: 0, y: -0.29}
+  m_Size: {x: 0.77, y: 2.11}
   m_Direction: 0
 --- !u!50 &763083635
 Rigidbody2D:
@@ -682,9 +688,9 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDamping: 0
+  m_LinearDamping: 0.1
   m_AngularDamping: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 3.5
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2

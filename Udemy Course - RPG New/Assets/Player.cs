@@ -22,9 +22,18 @@ public class Player : MonoBehaviour
     [Header("Movement details")] 
     public float moveSpeed;//移动速度
     public float jumpForce = 5;//跳跃力
+    
+    [Range(0,1)]
+    public float inAirMoveMultiplier = 0.7f;//空中移动乘数
     private bool facingRight = true;//面向右
 
     public Vector2 moveInput { get; private set; }//移动输入
+
+    [Header("Collision detection")] 
+    [SerializeField] private float groundCheckDistance;//地面检查距离
+    [SerializeField] private LayerMask whatIsGround;//什么是地面
+    
+    public bool groundDetected { get; private set; }//检测到地面
 
     // 在对象初始化时调用，进行必要的设置
     private void Awake()
@@ -64,6 +73,7 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
+        HandleCollisionDetection();
         stateMachine.UpdateActiveState();
     }
 
@@ -85,5 +95,18 @@ public class Player : MonoBehaviour
     {
         transform.Rotate(0,180,0);// 通过旋转角色的 transform 来实现翻转
         facingRight = !facingRight;// 更新角色当前朝向的状态
+    }
+
+    // 进行地面检测，射线从物体当前位置向下发射，检测是否接触地面
+    private void HandleCollisionDetection()
+    {
+        // 射线检测，返回是否与指定的地面层发生碰撞
+        groundDetected = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, whatIsGround);
+    }
+
+    // 在编辑器中可视化射线，帮助调试地面检测的范围
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawLine(transform.position,transform.position + new Vector3(0,- groundCheckDistance)); // 从当前位置绘制向下的射线
     }
 }

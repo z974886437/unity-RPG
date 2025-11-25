@@ -5,7 +5,14 @@ public class Player_idleState : Player_GroundSedSt
     public Player_idleState(Player player, StateMachine stateMachine, string animBoolName) : base(player, stateMachine, animBoolName)
     {
     }
-    
+
+    public override void Enter()
+    {
+        base.Enter();
+        
+        player.SetVelocity(0,rb.linearVelocity.y);// 设置玩家的速度，水平速度为 0，垂直速度保持不变
+    }
+
     public override void Update()
     {
         base.Update();
