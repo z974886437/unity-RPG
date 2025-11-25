@@ -9,18 +9,22 @@ public class Player : MonoBehaviour
     
     public Rigidbody2D rb { get; private set; }//二维刚体
     
-    private PlayerInputSet input;//输入
+    public PlayerInputSet input { get; private set; }//输入
+    
     private StateMachine stateMachine;//状态机
     
     public Player_idleState idleState { get; private set; }//空闲状态
     public Player_MoveState moveState { get; private set; }//移动状态
+    public Player_JumpState jumpState { get; private set; }//跳跃状态
+    public Player_FallState fallState { get; private set; }//下落状态
 
-    public Vector2 moveInput { get; private set; }//移动输入
 
     [Header("Movement details")] 
     public float moveSpeed;//移动速度
+    public float jumpForce = 5;//跳跃力
+    private bool facingRight = true;//面向右
 
-    private bool facingRight = true;
+    public Vector2 moveInput { get; private set; }//移动输入
 
     // 在对象初始化时调用，进行必要的设置
     private void Awake()
@@ -33,6 +37,8 @@ public class Player : MonoBehaviour
 
         idleState = new Player_idleState(this,stateMachine, "idle");// 创建并初始化玩家空闲状态
         moveState = new Player_MoveState(this,stateMachine, "move");// 创建并初始化玩家移动状态
+        jumpState = new Player_JumpState(this, stateMachine, "jumpFall");
+        fallState = new Player_FallState(this, stateMachine, "jumpFall");
     }
 
     // 在对象启用时调用，初始化输入事件
@@ -42,6 +48,8 @@ public class Player : MonoBehaviour
 
         input.Player.Movement.performed += ctx => moveInput = ctx.ReadValue<Vector2>();// 监听移动输入事件，按下时读取输入值
         input.Player.Movement.canceled += ctx => moveInput = Vector2.zero;// 监听移动输入取消事件，按下时清空输入值
+
+       ;
     }
 
     private void OnDisable()

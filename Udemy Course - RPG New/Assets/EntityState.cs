@@ -8,6 +8,7 @@ public abstract class EntityState
 
    protected Animator anim;//动画师
    protected Rigidbody2D rb;
+   protected PlayerInputSet input;
 
 
    public EntityState(Player player,StateMachine stateMachine,string animBoolName)
@@ -18,6 +19,7 @@ public abstract class EntityState
 
       anim = player.anim;
       rb = player.rb;
+      input = player.input;
    }
 
    public virtual void Enter()//进入
@@ -31,7 +33,7 @@ public abstract class EntityState
    {
       // we going to run logic of the state here 我们将在这里运行状态逻辑
       
-      Debug.Log("I run update of " + animBoolName);
+      anim.SetFloat("yVelocity",rb.linearVelocity.y);
    }
 
    public virtual void Exit()//出口
