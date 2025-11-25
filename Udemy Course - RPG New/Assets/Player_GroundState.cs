@@ -15,5 +15,8 @@ public class Player_GroundSedSt : EntityState
         
         if(input.Player.Jump.WasPerformedThisFrame())// 检查玩家是否在当前帧内按下跳跃按钮
             stateMachine.ChangeState(player.jumpState);// 如果跳跃按钮被按下，切换到跳跃状态
+        
+        if(input.Player.Attack.WasPerformedThisFrame()) // 如果玩家在当前帧内按下攻击按钮，切换到基本攻击状态
+            stateMachine.ChangeState(player.basicAttackState);// 切换到基本攻击（BasicAttack）状态
     }
 }

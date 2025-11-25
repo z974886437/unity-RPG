@@ -11,6 +11,7 @@ public abstract class EntityState
    protected PlayerInputSet input;
    
    protected float stateTimer;//状态定时器
+   protected bool triggerCalled;//触发称为
 
 
    public EntityState(Player player,StateMachine stateMachine,string animBoolName)
@@ -29,6 +30,7 @@ public abstract class EntityState
       // evertime state will be chaned, enter will be called 每次状态改变时，都会调用 Enter
       
       anim.SetBool(animBoolName,true);
+      triggerCalled = false;
    }
 
    public virtual void Update()
@@ -47,6 +49,11 @@ public abstract class EntityState
       // this will be called. everytime we exit state and change to a new one  这将被称为。每次我们退出状态并更改为新状态时
       
       anim.SetBool(animBoolName,false);
+   }
+
+   public void CallAnimationTrigger()
+   {
+      triggerCalled = true;
    }
 
    // 检查玩家是否能够执行冲刺
