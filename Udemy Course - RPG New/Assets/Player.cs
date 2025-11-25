@@ -18,7 +18,8 @@ public class Player : MonoBehaviour
     public Player_JumpState jumpState { get; private set; }//跳跃状态
     public Player_FallState fallState { get; private set; }//下落状态
     public Player_WallSlideState wallSlideState { get; private set; }//墙体滑动状态
-    public Player_WallJumpState wallJumpState { get; private set;}
+    public Player_WallJumpState wallJumpState { get; private set;}//墙跳状态
+    public Player_DashState dashState { get;private set; }//冲刺状态
 
 
     [Header("Movement details")] 
@@ -30,6 +31,13 @@ public class Player : MonoBehaviour
     public float inAirMoveMultiplier = 0.7f;//空中移动乘数
     [Range(0,1)]
     public float wallSlideSlowMultiplier = 0.7f;//墙壁滑梯慢速倍增器
+
+    [Space] 
+    public float dashDuration = 0.25f;//冲刺持续时间
+
+    public float dashSpeed = 20;//冲刺速度
+    
+    
     private bool facingRight = true;//面向右
     public int facingDir { get; private set; } = 1;//面向方向
 
@@ -58,6 +66,7 @@ public class Player : MonoBehaviour
         fallState = new Player_FallState(this, stateMachine, "jumpFall");
         wallSlideState = new Player_WallSlideState(this, stateMachine, "wallSlide");
         wallJumpState = new Player_WallJumpState(this,stateMachine, "jumpFall");
+        dashState = new Player_DashState(this, stateMachine, "dash");
     }
 
     // 在对象启用时调用，初始化输入事件
