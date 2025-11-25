@@ -17,23 +17,31 @@ public class Player : MonoBehaviour
     public Player_MoveState moveState { get; private set; }//移动状态
     public Player_JumpState jumpState { get; private set; }//跳跃状态
     public Player_FallState fallState { get; private set; }//下落状态
+    public Player_WallSlideState wallSlideState { get; private set; }//墙体滑动状态
+    public Player_WallJumpState wallJumpState { get; private set;}
 
 
     [Header("Movement details")] 
     public float moveSpeed;//移动速度
     public float jumpForce = 5;//跳跃力
+    public Vector2 wallJumpForce;//墙跳方向
     
     [Range(0,1)]
     public float inAirMoveMultiplier = 0.7f;//空中移动乘数
+    [Range(0,1)]
+    public float wallSlideSlowMultiplier = 0.7f;//墙壁滑梯慢速倍增器
     private bool facingRight = true;//面向右
+    public int facingDir { get; private set; } = 1;//面向方向
 
     public Vector2 moveInput { get; private set; }//移动输入
 
     [Header("Collision detection")] 
     [SerializeField] private float groundCheckDistance;//地面检查距离
+    [SerializeField] private float wallCheckDistance;//墙壁检查距离
     [SerializeField] private LayerMask whatIsGround;//什么是地面
     
     public bool groundDetected { get; private set; }//检测到地面
+    public bool wallDetected { get; private set; }//检测到墙壁
 
     // 在对象初始化时调用，进行必要的设置
     private void Awake()
@@ -48,6 +56,8 @@ public class Player : MonoBehaviour
         moveState = new Player_MoveState(this,stateMachine, "move");// 创建并初始化玩家移动状态
         jumpState = new Player_JumpState(this, stateMachine, "jumpFall");
         fallState = new Player_FallState(this, stateMachine, "jumpFall");
+        wallSlideState = new Player_WallSlideState(this, stateMachine, "wallSlide");
+        wallJumpState = new Player_WallJumpState(this,stateMachine, "jumpFall");
     }
 
     // 在对象启用时调用，初始化输入事件
@@ -91,10 +101,11 @@ public class Player : MonoBehaviour
             Flip();// 进行翻转
     }
 
-    private void Flip()
+    public void Flip()
     {
         transform.Rotate(0,180,0);// 通过旋转角色的 transform 来实现翻转
         facingRight = !facingRight;// 更新角色当前朝向的状态
+        facingDir = facingDir * -1;
     }
 
     // 进行地面检测，射线从物体当前位置向下发射，检测是否接触地面
@@ -102,11 +113,13 @@ public class Player : MonoBehaviour
     {
         // 射线检测，返回是否与指定的地面层发生碰撞
         groundDetected = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, whatIsGround);
+        wallDetected = Physics2D.Raycast(transform.position, Vector2.right * facingDir, wallCheckDistance, whatIsGround);
     }
 
     // 在编辑器中可视化射线，帮助调试地面检测的范围
     private void OnDrawGizmos()
     {
         Gizmos.DrawLine(transform.position,transform.position + new Vector3(0,- groundCheckDistance)); // 从当前位置绘制向下的射线
+        Gizmos.DrawLine(transform.position,transform.position + new Vector3(wallCheckDistance * facingDir,0));
     }
 }
