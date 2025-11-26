@@ -628,8 +628,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37b3e5f189490fc408c8660d0b5ae5dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackVelocity: {x: 3, y: 1.5}
+  attackVelocity:
+  - {x: 3, y: 1.5}
+  - {x: 1, y: 2.5}
+  - {x: 2.75, y: 1.75}
   attackVelocityDuration: 0.1
+  comboResetTime: 1
   moveSpeed: 8
   jumpForce: 12
   wallJumpForce: {x: 6, y: 12}
@@ -739,7 +743,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1290803944
 Transform:
   m_ObjectHideFlags: 0
@@ -873,7 +877,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &1367304757
 BoxCollider2D:
   m_ObjectHideFlags: 0

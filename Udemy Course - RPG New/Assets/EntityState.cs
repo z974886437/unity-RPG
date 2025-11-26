@@ -29,8 +29,8 @@ public abstract class EntityState
    {
       // evertime state will be chaned, enter will be called 每次状态改变时，都会调用 Enter
       
-      anim.SetBool(animBoolName,true);
-      triggerCalled = false;
+      anim.SetBool(animBoolName,true);// 设置动画布尔值为 true，开始相应的动画
+      triggerCalled = false;// 重置触发标记，确保新的状态没有立即触发过期的操作
    }
 
    public virtual void Update()
@@ -40,8 +40,8 @@ public abstract class EntityState
       stateTimer -= Time.deltaTime;
       anim.SetFloat("yVelocity",rb.linearVelocity.y);
       
-      if(input.Player.Dash.WasPressedThisFrame() && CanDash())
-         stateMachine.ChangeState(player.dashState);
+      if(input.Player.Dash.WasPressedThisFrame() && CanDash())// 检查是否按下了冲刺按钮且可以冲刺
+         stateMachine.ChangeState(player.dashState);// 如果按下了冲刺按钮且可以冲刺，切换到冲刺状态
    }
 
    public virtual void Exit()//出口

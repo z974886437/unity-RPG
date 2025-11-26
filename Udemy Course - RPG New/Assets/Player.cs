@@ -23,8 +23,9 @@ public class Player : MonoBehaviour
     public Player_BasicAttackState basicAttackState { get; private set; }//攻击状态
 
     [Header("Attack details")] 
-    public Vector2 attackVelocity;//攻击速度
+    public Vector2[] attackVelocity;//攻击速度
     public float attackVelocityDuration = 0.1f;//攻击速度持续时间
+    public float comboResetTime = 1;//组合重置时间
 
     [Header("Movement details")] 
     public float moveSpeed;//移动速度
@@ -81,8 +82,6 @@ public class Player : MonoBehaviour
 
         input.Player.Movement.performed += ctx => moveInput = ctx.ReadValue<Vector2>();// 监听移动输入事件，按下时读取输入值
         input.Player.Movement.canceled += ctx => moveInput = Vector2.zero;// 监听移动输入取消事件，按下时清空输入值
-
-       ;
     }
 
     private void OnDisable()
