@@ -14,7 +14,7 @@ public class Player_DashState : EntityState
         base.Enter();
         
         // 设置冲刺方向和冲刺持续时间
-        dashDir = player.facingDir; // 根据玩家的朝向设置冲刺方向
+        dashDir = player.moveInput.x != 0 ? ((int)player.moveInput.x) : player.facingDir;; // 根据玩家的朝向设置冲刺方向
         stateTimer = player.dashDuration;// 设置冲刺的持续时间
         
         // 禁用重力，使得冲刺期间不受重力影响

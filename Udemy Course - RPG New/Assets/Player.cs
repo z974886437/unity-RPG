@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -26,6 +27,7 @@ public class Player : MonoBehaviour
     public Vector2[] attackVelocity;//攻击速度
     public float attackVelocityDuration = 0.1f;//攻击速度持续时间
     public float comboResetTime = 1;//组合重置时间
+    private Coroutine queuedAttackCo;//排队攻击协程
 
     [Header("Movement details")] 
     public float moveSpeed;//移动速度
@@ -84,25 +86,45 @@ public class Player : MonoBehaviour
         input.Player.Movement.canceled += ctx => moveInput = Vector2.zero;// 监听移动输入取消事件，按下时清空输入值
     }
 
+    // 当对象禁用时调用，通常用于释放资源
     private void OnDisable()
     {
-        input.Disable();
+        input.Disable();// 禁用输入系统，停止监听输入
     }
 
+    // 游戏对象开始时的初始化
     private void Start()
     {
-        stateMachine.Initialize(idleState);
+        stateMachine.Initialize(idleState);// 初始化状态机，设置初始状态为 idleState（空闲状态）
     }
 
+    // 每帧更新时调用，处理碰撞检测和状态更新
     private void Update()
     {
-        HandleCollisionDetection();
-        stateMachine.UpdateActiveState();
+        HandleCollisionDetection();// 处理碰撞检测
+        stateMachine.UpdateActiveState(); // 更新状态机的当前活动状态
     }
 
+    // 延迟进入攻击状态
+    public void EnterAttackStateWithDelay()
+    {
+        if(queuedAttackCo != null) // 如果已经有一个排队的攻击协程在运行，停止它
+            StopCoroutine(queuedAttackCo);
+
+        queuedAttackCo = StartCoroutine(EnterAttackStateWithDelayCo());// 启动一个新的协程，延迟进入攻击状态
+    }
+
+    // 协程：延迟进入攻击状态
+    private IEnumerator EnterAttackStateWithDelayCo()
+    {
+        yield return new WaitForEndOfFrame();// 等待当前帧结束后再执行状态切换
+        stateMachine.ChangeState(basicAttackState);// 切换到基本攻击状态
+    }
+
+    // 调用动画触发器，触发当前状态的动画
     public void CallAnimationTrigger()
     {
-        stateMachine.currentState.CallAnimationTrigger();
+        stateMachine.currentState.CallAnimationTrigger();// 调用当前状态的动画触发器，通常用于动画事件的触发
     }
 
     public void SetVelocity(float xVelocity, float yVelocity)
