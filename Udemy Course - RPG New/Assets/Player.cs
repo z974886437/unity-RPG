@@ -22,9 +22,11 @@ public class Player : MonoBehaviour
     public Player_WallJumpState wallJumpState { get; private set;}//墙跳状态
     public Player_DashState dashState { get;private set; }//冲刺状态
     public Player_BasicAttackState basicAttackState { get; private set; }//攻击状态
+    public Player_JumpAttackState JumpAttackState { get; private set; }//跳跃攻击状态
 
     [Header("Attack details")] 
     public Vector2[] attackVelocity;//攻击速度
+    public Vector2 jumpAttackVelocity;//跳跃攻击速度
     public float attackVelocityDuration = 0.1f;//攻击速度持续时间
     public float comboResetTime = 1;//组合重置时间
     private Coroutine queuedAttackCo;//排队攻击协程
@@ -75,6 +77,7 @@ public class Player : MonoBehaviour
         wallJumpState = new Player_WallJumpState(this,stateMachine, "jumpFall");
         dashState = new Player_DashState(this, stateMachine, "dash");
         basicAttackState = new Player_BasicAttackState(this, stateMachine, "basicAttack");
+        JumpAttackState = new Player_JumpAttackState(this, stateMachine, "jumpAttack");
     }
 
     // 在对象启用时调用，初始化输入事件

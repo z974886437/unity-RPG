@@ -11,7 +11,7 @@ public abstract class EntityState
    protected PlayerInputSet input;
    
    protected float stateTimer;//状态定时器
-   protected bool triggerCalled;//触发称为
+   protected bool triggerCalled;//触发呼叫
 
 
    public EntityState(Player player,StateMachine stateMachine,string animBoolName)

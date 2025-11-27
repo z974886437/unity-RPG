@@ -17,7 +17,7 @@ public class Player_JumpState : Player_AireState
     {
         base.Update();
         
-        if(rb.linearVelocity.y < 0)// 如果玩家的垂直速度小于 0，说明玩家正在向下移动（即下落）
+        if(rb.linearVelocity.y < 0 && stateMachine.currentState != player.JumpAttackState) // 如果玩家的垂直速度小于0，且当前状态不是跳跃攻击状态，则说明玩家正在下落
             stateMachine.ChangeState(player.fallState);// 如果玩家在下落，切换到下落状态
     }
 }
