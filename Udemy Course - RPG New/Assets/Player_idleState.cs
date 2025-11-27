@@ -16,6 +16,9 @@ public class Player_idleState : Player_GroundSedSt
     public override void Update()
     {
         base.Update();
+
+        if (player.moveInput.x == player.facingDir && player.wallDetected)// 如果玩家的水平输入方向与玩家面朝的方向相同，并且玩家检测到墙壁，则不做任何操作
+            return;// 防止玩家在墙壁处移动
         
         if(player.moveInput.x != 0)// 检查玩家的水平方向输入是否不为零（即玩家有移动输入）
             stateMachine.ChangeState(player.moveState);// 如果玩家有水平输入，切换到移动状态

@@ -56,6 +56,8 @@ public class Player : MonoBehaviour
     [SerializeField] private float groundCheckDistance;//地面检查距离
     [SerializeField] private float wallCheckDistance;//墙壁检查距离
     [SerializeField] private LayerMask whatIsGround;//什么是地面
+    [SerializeField] private Transform primaryWallCheck;//初级墙检查
+    [SerializeField] private Transform secondaryWallCheck;//次墙检查
     
     public bool groundDetected { get; private set; }//检测到地面
     public bool wallDetected { get; private set; }//检测到墙壁
@@ -156,13 +158,15 @@ public class Player : MonoBehaviour
     {
         // 射线检测，返回是否与指定的地面层发生碰撞
         groundDetected = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, whatIsGround);
-        wallDetected = Physics2D.Raycast(transform.position, Vector2.right * facingDir, wallCheckDistance, whatIsGround);
+        wallDetected = Physics2D.Raycast(primaryWallCheck.position, Vector2.right * facingDir, wallCheckDistance, whatIsGround) 
+                       && Physics2D.Raycast(secondaryWallCheck.position, Vector2.right * facingDir, wallCheckDistance,whatIsGround);
     }
 
     // 在编辑器中可视化射线，帮助调试地面检测的范围
     private void OnDrawGizmos()
     {
         Gizmos.DrawLine(transform.position,transform.position + new Vector3(0,- groundCheckDistance)); // 从当前位置绘制向下的射线
-        Gizmos.DrawLine(transform.position,transform.position + new Vector3(wallCheckDistance * facingDir,0));
+        Gizmos.DrawLine(primaryWallCheck.position,primaryWallCheck.position + new Vector3(wallCheckDistance * facingDir,0));
+        Gizmos.DrawLine(secondaryWallCheck.position,secondaryWallCheck.position + new Vector3(wallCheckDistance * facingDir,0));
     }
 }
