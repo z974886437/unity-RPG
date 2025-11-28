@@ -13,7 +13,7 @@ public class ParallaxBackground : MonoBehaviour
    {
       mainCamera = Camera.main;// 获取主摄像机（Camera.main 是 Unity 自动赋值的主摄像机）
       cameraHalfWidth = mainCamera.orthographicSize * mainCamera.aspect;// 计算摄像机的半宽度，orthographicSize 是摄像机的视口大小，aspect 是摄像机的长宽比
-      CalculateImageLength();// 计算背景图像的长度（初始化时计算）
+      InitializeLayers();// 计算背景图像的长度（初始化时计算）
    }
 
    // 固定更新方法，每帧固定的时间间隔调用，适用于物理计算
@@ -35,7 +35,7 @@ public class ParallaxBackground : MonoBehaviour
    }
 
    // 计算每一层背景的图像宽度
-   private void CalculateImageLength()
+   private void InitializeLayers()
    {
       foreach (ParallaxLayer layer in backgroundLayers)// 遍历所有背景层，计算每一层的图像宽度
          layer.CalculateImageWidth();

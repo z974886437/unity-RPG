@@ -20,7 +20,9 @@ public class Player_WallSlideState : EntityState
         if (player.groundDetected)// 如果接触地面，切换到站立状态
         {
             stateMachine.ChangeState(player.idleState); // 切换到站立（Idle）状态
-            player.Flip(); // 翻转角色方向
+            
+            if(player.facingDir != player.moveInput.x)
+                 player.Flip(); // 翻转角色方向
         }
     }
 
