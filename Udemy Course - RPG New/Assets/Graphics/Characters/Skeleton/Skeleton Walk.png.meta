@@ -73,7 +73,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -87,7 +87,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 16
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -111,7 +111,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -434,7 +434,20 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Skeleton Walk_0: 45966500872709769
+      Skeleton Walk_1: 7013577002690406627
+      Skeleton Walk_10: 1513826763441915127
+      Skeleton Walk_11: -2146757507701255462
+      Skeleton Walk_12: -4988383733850832283
+      Skeleton Walk_2: -2356003859601637949
+      Skeleton Walk_3: 2369481524001456022
+      Skeleton Walk_4: -1540590527562206909
+      Skeleton Walk_5: -7445728037447846149
+      Skeleton Walk_6: 4792086390759421477
+      Skeleton Walk_7: -3462787873181832886
+      Skeleton Walk_8: 7746255393700133122
+      Skeleton Walk_9: 4482783208499175354
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
