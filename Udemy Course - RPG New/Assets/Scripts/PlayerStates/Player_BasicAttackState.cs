@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Player_BasicAttackState : EntityState
+public class Player_BasicAttackState : PlayerState
 {
     private float attackVelocityTimer;//攻击速度计时器
     private float lastTimeAttacked;//上次攻击

@@ -2,17 +2,9 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : Entity
 {
-    //public StateMachine stateMachine { get; private set; }
-
-    public Animator anim { get; private set; }//动画师
-    
-    public Rigidbody2D rb { get; private set; }//二维刚体
-    
     public PlayerInputSet input { get; private set; }//输入
-    
-    private StateMachine stateMachine;//状态机
     
     public Player_idleState idleState { get; private set; }//空闲状态
     public Player_MoveState moveState { get; private set; }//移动状态
@@ -23,7 +15,7 @@ public class Player : MonoBehaviour
     public Player_DashState dashState { get;private set; }//冲刺状态
     public Player_BasicAttackState basicAttackState { get; private set; }//攻击状态
     public Player_JumpAttackState JumpAttackState { get; private set; }//跳跃攻击状态
-
+    
     [Header("Attack details")] 
     public Vector2[] attackVelocity;//攻击速度
     public Vector2 jumpAttackVelocity;//跳跃攻击速度
@@ -35,40 +27,20 @@ public class Player : MonoBehaviour
     public float moveSpeed;//移动速度
     public float jumpForce = 5;//跳跃力
     public Vector2 wallJumpForce;//墙跳方向
-    
     [Range(0,1)]
     public float inAirMoveMultiplier = 0.7f;//空中移动乘数
     [Range(0,1)]
     public float wallSlideSlowMultiplier = 0.7f;//墙壁滑梯慢速倍增器
-
     [Space] 
     public float dashDuration = 0.25f;//冲刺持续时间
-
     public float dashSpeed = 20;//冲刺速度
     
-    
-    private bool facingRight = true;//面向右
-    public int facingDir { get; private set; } = 1;//面向方向
-
     public Vector2 moveInput { get; private set; }//移动输入
 
-    [Header("Collision detection")] 
-    [SerializeField] private float groundCheckDistance;//地面检查距离
-    [SerializeField] private float wallCheckDistance;//墙壁检查距离
-    [SerializeField] private LayerMask whatIsGround;//什么是地面
-    [SerializeField] private Transform primaryWallCheck;//初级墙检查
-    [SerializeField] private Transform secondaryWallCheck;//次墙检查
-    
-    public bool groundDetected { get; private set; }//检测到地面
-    public bool wallDetected { get; private set; }//检测到墙壁
-
-    // 在对象初始化时调用，进行必要的设置
-    private void Awake()
+    protected override void Awake()
     {
-        anim = GetComponentInChildren<Animator>();
-        rb = GetComponent<Rigidbody2D>();
+        base.Awake();
         
-        stateMachine = new StateMachine();// 创建状态机实例
         input = new PlayerInputSet();// 创建玩家输入设置实例
 
         idleState = new Player_idleState(this,stateMachine, "idle");// 创建并初始化玩家空闲状态
@@ -81,35 +53,14 @@ public class Player : MonoBehaviour
         basicAttackState = new Player_BasicAttackState(this, stateMachine, "basicAttack");
         JumpAttackState = new Player_JumpAttackState(this, stateMachine, "jumpAttack");
     }
-
-    // 在对象启用时调用，初始化输入事件
-    private void OnEnable()
-    {
-        input.Enable();// 启用玩家输入系统
-
-        input.Player.Movement.performed += ctx => moveInput = ctx.ReadValue<Vector2>();// 监听移动输入事件，按下时读取输入值
-        input.Player.Movement.canceled += ctx => moveInput = Vector2.zero;// 监听移动输入取消事件，按下时清空输入值
-    }
-
-    // 当对象禁用时调用，通常用于释放资源
-    private void OnDisable()
-    {
-        input.Disable();// 禁用输入系统，停止监听输入
-    }
-
+    
     // 游戏对象开始时的初始化
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         stateMachine.Initialize(idleState);// 初始化状态机，设置初始状态为 idleState（空闲状态）
     }
-
-    // 每帧更新时调用，处理碰撞检测和状态更新
-    private void Update()
-    {
-        HandleCollisionDetection();// 处理碰撞检测
-        stateMachine.UpdateActiveState(); // 更新状态机的当前活动状态
-    }
-
+    
     // 延迟进入攻击状态
     public void EnterAttackStateWithDelay()
     {
@@ -125,48 +76,21 @@ public class Player : MonoBehaviour
         yield return new WaitForEndOfFrame();// 等待当前帧结束后再执行状态切换
         stateMachine.ChangeState(basicAttackState);// 切换到基本攻击状态
     }
-
-    // 调用动画触发器，触发当前状态的动画
-    public void CallAnimationTrigger()
+    
+    // 在对象启用时调用，初始化输入事件
+    private void OnEnable()
     {
-        stateMachine.currentState.CallAnimationTrigger();// 调用当前状态的动画触发器，通常用于动画事件的触发
-    }
+        input.Enable();// 启用玩家输入系统
 
-    public void SetVelocity(float xVelocity, float yVelocity)
-    {
-        rb.linearVelocity = new Vector2(xVelocity, yVelocity);// 设置角色的速度，水平速度和垂直速度
-        HandleFlip(xVelocity);// 根据水平速度来判断是否需要翻转角色
+        input.Player.Movement.performed += ctx => moveInput = ctx.ReadValue<Vector2>();// 监听移动输入事件，按下时读取输入值
+        input.Player.Movement.canceled += ctx => moveInput = Vector2.zero;// 监听移动输入取消事件，按下时清空输入值
     }
-
-    private void HandleFlip(float xVelocity)
+    
+    // 当对象禁用时调用，通常用于释放资源
+    private void OnDisable()
     {
-        if(xVelocity > 0 && facingRight == false)// 如果角色向右移动但当前面朝左
-            Flip();// 进行翻转
-        else if(xVelocity < 0 && facingRight)// 如果角色向左移动但当前面朝右
-            Flip();// 进行翻转
+        input.Disable();// 禁用输入系统，停止监听输入
     }
-
-    public void Flip()
-    {
-        transform.Rotate(0,180,0);// 通过旋转角色的 transform 来实现翻转
-        facingRight = !facingRight;// 更新角色当前朝向的状态
-        facingDir = facingDir * -1;
-    }
-
-    // 进行地面检测，射线从物体当前位置向下发射，检测是否接触地面
-    private void HandleCollisionDetection()
-    {
-        // 射线检测，返回是否与指定的地面层发生碰撞
-        groundDetected = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, whatIsGround);
-        wallDetected = Physics2D.Raycast(primaryWallCheck.position, Vector2.right * facingDir, wallCheckDistance, whatIsGround) 
-                       && Physics2D.Raycast(secondaryWallCheck.position, Vector2.right * facingDir, wallCheckDistance,whatIsGround);
-    }
-
-    // 在编辑器中可视化射线，帮助调试地面检测的范围
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawLine(transform.position,transform.position + new Vector3(0,- groundCheckDistance)); // 从当前位置绘制向下的射线
-        Gizmos.DrawLine(primaryWallCheck.position,primaryWallCheck.position + new Vector3(wallCheckDistance * facingDir,0));
-        Gizmos.DrawLine(secondaryWallCheck.position,secondaryWallCheck.position + new Vector3(wallCheckDistance * facingDir,0));
-    }
+    
+    
 }

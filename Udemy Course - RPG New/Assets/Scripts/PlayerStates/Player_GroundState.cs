@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Player_GroundSedSt : EntityState
+public class Player_GroundSedSt : PlayerState
 {
     public Player_GroundSedSt(Player player, StateMachine stateMachine, string animBoolName) : base(player, stateMachine, animBoolName)
     {

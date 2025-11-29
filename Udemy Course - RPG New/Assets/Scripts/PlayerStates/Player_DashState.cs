@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Player_DashState : EntityState
+public class Player_DashState : PlayerState
 {
     private float originalGravityScale;//原始重力标尺
     private float dashDir;//冲刺方向
