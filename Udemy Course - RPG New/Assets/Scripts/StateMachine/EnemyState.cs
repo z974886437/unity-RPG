@@ -11,4 +11,11 @@ public class EnemyState : EntityState
         rb = enemy.rb;
         anim = enemy.anim;
     }
+
+    public override void Update()
+    {
+        base.Update();
+        
+        anim.SetFloat("moveAnimSpeedMultiplier",enemy.moveAnimSpeedMultiplier);// 设置动画控制器中的 "moveAnimSpeedMultiplier" 参数，用于调整敌人移动动画的速度
+    }
 }

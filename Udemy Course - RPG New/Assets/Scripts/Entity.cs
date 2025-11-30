@@ -16,6 +16,7 @@ public class Entity : MonoBehaviour
     [SerializeField] private float groundCheckDistance;//地面检查距离
     [SerializeField] private float wallCheckDistance;//墙壁检查距离
     [SerializeField] private LayerMask whatIsGround;//什么是地面
+    [SerializeField] private Transform groundCheck;//地面检查
     [SerializeField] private Transform primaryWallCheck;//初级墙检查
     [SerializeField] private Transform secondaryWallCheck;//次墙检查
     
@@ -74,16 +75,29 @@ public class Entity : MonoBehaviour
     private void HandleCollisionDetection()
     {
         // 射线检测，返回是否与指定的地面层发生碰撞
-        groundDetected = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, whatIsGround);
-        wallDetected = Physics2D.Raycast(primaryWallCheck.position, Vector2.right * facingDir, wallCheckDistance, whatIsGround) 
-                       && Physics2D.Raycast(secondaryWallCheck.position, Vector2.right * facingDir, wallCheckDistance,whatIsGround);
+        groundDetected = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, whatIsGround);
+
+        // 如果有第二个墙壁检测点（secondaryWallCheck）
+        if (secondaryWallCheck != null)
+        {
+            // 射线检测，检测从 primaryWallCheck 和 secondaryWallCheck 向右的方向是否与墙壁发生碰撞
+            // primaryWallCheck 和 secondaryWallCheck 分别是两个墙壁检测点，Vector2.right * facingDir 是检测的方向（根据朝向，可能是右或左）
+            // wallCheckDistance 是射线检测的最大距离，whatIsGround 是墙壁的过滤器
+            wallDetected = Physics2D.Raycast(primaryWallCheck.position, Vector2.right * facingDir, wallCheckDistance, whatIsGround)
+                           && Physics2D.Raycast(secondaryWallCheck.position, Vector2.right * facingDir, wallCheckDistance, whatIsGround);
+        }
+        else
+            // 如果没有第二个墙壁检测点，则仅使用 primaryWallCheck 进行墙壁检测
+            wallDetected = Physics2D.Raycast(primaryWallCheck.position, Vector2.right * facingDir, wallCheckDistance, whatIsGround);
     }
 
     // 在编辑器中可视化射线，帮助调试地面检测的范围
     private void OnDrawGizmos()
     {
-        Gizmos.DrawLine(transform.position,transform.position + new Vector3(0,- groundCheckDistance)); // 从当前位置绘制向下的射线
+        Gizmos.DrawLine(groundCheck.position,groundCheck.position + new Vector3(0,- groundCheckDistance)); // 从当前位置绘制向下的射线
         Gizmos.DrawLine(primaryWallCheck.position,primaryWallCheck.position + new Vector3(wallCheckDistance * facingDir,0));
-        Gizmos.DrawLine(secondaryWallCheck.position,secondaryWallCheck.position + new Vector3(wallCheckDistance * facingDir,0));
+        
+        if(secondaryWallCheck != null)// 如果有第二个墙壁检测点（secondaryWallCheck），绘制从 secondaryWallCheck 向右的射线
+             Gizmos.DrawLine(secondaryWallCheck.position,secondaryWallCheck.position + new Vector3(wallCheckDistance * facingDir,0));
     }
 }
