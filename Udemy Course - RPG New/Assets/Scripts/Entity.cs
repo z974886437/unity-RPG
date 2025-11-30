@@ -38,7 +38,7 @@ public class Entity : MonoBehaviour
     }
 
     // 每帧更新时调用，处理碰撞检测和状态更新
-    private void Update()
+    protected virtual void Update()
     {
         HandleCollisionDetection();// 处理碰撞检测
         stateMachine.UpdateActiveState(); // 更新状态机的当前活动状态
@@ -56,7 +56,7 @@ public class Entity : MonoBehaviour
         HandleFlip(xVelocity);// 根据水平速度来判断是否需要翻转角色
     }
 
-    private void HandleFlip(float xVelocity)
+    public void HandleFlip(float xVelocity)
     {
         if(xVelocity > 0 && facingRight == false)// 如果角色向右移动但当前面朝左
             Flip();// 进行翻转

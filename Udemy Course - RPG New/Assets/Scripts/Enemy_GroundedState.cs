@@ -10,7 +10,7 @@ public class Enemy_GroundedState : EnemyState
     {
         base.Update();
         
-        if(enemy.PlayerDetection() == true)// 检测敌人是否发现玩家
+        if(enemy.PlayerDetected() == true)// 检测敌人是否发现玩家
             stateMachine.ChangeState(enemy.battleState);// 如果检测到玩家，切换到敌人的战斗状态
     }
 }

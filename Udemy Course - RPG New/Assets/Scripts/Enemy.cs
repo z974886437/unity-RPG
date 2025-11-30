@@ -10,7 +10,10 @@ public class Enemy : Entity
     [Header("Battle details")]
     public float battleMoveSpeed = 3;//战斗移动速度
     public float attackDistance = 2;//攻击距离
-
+    public float battleTimeDuration = 5;//战斗持续时间
+    public float minRetreatDistance = 1;//最小后退距离
+    public Vector2 retrealVelocity;//后退速度
+    
     [Header("Movement details")] 
     public float idleTime = 2;//空闲时间
     public float moveSpeed = 1.4f;//移动速度
@@ -22,8 +25,10 @@ public class Enemy : Entity
     [SerializeField] private Transform playerCheck;//玩家检测
     [SerializeField] private float playerCheckDistance = 10;//检测玩家距离
 
+    
+
     // 检测玩家是否在射线检测范围内
-    public RaycastHit2D PlayerDetection()
+    public RaycastHit2D PlayerDetected()
     {
         // 发射一条射线，检测从 playerCheck 位置开始，朝向右侧（facingDir）并且根据玩家的移动方向扩展
         // 射线长度为 playerCheckDistance，检测目标是玩家（whatIsPlayer）或地面（whatIsGround）
@@ -49,5 +54,7 @@ public class Enemy : Entity
         Gizmos.color = Color.blue;// 设置 Gizmos 的颜色为黄色
         Gizmos.DrawLine(playerCheck.position,new Vector3(playerCheck.position.x + (facingDir * attackDistance),playerCheck.position.y));
         
+        Gizmos.color = Color.green;// 设置 Gizmos 的颜色为黄色
+        Gizmos.DrawLine(playerCheck.position,new Vector3(playerCheck.position.x + (facingDir * minRetreatDistance),playerCheck.position.y));
     }
 }
