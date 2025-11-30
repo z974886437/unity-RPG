@@ -13,9 +13,9 @@ public class Entity : MonoBehaviour
     public int facingDir { get; private set; } = 1;//面向方向
     
     [Header("Collision detection")] 
+    [SerializeField] protected LayerMask whatIsGround;//什么是地面
     [SerializeField] private float groundCheckDistance;//地面检查距离
     [SerializeField] private float wallCheckDistance;//墙壁检查距离
-    [SerializeField] private LayerMask whatIsGround;//什么是地面
     [SerializeField] private Transform groundCheck;//地面检查
     [SerializeField] private Transform primaryWallCheck;//初级墙检查
     [SerializeField] private Transform secondaryWallCheck;//次墙检查
@@ -92,7 +92,7 @@ public class Entity : MonoBehaviour
     }
 
     // 在编辑器中可视化射线，帮助调试地面检测的范围
-    private void OnDrawGizmos()
+    protected virtual void OnDrawGizmos()
     {
         Gizmos.DrawLine(groundCheck.position,groundCheck.position + new Vector3(0,- groundCheckDistance)); // 从当前位置绘制向下的射线
         Gizmos.DrawLine(primaryWallCheck.position,primaryWallCheck.position + new Vector3(wallCheckDistance * facingDir,0));

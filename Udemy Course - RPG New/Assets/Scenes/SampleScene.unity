@@ -332,7 +332,7 @@ GameObject:
   - component: {fileID: 280339203}
   - component: {fileID: 280339205}
   - component: {fileID: 280339204}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Enemy_Skeleton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -348,7 +348,7 @@ Transform:
   m_GameObject: {fileID: 280339201}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -12.011, y: -1.67, z: -0.06560389}
+  m_LocalPosition: {x: -16.18, y: -1.67, z: -0.06560389}
   m_LocalScale: {x: 1.3, y: 1.3, z: 1.3}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -368,17 +368,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7b382404c7bd6c4dac340b659f17d01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  groundCheckDistance: 0.5
-  wallCheckDistance: 0.5
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64
+  groundCheckDistance: 0.5
+  wallCheckDistance: 0.5
   groundCheck: {fileID: 337325573}
   primaryWallCheck: {fileID: 280339202}
   secondaryWallCheck: {fileID: 0}
   idleTime: 2
   moveSpeed: 1.4
   moveAnimSpeedMultiplier: 1
+  whatIsPlayer:
+    serializedVersion: 2
+    m_Bits: 128
+  playerCheck: {fileID: 280339202}
+  playerCheckDistance: 10
 --- !u!70 &280339204
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -850,7 +855,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.8781939, y: 2.2781076, z: 15.767418}
+  m_LocalPosition: {x: 1.1818061, y: 2.2781076, z: 15.767418}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1030,13 +1035,13 @@ GameObject:
   - component: {fileID: 763083632}
   - component: {fileID: 763083635}
   - component: {fileID: 763083634}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &763083632
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1049,11 +1054,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37b3e5f189490fc408c8660d0b5ae5dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  groundCheckDistance: 1.4
-  wallCheckDistance: 0.4
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64
+  groundCheckDistance: 1.4
+  wallCheckDistance: 0.4
   groundCheck: {fileID: 763083633}
   primaryWallCheck: {fileID: 243174659}
   secondaryWallCheck: {fileID: 1811148404}
@@ -1080,7 +1085,7 @@ Transform:
   m_GameObject: {fileID: 763083631}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.21, y: -1.55, z: 0}
+  m_LocalPosition: {x: -4.15, y: -1.55, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -12380,7 +12385,7 @@ Transform:
   m_GameObject: {fileID: 1970723732}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.8781939, y: 2.2781076, z: 15.767418}
+  m_LocalPosition: {x: 1.1818061, y: 2.2781076, z: 15.767418}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
