@@ -6,6 +6,10 @@ public class Enemy : Entity
     public Enemy_MoveState moveState;//移动状态
     public Enemy_AttackState attackState;//攻击状态
     public Enemy_BattleState battleState;//战斗状态
+    
+    [Header("Battle details")]
+    public float battleMoveSpeed = 3;//战斗移动速度
+    public float attackDistance = 2;//攻击距离
 
     [Header("Movement details")] 
     public float idleTime = 2;//空闲时间
@@ -41,5 +45,9 @@ public class Enemy : Entity
         
         // 绘制从 playerCheck 位置开始，朝向玩家检测方向的射线，长度为 playerCheckDistance
         Gizmos.DrawLine(playerCheck.position,new Vector3(playerCheck.position.x + (facingDir * playerCheckDistance),playerCheck.position.y));
+        
+        Gizmos.color = Color.blue;// 设置 Gizmos 的颜色为黄色
+        Gizmos.DrawLine(playerCheck.position,new Vector3(playerCheck.position.x + (facingDir * attackDistance),playerCheck.position.y));
+        
     }
 }
