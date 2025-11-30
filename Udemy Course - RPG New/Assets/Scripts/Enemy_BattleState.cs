@@ -4,7 +4,7 @@ using UnityEngine;
 public class Enemy_BattleState : EnemyState
 {
     private Transform player;
-    public float lastTimeWasInBattle;//上次是在战斗中
+    private float lastTimeWasInBattle;//上次是在战斗中
     
     public Enemy_BattleState(Enemy enemy, StateMachine stateMachine, string animBoolName) : base(enemy, stateMachine, animBoolName)
     {

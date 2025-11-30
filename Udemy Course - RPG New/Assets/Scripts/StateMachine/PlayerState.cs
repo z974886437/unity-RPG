@@ -17,11 +17,16 @@ public abstract class PlayerState : EntityState
    public override void Update()
    {
       base.Update();
-         
-      anim.SetFloat("yVelocity",rb.linearVelocity.y);
-         
+      
       if(input.Player.Dash.WasPressedThisFrame() && CanDash())// 检查是否按下了冲刺按钮且可以冲刺
             stateMachine.ChangeState(player.dashState);// 如果按下了冲刺按钮且可以冲刺，切换到冲刺状态
+   }
+
+   public override void UpdateAnimationParameters()
+   {
+      base.UpdateAnimationParameters();
+      
+      anim.SetFloat("yVelocity",rb.linearVelocity.y);
    }
 
    // 检查玩家是否能够执行冲刺

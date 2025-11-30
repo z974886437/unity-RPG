@@ -45,9 +45,9 @@ public class Entity : MonoBehaviour
     }
     
     // 调用动画触发器，触发当前状态的动画
-    public void CallAnimationTrigger()
+    public void CurrentStateAnimationTrigger()
     {
-        stateMachine.currentState.CallAnimationTrigger();// 调用当前状态的动画触发器，通常用于动画事件的触发
+        stateMachine.currentState.AnimationTrigger();// 调用当前状态的动画触发器，通常用于动画事件的触发
     }
 
     public void SetVelocity(float xVelocity, float yVelocity)

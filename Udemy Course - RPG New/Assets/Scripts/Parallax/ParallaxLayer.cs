@@ -25,12 +25,12 @@ public class ParallaxLayer
     }
 
     // 循环背景图像，如果背景图像的边界超出了摄像机视野的范围，则将其位置重置，达到无缝循环的效果
-    public void LoopBackground(float cameraLeftEdge, float cameraRightEdge)
+    public void LoopBackground(float cameraLefteEdge, float cameraRightEdge)
     {
         float imageRightEdge = (background.position.x + imageHalfWidth) - imageWidthOffset; // 获取背景图像的右边界
         float imageLeftEdge = (background.position.x - imageHalfWidth) + imageWidthOffset; // 获取背景图像的左边界
 
-        if (imageRightEdge < cameraLeftEdge) // 如果背景图像的右边界超出了摄像机的左边界，背景需要重新定位到屏幕右边
+        if (imageRightEdge < cameraLefteEdge) // 如果背景图像的右边界超出了摄像机的左边界，背景需要重新定位到屏幕右边
             background.position += Vector3.right * imageFullWidth;
         else if(imageLeftEdge > cameraRightEdge) // 如果背景图像的左边界超出了摄像机的右边界，背景需要重新定位到屏幕左边
             background.position += Vector3.right * -imageFullWidth;

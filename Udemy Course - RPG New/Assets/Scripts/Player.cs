@@ -6,7 +6,7 @@ public class Player : Entity
 {
     public PlayerInputSet input { get; private set; }//输入
     
-    public Player_idleState idleState { get; private set; }//空闲状态
+    public Player_IdleState idleState { get; private set; }//空闲状态
     public Player_MoveState moveState { get; private set; }//移动状态
     public Player_JumpState jumpState { get; private set; }//跳跃状态
     public Player_FallState fallState { get; private set; }//下落状态
@@ -14,7 +14,7 @@ public class Player : Entity
     public Player_WallJumpState wallJumpState { get; private set;}//墙跳状态
     public Player_DashState dashState { get;private set; }//冲刺状态
     public Player_BasicAttackState basicAttackState { get; private set; }//攻击状态
-    public Player_JumpAttackState JumpAttackState { get; private set; }//跳跃攻击状态
+    public Player_JumpAttackState jumpAttackState { get; private set; }//跳跃攻击状态
     
     [Header("Attack details")] 
     public Vector2[] attackVelocity;//攻击速度
@@ -43,7 +43,7 @@ public class Player : Entity
         
         input = new PlayerInputSet();// 创建玩家输入设置实例
 
-        idleState = new Player_idleState(this,stateMachine, "idle");// 创建并初始化玩家空闲状态
+        idleState = new Player_IdleState(this,stateMachine, "idle");// 创建并初始化玩家空闲状态
         moveState = new Player_MoveState(this,stateMachine, "move");// 创建并初始化玩家移动状态
         jumpState = new Player_JumpState(this, stateMachine, "jumpFall");
         fallState = new Player_FallState(this, stateMachine, "jumpFall");
@@ -51,7 +51,7 @@ public class Player : Entity
         wallJumpState = new Player_WallJumpState(this,stateMachine, "jumpFall");
         dashState = new Player_DashState(this, stateMachine, "dash");
         basicAttackState = new Player_BasicAttackState(this, stateMachine, "basicAttack");
-        JumpAttackState = new Player_JumpAttackState(this, stateMachine, "jumpAttack");
+        jumpAttackState = new Player_JumpAttackState(this, stateMachine, "jumpAttack");
     }
     
     // 游戏对象开始时的初始化

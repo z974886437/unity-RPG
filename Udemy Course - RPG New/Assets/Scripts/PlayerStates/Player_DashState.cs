@@ -3,7 +3,7 @@ using UnityEngine;
 public class Player_DashState : PlayerState
 {
     private float originalGravityScale;//原始重力标尺
-    private float dashDir;//冲刺方向
+    private int dashDir;//冲刺方向
     
     public Player_DashState(Player player, StateMachine stateMachine, string animBoolName) : base(player, stateMachine, animBoolName)
     {

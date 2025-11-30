@@ -6,7 +6,7 @@ public class Enemy_IdleState : Enemy_GroundedState
     {
     }
 
-    override public void Enter()
+    public override void Enter()
     {
         base.Enter();
 

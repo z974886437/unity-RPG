@@ -7,9 +7,9 @@ public class Player_BasicAttackState : PlayerState
     
     private bool comboAttackQueued;//组合攻击已排队
     private int attackDir;//攻击方向
-    private const int FirstComboIndex = 1;// we start combo index wit number 1,this parametr is used in the Animator.
     private int comboIndex = 1;//组合指数
     private int comboLimit = 3;//组合限制
+    private const int FirstComboIndex = 1;// we start combo index wit number 1,this parametr is used in the Animator.
 
     
     

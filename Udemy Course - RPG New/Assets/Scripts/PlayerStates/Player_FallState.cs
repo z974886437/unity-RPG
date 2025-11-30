@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Player_FallState : Player_AireState
+public class Player_FallState : Player_AiredState
 {
     public Player_FallState(Player player, StateMachine stateMachine, string animBoolName) : base(player, stateMachine, animBoolName)
     {
