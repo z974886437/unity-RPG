@@ -48,6 +48,12 @@ public class Entity : MonoBehaviour
         stateMachine.UpdateActiveState(); // 更新状态机的当前活动状态
     }
 
+    public virtual void EntityDeath()
+    {
+        
+    }
+
+    //受到击退
     public void ReciveKnockback(Vector2 knockback, float duration)
     {
         if(knockbackCo != null)// 如果已经有击退协程在运行，停止当前协程
@@ -56,6 +62,7 @@ public class Entity : MonoBehaviour
         knockbackCo = StartCoroutine(KnockbackCo(knockback, duration));// 启动新的击退协程
     }
 
+    //击退
     private IEnumerator KnockbackCo(Vector2 knockback,float duration)
     {
         isKnocked = true;// 设置被击退标志为 true

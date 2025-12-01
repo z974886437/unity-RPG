@@ -52,7 +52,7 @@ public class Entity_Health : MonoBehaviour
     private void Die()
     {
         isDead = true;// 标记实体为已死亡
-        Debug.Log("实体死亡"); // 打印死亡信息
+        entity.EntityDeath();
     }
 
     //计算击退

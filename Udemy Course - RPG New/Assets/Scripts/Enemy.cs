@@ -6,6 +6,7 @@ public class Enemy : Entity
     public Enemy_MoveState moveState;//移动状态
     public Enemy_AttackState attackState;//攻击状态
     public Enemy_BattleState battleState;//战斗状态
+    public Enemy_DeadState deadState;//死亡状态
     
     [Header("Battle details")]
     public float battleMoveSpeed = 3;//战斗移动速度
@@ -27,7 +28,14 @@ public class Enemy : Entity
     
     public Transform player { get; private set; }
 
-    
+
+    public override void EntityDeath()
+    {
+        base.EntityDeath();
+        
+        stateMachine.ChangeState(deadState);
+    }
+
     // 尝试进入战斗状态的方法
     public void TryEnterBattleState(Transform player)
     {
