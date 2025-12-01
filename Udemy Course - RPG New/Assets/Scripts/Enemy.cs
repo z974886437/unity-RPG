@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Enemy : Entity
@@ -34,6 +35,11 @@ public class Enemy : Entity
         base.EntityDeath();
         
         stateMachine.ChangeState(deadState);
+    }
+
+    private void HandlePlayerDeath()
+    {
+        stateMachine.ChangeState(idleState);
     }
 
     // 尝试进入战斗状态的方法
@@ -87,5 +93,15 @@ public class Enemy : Entity
         
         Gizmos.color = Color.green;// 设置 Gizmos 的颜色为黄色
         Gizmos.DrawLine(playerCheck.position,new Vector3(playerCheck.position.x + (facingDir * minRetreatDistance),playerCheck.position.y));
+    }
+
+    private void OnEnable()
+    {
+        Player.OnPlayerDeath += HandlePlayerDeath;// 订阅玩家死亡事件，当玩家死亡时调用HandlePlayerDeath方法
+    }
+
+    private void OnDisable()
+    {
+        Player.OnPlayerDeath -= HandlePlayerDeath;// 取消订阅玩家死亡事件，避免内存泄漏
     }
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Player : Entity
 {
+    public static event Action OnPlayerDeath;
     public PlayerInputSet input { get; private set; }//输入
     
     public Player_IdleState idleState { get; private set; }//空闲状态
@@ -15,6 +16,7 @@ public class Player : Entity
     public Player_DashState dashState { get;private set; }//冲刺状态
     public Player_BasicAttackState basicAttackState { get; private set; }//攻击状态
     public Player_JumpAttackState jumpAttackState { get; private set; }//跳跃攻击状态
+    public Player_DeadState deadState { get; private set; }
     
     [Header("Attack details")] 
     public Vector2[] attackVelocity;//攻击速度
@@ -52,6 +54,7 @@ public class Player : Entity
         dashState = new Player_DashState(this, stateMachine, "dash");
         basicAttackState = new Player_BasicAttackState(this, stateMachine, "basicAttack");
         jumpAttackState = new Player_JumpAttackState(this, stateMachine, "jumpAttack");
+        deadState = new Player_DeadState(this, stateMachine, "dead");
     }
     
     // 游戏对象开始时的初始化
@@ -60,7 +63,15 @@ public class Player : Entity
         base.Start();
         stateMachine.Initialize(idleState);// 初始化状态机，设置初始状态为 idleState（空闲状态）
     }
-    
+
+    public override void EntityDeath()
+    {
+        base.EntityDeath();
+        
+        OnPlayerDeath?.Invoke(); // 如果有订阅者，触发玩家死亡事件（例如 UI 更新、音效播放等）
+        stateMachine.ChangeState(deadState);// 切换到死亡状态，处理死亡后的状态逻辑
+    }
+
     // 延迟进入攻击状态
     public void EnterAttackStateWithDelay()
     {

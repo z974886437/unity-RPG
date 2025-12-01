@@ -1,6 +1,5 @@
-using System;
+
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class Entity_Health : MonoBehaviour
 {
@@ -11,13 +10,12 @@ public class Entity_Health : MonoBehaviour
     [SerializeField] protected bool isDead;
     
     [Header("On Damage Knockback")]
+    [SerializeField] private Vector2 knockbackPower = new Vector2(1.5f,2.5f);//关于伤害击退
+    [SerializeField] private Vector2 heavyKnockbackPower = new Vector2(7, 7);//重伤害击退
     [SerializeField] private float knockbackDuration = 0.2f;//击退持续时间
-    [SerializeField] private Vector2 onDamageKnockback = new Vector2(1.5f,2.5f);//关于伤害击退
-    [Space]
-    [Range(0,1)]
-    [SerializeField] private float heavyDamageThreshold = 0.3f;//重损伤阈值
     [SerializeField] private float heavyKnockbackDuration = 0.5f;//重击退持续时间
-    [SerializeField] private Vector2 onHeavyDamageKnockback = new Vector2(7, 7);//重伤害击退
+    [Header("On Heavy Damage")]
+    [SerializeField] private float heavyDamageThreshold = 0.3f;//重损伤阈值
 
     protected void Awake()
     {
@@ -31,11 +29,11 @@ public class Entity_Health : MonoBehaviour
         if (isDead) // 如果实体已经死亡，直接返回，不再处理伤害
             return;
         
-        float duration = CalculateDuration(damage);// 计算根据伤害决定的击退持续时间
         Vector2 knockback = CalculateKnockback(damage,damageDealer);// 计算击退方向和距离
+        float duration = CalculateDuration(damage);// 计算根据伤害决定的击退持续时间
         
-        entityVfx?.PlayOnDamageVfx();// 如果存在伤害视觉效果对象，播放伤害效果
         entity?.ReciveKnockback(knockback,duration);// 如果存在实体对象，执行击退动作
+        entityVfx?.PlayOnDamageVfx();// 如果存在伤害视觉效果对象，播放伤害效果
         ReduceHp(damage);// 调用 ReduceHp 方法扣除生命值
     }
 
@@ -44,7 +42,7 @@ public class Entity_Health : MonoBehaviour
     {
         maxHp -= damage;// 减少当前生命值（maxHp 可能是当前生命值的变量名称）
 
-        if (maxHp < 0)// 如果生命值小于 0，调用 Die 方法执行死亡逻辑
+        if (maxHp <= 0)// 如果生命值小于 0，调用 Die 方法执行死亡逻辑
             Die();
     }
 
@@ -52,7 +50,7 @@ public class Entity_Health : MonoBehaviour
     private void Die()
     {
         isDead = true;// 标记实体为已死亡
-        entity.EntityDeath();
+        entity?.EntityDeath();
     }
 
     //计算击退
@@ -60,17 +58,14 @@ public class Entity_Health : MonoBehaviour
     {
         int direction = transform.position.x > damageDealer.position.x ? 1 : -1;// 根据攻击者与实体的位置，确定击退方向，左边攻击为负，右边攻击为正
 
-        Vector2 knockback = IsHeavyDamage(damage) ? onHeavyDamageKnockback : onDamageKnockback; // 判断是否为重击，根据伤害选择不同的击退效果
+        Vector2 knockback = IsHeavyDamage(damage) ? heavyKnockbackPower : knockbackPower; // 判断是否为重击，根据伤害选择不同的击退效果
         knockback.x = knockback.x * direction;// 调整击退方向，确保与攻击者相反
         
         return knockback;// 返回计算好的击退向量
     }
 
     //计算持续时间
-    private float CalculateDuration(float damage)
-    {
-        return IsHeavyDamage(damage) ? heavyKnockbackDuration : knockbackDuration;// 判断是否为重击，选择不同的击退持续时间
-    }
+    private float CalculateDuration(float damage) => IsHeavyDamage(damage) ? heavyKnockbackDuration : knockbackDuration;// 判断是否为重击，选择不同的击退持续时间
     
     private bool IsHeavyDamage(float damage) => damage / maxHp > heavyDamageThreshold;// 判断伤害是否超过重击阈值
 }
