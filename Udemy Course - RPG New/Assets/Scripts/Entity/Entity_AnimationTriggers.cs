@@ -1,12 +1,12 @@
 using System;
 using UnityEngine;
 
-public class Enltity_AnimationTriggers : MonoBehaviour
+public class Entity_AnimationTriggers : MonoBehaviour
 {
     private Entity entity;
     private Entity_Combat entityCombat;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         entity = GetComponentInParent<Entity>();
         entityCombat = GetComponentInParent<Entity_Combat>();

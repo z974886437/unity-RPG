@@ -8,6 +8,7 @@ public class Enemy : Entity
     public Enemy_AttackState attackState;//攻击状态
     public Enemy_BattleState battleState;//战斗状态
     public Enemy_DeadState deadState;//死亡状态
+    public Enemy_StunnedState stunnedState;//惊呆状态
     
     [Header("Battle details")]
     public float battleMoveSpeed = 3;//战斗移动速度
@@ -15,6 +16,11 @@ public class Enemy : Entity
     public float battleTimeDuration = 5;//战斗持续时间
     public float minRetreatDistance = 1;//最小后退距离
     public Vector2 retrealVelocity;//后退速度
+    
+    [Header("Stunned state details")]
+    public float stunnedDuration = 1;
+    public Vector2 stunnedVelocity = new Vector2(7,7);
+    protected bool canBeStunned;
     
     [Header("Movement details")] 
     public float idleTime = 2;//空闲时间
@@ -28,7 +34,9 @@ public class Enemy : Entity
     [SerializeField] private float playerCheckDistance = 10;//检测玩家距离
     
     public Transform player { get; private set; }
-
+    
+    
+    public void EnableCounterWindow(bool enable) => canBeStunned = enable;
 
     public override void EntityDeath()
     {
