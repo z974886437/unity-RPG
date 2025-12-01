@@ -13,9 +13,11 @@ public class Enemy_BattleState : EnemyState
     public override void Enter()
     {
         base.Enter();
+        
+        UpdateBattleTimer();
 
-        if(player == null)// 如果 player 为 null（还没有检测到玩家），则通过 PlayerDetection 获取玩家的 Transform
-            player = enemy.PlayerDetected().transform;
+        if (player == null) // 如果 player 为 null（还没有检测到玩家），则通过 PlayerDetection 获取玩家的 Transform
+            player = enemy.GetPlayerReference();
 
         if (ShouldRetreat())// 如果敌人需要撤退，根据距离判断并设置撤退速度
         {
@@ -34,7 +36,7 @@ public class Enemy_BattleState : EnemyState
         if(BattleTimeIsOver())// 如果战斗时间结束，切换到空闲状态
             stateMachine.ChangeState(enemy.idleState);
         
-        if(WithinAttackRange() && enemy.PlayerDetected() == true)// 如果玩家在攻击范围内，并且检测到玩家，切换到攻击状态
+        if(WithinAttackRange() && enemy.PlayerDetected())// 如果玩家在攻击范围内，并且检测到玩家，切换到攻击状态
             stateMachine.ChangeState(enemy.attackState);
         else
             enemy.SetVelocity(enemy.battleMoveSpeed * DirectionToPlayer(),rb.linearVelocity.y);// 如果玩家不在攻击范围内，敌人向玩家移动

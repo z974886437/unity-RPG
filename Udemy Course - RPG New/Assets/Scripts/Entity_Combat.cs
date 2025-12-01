@@ -20,7 +20,7 @@ public class Entity_Combat : MonoBehaviour
             // if (targetHealth != null)
             //     targetHealth.TakeDamage(10);
             // 使用安全访问符（?.）检查 targetHealth 是否为 null，如果不为 null，则调用 TakeDamage 方法
-            targetHealth?.TakeDamage(damage);// 对目标造成伤害（damage 是攻击造成的伤害值）
+            targetHealth?.TakeDamage(damage,transform);// 对目标造成伤害（damage 是攻击造成的伤害值）
         }
     }
 

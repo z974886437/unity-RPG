@@ -6,7 +6,7 @@ public class Entity_Health : MonoBehaviour
     [SerializeField] protected bool isDead;
 
     // 处理实体受到伤害的方法
-    public virtual void TakeDamage(float damage)
+    public virtual void TakeDamage(float damage,Transform damageDealer)
     {
         if (isDead) // 如果实体已经死亡，直接返回，不再处理伤害
             return;

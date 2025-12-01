@@ -24,8 +24,31 @@ public class Enemy : Entity
     [SerializeField] private LayerMask whatIsPlayer;//什么是玩家
     [SerializeField] private Transform playerCheck;//玩家检测
     [SerializeField] private float playerCheckDistance = 10;//检测玩家距离
+    
+    public Transform player { get; private set; }
 
     
+    // 尝试进入战斗状态的方法
+    public void TryEnterBattleState(Transform player)
+    {
+        if (stateMachine.currentState == battleState)// 如果当前状态已经是战斗状态，直接返回
+            return;
+
+        if (stateMachine.currentState == attackState)// 如果当前状态是攻击状态，不能进入战斗状态，直接返回
+            return;
+        
+        this.player = player;// 设置当前玩家对象
+        stateMachine.ChangeState(battleState);// 切换到战斗状态
+    }
+
+    // 获取玩家引用的方法
+    public Transform GetPlayerReference()
+    {
+        if (player == null)// 如果当前玩家引用为空，则通过PlayerDetected方法检测并赋值
+            player = PlayerDetected().transform;
+
+        return player;// 返回玩家的Transform引用
+    }
 
     // 检测玩家是否在射线检测范围内
     public RaycastHit2D PlayerDetected()
