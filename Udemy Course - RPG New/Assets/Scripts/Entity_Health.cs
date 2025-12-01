@@ -1,15 +1,27 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Entity_Health : MonoBehaviour
 {
     private Entity_VFX entityVfx;
+    private Entity entity;
     
     [SerializeField] protected float maxHp = 100;
     [SerializeField] protected bool isDead;
+    
+    [Header("On Damage Knockback")]
+    [SerializeField] private float knockbackDuration = 0.2f;//击退持续时间
+    [SerializeField] private Vector2 onDamageKnockback = new Vector2(1.5f,2.5f);//关于伤害击退
+    [Space]
+    [Range(0,1)]
+    [SerializeField] private float heavyDamageThreshold = 0.3f;//重损伤阈值
+    [SerializeField] private float heavyKnockbackDuration = 0.5f;//重击退持续时间
+    [SerializeField] private Vector2 onHeavyDamageKnockback = new Vector2(7, 7);//重伤害击退
 
     protected void Awake()
     {
+        entity = GetComponent<Entity>();
         entityVfx = GetComponent<Entity_VFX>();
     }
 
@@ -19,7 +31,11 @@ public class Entity_Health : MonoBehaviour
         if (isDead) // 如果实体已经死亡，直接返回，不再处理伤害
             return;
         
-        entityVfx?.PlayOnDamageVfx();
+        float duration = CalculateDuration(damage);// 计算根据伤害决定的击退持续时间
+        Vector2 knockback = CalculateKnockback(damage,damageDealer);// 计算击退方向和距离
+        
+        entityVfx?.PlayOnDamageVfx();// 如果存在伤害视觉效果对象，播放伤害效果
+        entity?.ReciveKnockback(knockback,duration);// 如果存在实体对象，执行击退动作
         ReduceHp(damage);// 调用 ReduceHp 方法扣除生命值
     }
 
@@ -38,4 +54,23 @@ public class Entity_Health : MonoBehaviour
         isDead = true;// 标记实体为已死亡
         Debug.Log("实体死亡"); // 打印死亡信息
     }
+
+    //计算击退
+    private Vector2 CalculateKnockback(float damage,Transform damageDealer)
+    {
+        int direction = transform.position.x > damageDealer.position.x ? 1 : -1;// 根据攻击者与实体的位置，确定击退方向，左边攻击为负，右边攻击为正
+
+        Vector2 knockback = IsHeavyDamage(damage) ? onHeavyDamageKnockback : onDamageKnockback; // 判断是否为重击，根据伤害选择不同的击退效果
+        knockback.x = knockback.x * direction;// 调整击退方向，确保与攻击者相反
+        
+        return knockback;// 返回计算好的击退向量
+    }
+
+    //计算持续时间
+    private float CalculateDuration(float damage)
+    {
+        return IsHeavyDamage(damage) ? heavyKnockbackDuration : knockbackDuration;// 判断是否为重击，选择不同的击退持续时间
+    }
+    
+    private bool IsHeavyDamage(float damage) => damage / maxHp > heavyDamageThreshold;// 判断伤害是否超过重击阈值
 }

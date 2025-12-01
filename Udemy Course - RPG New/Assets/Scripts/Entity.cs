@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class Entity : MonoBehaviour
@@ -23,6 +24,9 @@ public class Entity : MonoBehaviour
     public bool groundDetected { get; private set; }//检测到地面
     public bool wallDetected { get; private set; }//检测到墙壁
 
+    private Coroutine knockbackCo;
+    private bool isKnocked;
+
     // 在对象初始化时调用，进行必要的设置
     protected virtual void Awake()
     {
@@ -43,6 +47,25 @@ public class Entity : MonoBehaviour
         HandleCollisionDetection();// 处理碰撞检测
         stateMachine.UpdateActiveState(); // 更新状态机的当前活动状态
     }
+
+    public void ReciveKnockback(Vector2 knockback, float duration)
+    {
+        if(knockbackCo != null)// 如果已经有击退协程在运行，停止当前协程
+            StopCoroutine(knockbackCo);
+
+        knockbackCo = StartCoroutine(KnockbackCo(knockback, duration));// 启动新的击退协程
+    }
+
+    private IEnumerator KnockbackCo(Vector2 knockback,float duration)
+    {
+        isKnocked = true;// 设置被击退标志为 true
+        rb.linearVelocity = knockback;// 设置刚体的线性速度为击退的向量，启动击退效果
+        
+        yield return new WaitForSeconds(duration);// 等待指定的击退持续时间
+
+        rb.linearVelocity = Vector2.zero;// 击退持续时间结束后，将刚体速度重置为零，停止击退
+        isKnocked = false;// 设置被击退标志为 false，表示击退结束
+    }
     
     // 调用动画触发器，触发当前状态的动画
     public void CurrentStateAnimationTrigger()
@@ -52,6 +75,9 @@ public class Entity : MonoBehaviour
 
     public void SetVelocity(float xVelocity, float yVelocity)
     {
+        if (isKnocked)
+            return;
+        
         rb.linearVelocity = new Vector2(xVelocity, yVelocity);// 设置角色的速度，水平速度和垂直速度
         HandleFlip(xVelocity);// 根据水平速度来判断是否需要翻转角色
     }
