@@ -500,7 +500,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30d162ab3085c85499902660a0d91d07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 25
+  damage: 10
   targetCheck: {fileID: 141049813}
   targetCheckRadius: 1
   whatIsTarget:
@@ -518,6 +518,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27e90b88ae1fbd84baa8be614338673f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentHp: 0
   maxHp: 100
   isDead: 0
   knockbackPower: {x: 1.5, y: 2.5}
@@ -1314,6 +1315,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a94e72a41b473d44b09be0fea26f38b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentHp: 0
   maxHp: 100
   isDead: 0
   knockbackPower: {x: 1.5, y: 2.5}

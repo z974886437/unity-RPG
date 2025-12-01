@@ -6,6 +6,7 @@ public class Entity_Health : MonoBehaviour
     private Entity_VFX entityVfx;
     private Entity entity;
     
+    [SerializeField] protected float currentHp;
     [SerializeField] protected float maxHp = 100;
     [SerializeField] protected bool isDead;
     
@@ -19,8 +20,10 @@ public class Entity_Health : MonoBehaviour
 
     protected void Awake()
     {
-        entity = GetComponent<Entity>();
         entityVfx = GetComponent<Entity_VFX>();
+        entity = GetComponent<Entity>();
+        
+        currentHp = maxHp;
     }
 
     // 处理实体受到伤害的方法
@@ -40,9 +43,9 @@ public class Entity_Health : MonoBehaviour
     // 扣除生命值的方法
     protected void ReduceHp(float damage)
     {
-        maxHp -= damage;// 减少当前生命值（maxHp 可能是当前生命值的变量名称）
+        currentHp -= damage;// 减少当前生命值（maxHp 可能是当前生命值的变量名称）
 
-        if (maxHp <= 0)// 如果生命值小于 0，调用 Die 方法执行死亡逻辑
+        if (currentHp <= 0)// 如果生命值小于 0，调用 Die 方法执行死亡逻辑
             Die();
     }
 

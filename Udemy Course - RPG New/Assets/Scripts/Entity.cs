@@ -24,8 +24,8 @@ public class Entity : MonoBehaviour
     public bool groundDetected { get; private set; }//检测到地面
     public bool wallDetected { get; private set; }//检测到墙壁
 
-    private Coroutine knockbackCo;
     private bool isKnocked;
+    private Coroutine knockbackCo;
 
     // 在对象初始化时调用，进行必要的设置
     protected virtual void Awake()
@@ -46,6 +46,12 @@ public class Entity : MonoBehaviour
     {
         HandleCollisionDetection();// 处理碰撞检测
         stateMachine.UpdateActiveState(); // 更新状态机的当前活动状态
+    }
+    
+    // 调用动画触发器，触发当前状态的动画
+    public void CurrentStateAnimationTrigger()
+    {
+        stateMachine.currentState.AnimationTrigger();// 调用当前状态的动画触发器，通常用于动画事件的触发
     }
 
     public virtual void EntityDeath()
@@ -74,11 +80,7 @@ public class Entity : MonoBehaviour
         isKnocked = false;// 设置被击退标志为 false，表示击退结束
     }
     
-    // 调用动画触发器，触发当前状态的动画
-    public void CurrentStateAnimationTrigger()
-    {
-        stateMachine.currentState.AnimationTrigger();// 调用当前状态的动画触发器，通常用于动画事件的触发
-    }
+    
 
     public void SetVelocity(float xVelocity, float yVelocity)
     {
