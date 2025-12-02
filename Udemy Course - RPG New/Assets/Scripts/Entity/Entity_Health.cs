@@ -1,8 +1,10 @@
 
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Entity_Health : MonoBehaviour,IDamgable
 {
+    private Slider healthBar;
     private Entity_VFX entityVfx;
     private Entity entity;
     
@@ -22,8 +24,10 @@ public class Entity_Health : MonoBehaviour,IDamgable
     {
         entityVfx = GetComponent<Entity_VFX>();
         entity = GetComponent<Entity>();
+        healthBar = GetComponentInChildren<Slider>();
         
         currentHp = maxHp;
+        UpdateHealthBar();
     }
 
     // 处理实体受到伤害的方法
@@ -44,6 +48,7 @@ public class Entity_Health : MonoBehaviour,IDamgable
     protected void ReduceHp(float damage)
     {
         currentHp -= damage;// 减少当前生命值（maxHp 可能是当前生命值的变量名称）
+        UpdateHealthBar();
 
         if (currentHp <= 0)// 如果生命值小于 0，调用 Die 方法执行死亡逻辑
             Die();
@@ -55,6 +60,16 @@ public class Entity_Health : MonoBehaviour,IDamgable
         isDead = true;// 标记实体为已死亡
         entity?.EntityDeath();
     }
+
+    // 更新血条的显示
+    private void UpdateHealthBar()
+    {
+        if (healthBar == null)// 如果血条对象为空，直接返回
+            return;
+        
+        healthBar.value = currentHp / maxHp; // 设置血条的值，值为当前生命值与最大生命值的比值
+    }
+        
 
     //计算击退
     private Vector2 CalculateKnockback(float damage,Transform damageDealer)

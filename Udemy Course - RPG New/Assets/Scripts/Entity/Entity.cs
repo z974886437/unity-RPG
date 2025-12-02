@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class Entity : MonoBehaviour
 {
-//public StateMachine stateMachine { get; private set; }
+    //public StateMachine stateMachine { get; private set; }
+
+    public event Action OnFlipped;
 
     public Animator anim { get; private set; }//动画师
     public Rigidbody2D rb { get; private set; }//二维刚体
@@ -104,6 +106,8 @@ public class Entity : MonoBehaviour
         transform.Rotate(0,180,0);// 通过旋转角色的 transform 来实现翻转
         facingRight = !facingRight;// 更新角色当前朝向的状态
         facingDir = facingDir * -1;
+        
+        OnFlipped?.Invoke();
     }
 
     // 进行地面检测，射线从物体当前位置向下发射，检测是否接触地面
