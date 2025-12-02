@@ -1162,7 +1162,7 @@ GameObject:
   - component: {fileID: 763083632}
   - component: {fileID: 763083635}
   - component: {fileID: 763083634}
-  - component: {fileID: 763083636}
+  - component: {fileID: 763083639}
   - component: {fileID: 763083637}
   - component: {fileID: 763083638}
   m_Layer: 7
@@ -1289,24 +1289,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
---- !u!114 &763083636
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 763083631}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30d162ab3085c85499902660a0d91d07, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damage: 20
-  targetCheck: {fileID: 440371311}
-  targetCheckRadius: 1
-  whatIsTarget:
-    serializedVersion: 2
-    m_Bits: 256
 --- !u!114 &763083637
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1341,6 +1323,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onDamageMaterial: {fileID: 2100000, guid: 9e84dfcd1a1cd3441a606588f2aa236a, type: 2}
   onDamageVfxDuration: 0.15
+--- !u!114 &763083639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 763083631}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cebf938320b69c444947774a17c19974, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 10
+  targetCheck: {fileID: 440371311}
+  targetCheckRadius: 1
+  whatIsTarget:
+    serializedVersion: 2
+    m_Bits: 256
+  counterRecovery: 0.25
 --- !u!1 &782304767
 GameObject:
   m_ObjectHideFlags: 0

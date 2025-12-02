@@ -17,6 +17,7 @@ public class Player : Entity
     public Player_BasicAttackState basicAttackState { get; private set; }//攻击状态
     public Player_JumpAttackState jumpAttackState { get; private set; }//跳跃攻击状态
     public Player_DeadState deadState { get; private set; }
+    public Player_CounterAttackState counterAttackState { get; private set; }
     
     [Header("Attack details")] 
     public Vector2[] attackVelocity;//攻击速度
@@ -55,6 +56,7 @@ public class Player : Entity
         basicAttackState = new Player_BasicAttackState(this, stateMachine, "basicAttack");
         jumpAttackState = new Player_JumpAttackState(this, stateMachine, "jumpAttack");
         deadState = new Player_DeadState(this, stateMachine, "dead");
+        counterAttackState = new Player_CounterAttackState(this, stateMachine, "counterAttack");
     }
     
     // 游戏对象开始时的初始化

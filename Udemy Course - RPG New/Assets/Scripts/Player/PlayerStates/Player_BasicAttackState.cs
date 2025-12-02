@@ -45,6 +45,10 @@ public class Player_BasicAttackState : PlayerState
     {
         base.Update();
         HandleAttackVelocity();// 处理攻击时的速度
+        
+        //打断攻击并进入反击状态
+        // if(input.Player.CounterAttack.WasPressedThisFrame())
+        //     stateMachine.ChangeState(player.counterAttackState);
 
         if (input.Player.Attack.WasPressedThisFrame())// 检查玩家是否按下了攻击按钮，如果是，则排队下一个攻击
             QueueNextAttack();// 排队下一个攻击，准备执行组合攻击

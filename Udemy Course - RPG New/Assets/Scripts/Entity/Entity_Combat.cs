@@ -28,7 +28,7 @@ public class Entity_Combat : MonoBehaviour
     }
 
     // 获取攻击范围内的所有碰撞体（即目标）
-    private Collider2D[] GetDetectedColliders()
+    protected Collider2D[] GetDetectedColliders()
     {
         // 使用 Physics2D.OverlapCircleAll 检测指定位置（targetCheck.position）和半径（targetCheckRadius）内的所有碰撞体
         // whatIsTarget 是 LayerMask，用于筛选哪些物体是有效的目标（比如敌人、玩家等）
