@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class Entity_Combat : MonoBehaviour
 {
+    private Entity_VFX vfx;
     public float damage = 10;
     
     [Header("Target detection")]
@@ -10,12 +11,22 @@ public class Entity_Combat : MonoBehaviour
     [SerializeField] private float targetCheckRadius = 1;//目标检查半径
     [SerializeField] private LayerMask whatIsTarget;//什么是目标
 
+    private void Awake()
+    {
+        vfx = GetComponent<Entity_VFX>();
+    }
+
     public void PerformAttack()
     {
         foreach (var target in GetDetectedColliders()) // 遍历所有检测到的碰撞体（敌人攻击范围内的目标）
         {
             IDamgable damgable = target.GetComponent<IDamgable>();
-            damgable?.TakeDamage(damage,transform);
+
+            if (damgable == null)
+                continue;
+            
+            damgable.TakeDamage(damage,transform);
+            vfx.CreateOnHitVFX(target.transform);
             
             // 获取目标的 Entity_Health 组件，这个组件负责管理目标的生命值
             //Entity_Health targetHealth = target.GetComponent<Entity_Health>();

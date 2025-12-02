@@ -1,20 +1,31 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Entity_VFX : MonoBehaviour
 {
     private SpriteRenderer sr;// 声明SpriteRenderer变量，用于操作精灵的材质和渲染效果
     
-    [Header("On Damage VFX")]
+    [Header("On Taking Damage VFX")]
     [SerializeField] private Material onDamageMaterial;//在损坏材料上
     [SerializeField] private float onDamageVfxDuration = 0.2f;//伤害视觉效果持续时间
     private Material originalMaterial;//原始材料
     private Coroutine onDamageVfxCoroutine;//关于损坏视觉特效协程
 
+    [Header("On Doing Damage VFX")]
+    [SerializeField] private Color hitVfxColor = Color.white;
+    [SerializeField] private GameObject hitVfx;
+    
     private void Awake()
     {
         sr = GetComponentInChildren<SpriteRenderer>();// 获取子物体上的SpriteRenderer组件
         originalMaterial = sr.material;// 记录原始材质
+    }
+
+    public void CreateOnHitVFX(Transform target)
+    {
+        GameObject vfx = Instantiate(hitVfx, target.position, Quaternion.identity);
+        vfx.GetComponentInChildren<SpriteRenderer>().color = hitVfxColor;
     }
 
     public void PlayOnDamageVfx()
