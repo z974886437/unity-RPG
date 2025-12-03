@@ -4,7 +4,8 @@ using UnityEngine;
 public class Entity_Combat : MonoBehaviour
 {
     private Entity_VFX vfx;
-    public float damage = 10;
+    private Entity_Stats stats;
+    
     
     [Header("Target detection")]
     [SerializeField] private Transform targetCheck;//目标检查
@@ -14,6 +15,7 @@ public class Entity_Combat : MonoBehaviour
     private void Awake()
     {
         vfx = GetComponent<Entity_VFX>();
+        stats = GetComponent<Entity_Stats>();
     }
 
     public void PerformAttack()
@@ -25,10 +27,11 @@ public class Entity_Combat : MonoBehaviour
             if (damgable == null) // 如果目标没有实现 IDamgable 接口，跳过此目标
                 continue;
             
+            float damage = stats.GetPhyiscalDamage(out bool isCrit);// 获取物理伤害，并判断是否暴击
             bool targetGotHit = damgable.TakeDamage(damage,transform);// 尝试对目标造成伤害，并检查是否成功（目标是否受到伤害）
             
             if(targetGotHit)// 如果目标成功受到伤害，创建攻击命中的特效（VFX）
-                vfx.CreateOnHitVFX(target.transform);
+                vfx.CreateOnHitVFX(target.transform,isCrit);
             
             // 获取目标的 Entity_Health 组件，这个组件负责管理目标的生命值
             //Entity_Health targetHealth = target.GetComponent<Entity_Health>();

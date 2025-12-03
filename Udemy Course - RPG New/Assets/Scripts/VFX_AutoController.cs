@@ -10,6 +10,10 @@ public class VFX_AutoController : MonoBehaviour
     [SerializeField] private bool randomOffset = true;
     [SerializeField] private bool randomRotation = true;
     
+    [Header("Random rotation")]
+    [SerializeField] private float minRotation = 0;
+    [SerializeField] private float maxRotation = 360;
+    
     [Header("Random Position")]
     [SerializeField] private float xMinOffset = -0.3f;
     [SerializeField] private float xMaxOffset = 0.3f;
@@ -45,7 +49,7 @@ public class VFX_AutoController : MonoBehaviour
         if (randomRotation == false) // 如果没有启用随机旋转，直接返回
             return;
         
-        float zRotation = Random.Range(0, 360); // 随机生成 z 轴的旋转角度
+        float zRotation = Random.Range(minRotation, maxRotation); // 随机生成 z 轴的旋转角度
         transform.Rotate(0,0,zRotation);// 旋转物体
     }
 }
