@@ -32,7 +32,7 @@ public class Entity_Health : MonoBehaviour,IDamgable
     }
 
     // 处理实体受到伤害的方法
-    public virtual bool TakeDamage(float damage,Transform damageDealer)
+    public virtual bool TakeDamage(float damage,float elementalDamage,Transform damageDealer)
     {
         if (isDead) // 如果实体已经死亡，直接返回，不再处理伤害
             return false;
@@ -56,7 +56,7 @@ public class Entity_Health : MonoBehaviour,IDamgable
         entity?.ReciveKnockback(knockback,duration);// 如果存在实体对象，执行击退动作
         entityVfx?.PlayOnDamageVfx();// 如果存在伤害视觉效果对象，播放伤害效果
         ReduceHp(finalDamage);// 调用 ReduceHp 方法扣除生命值
-        Debug.Log("Damage taken: " + finalDamage);
+        Debug.Log("Elemental Damage taken: " + elementalDamage);
 
         return true;
     }

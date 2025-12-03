@@ -7,6 +7,35 @@ public class Entity_Stats : MonoBehaviour
     public Stat_OffenseGroup offense;
     public Stat_DefenseGroup defense;
 
+    
+    // 计算角色的最终元素伤害，综合火焰、冰霜、闪电伤害及智力加成
+    public float GetElementalDamage()
+    {
+        float fireDamage = offense.fireDamage.GetValue(); // 获取角色的火焰伤害
+        float iceDamage = offense.iceDamage.GetValue();// 获取角色的冰霜伤害
+        float LightningDamage = offense.lightningDamage.GetValue(); // 获取角色的闪电伤害
+        float bonusElementalDamage = major.intelligence.GetValue();// 获取角色的智力加成（用于增加元素伤害）
+
+        float highestDamage = fireDamage; // 初始时，火焰伤害视为最高伤害
+        
+        if(iceDamage > highestDamage)// 如果冰霜伤害更高，更新最高伤害为冰霜伤害
+            highestDamage = iceDamage;
+        
+        if(LightningDamage > highestDamage)// 如果闪电伤害更高，更新最高伤害为闪电伤害
+            highestDamage = LightningDamage;
+
+        if (highestDamage <= 0)// 如果所有元素伤害都为 0，直接返回 0
+            return 0;
+
+        float bonusFire = (fireDamage == highestDamage) ? 0 : fireDamage * 0.5f; // 如果火焰伤害不是最高，给予火焰伤害 50% 的加成
+        float bonusIce = (iceDamage == highestDamage) ? 0 : iceDamage * 0.5f; // 如果冰霜伤害不是最高，给予冰霜伤害 50% 的加成
+        float bonusLightning = (LightningDamage == highestDamage) ? 0 : LightningDamage * 0.5f; // 如果闪电伤害不是最高，给予闪电伤害 50% 的加成
+
+        float weakerElementsDamage = bonusFire + bonusIce + bonusLightning;// 计算较弱元素的伤害加成（火焰、冰霜和闪电的 50% 加成）
+        float finalDamage = highestDamage + weakerElementsDamage + bonusElementalDamage;// 计算最终的元素伤害（最高伤害 + 较弱元素伤害 + 智力加成）
+        
+        return finalDamage; // 返回最终的元素伤害
+    }
 
     // 获取物理伤害并判断是否暴击
     public float GetPhyiscalDamage(out bool isCrit)

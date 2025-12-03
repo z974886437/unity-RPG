@@ -3,5 +3,5 @@ using UnityEngine;
 public interface IDamgable
 {
 
-    public bool TakeDamage(float damage, Transform damageDealer);
+    public bool TakeDamage(float damage,float elementalDamage, Transform damageDealer);
 }
