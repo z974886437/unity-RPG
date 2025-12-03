@@ -32,10 +32,16 @@ public class Entity_Health : MonoBehaviour,IDamgable
     }
 
     // 处理实体受到伤害的方法
-    public virtual void TakeDamage(float damage,Transform damageDealer)
+    public virtual bool TakeDamage(float damage,Transform damageDealer)
     {
         if (isDead) // 如果实体已经死亡，直接返回，不再处理伤害
-            return;
+            return false;
+
+        if (AttackEvaded())
+        {
+            Debug.Log($"{gameObject.name} evaded the attack!");
+            return false;
+        }
         
         Vector2 knockback = CalculateKnockback(damage,damageDealer);// 计算击退方向和距离
         float duration = CalculateDuration(damage);// 计算根据伤害决定的击退持续时间
@@ -43,7 +49,13 @@ public class Entity_Health : MonoBehaviour,IDamgable
         entity?.ReciveKnockback(knockback,duration);// 如果存在实体对象，执行击退动作
         entityVfx?.PlayOnDamageVfx();// 如果存在伤害视觉效果对象，播放伤害效果
         ReduceHp(damage);// 调用 ReduceHp 方法扣除生命值
+
+        return true;
     }
+
+    // 判断攻击是否被闪避
+    private bool AttackEvaded() => Random.Range(0, 100) < stats.GetEvasion();
+    
 
     // 扣除生命值的方法
     protected void ReduceHp(float damage)

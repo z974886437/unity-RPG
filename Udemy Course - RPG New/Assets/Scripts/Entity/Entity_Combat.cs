@@ -20,13 +20,15 @@ public class Entity_Combat : MonoBehaviour
     {
         foreach (var target in GetDetectedColliders()) // 遍历所有检测到的碰撞体（敌人攻击范围内的目标）
         {
-            IDamgable damgable = target.GetComponent<IDamgable>();
+            IDamgable damgable = target.GetComponent<IDamgable>(); // 获取目标的 IDamgable 接口（如果目标可以被攻击）
 
-            if (damgable == null)
+            if (damgable == null) // 如果目标没有实现 IDamgable 接口，跳过此目标
                 continue;
             
-            damgable.TakeDamage(damage,transform);
-            vfx.CreateOnHitVFX(target.transform);
+            bool targetGotHit = damgable.TakeDamage(damage,transform);// 尝试对目标造成伤害，并检查是否成功（目标是否受到伤害）
+            
+            if(targetGotHit)// 如果目标成功受到伤害，创建攻击命中的特效（VFX）
+                vfx.CreateOnHitVFX(target.transform);
             
             // 获取目标的 Entity_Health 组件，这个组件负责管理目标的生命值
             //Entity_Health targetHealth = target.GetComponent<Entity_Health>();
