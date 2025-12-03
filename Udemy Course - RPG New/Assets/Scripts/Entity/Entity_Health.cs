@@ -7,9 +7,9 @@ public class Entity_Health : MonoBehaviour,IDamgable
     private Slider healthBar;
     private Entity_VFX entityVfx;
     private Entity entity;
+    private Entity_Stats stats;
     
     [SerializeField] protected float currentHp;
-    [SerializeField] protected float maxHp = 100;
     [SerializeField] protected bool isDead;
     
     [Header("On Damage Knockback")]
@@ -24,9 +24,10 @@ public class Entity_Health : MonoBehaviour,IDamgable
     {
         entityVfx = GetComponent<Entity_VFX>();
         entity = GetComponent<Entity>();
+        stats = GetComponent<Entity_Stats>();
         healthBar = GetComponentInChildren<Slider>();
         
-        currentHp = maxHp;
+        currentHp = stats.GetMaxHealth();
         UpdateHealthBar();
     }
 
@@ -67,7 +68,7 @@ public class Entity_Health : MonoBehaviour,IDamgable
         if (healthBar == null)// 如果血条对象为空，直接返回
             return;
         
-        healthBar.value = currentHp / maxHp; // 设置血条的值，值为当前生命值与最大生命值的比值
+        healthBar.value = currentHp / stats.GetMaxHealth(); // 设置血条的值，值为当前生命值与最大生命值的比值
     }
         
 
@@ -85,5 +86,5 @@ public class Entity_Health : MonoBehaviour,IDamgable
     //计算持续时间
     private float CalculateDuration(float damage) => IsHeavyDamage(damage) ? heavyKnockbackDuration : knockbackDuration;// 判断是否为重击，选择不同的击退持续时间
     
-    private bool IsHeavyDamage(float damage) => damage / maxHp > heavyDamageThreshold;// 判断伤害是否超过重击阈值
+    private bool IsHeavyDamage(float damage) => damage / stats.GetMaxHealth() > heavyDamageThreshold;// 判断伤害是否超过重击阈值
 }
