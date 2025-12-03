@@ -37,18 +37,26 @@ public class Entity_Health : MonoBehaviour,IDamgable
         if (isDead) // 如果实体已经死亡，直接返回，不再处理伤害
             return false;
 
-        if (AttackEvaded())
+        if (AttackEvaded())// 检查攻击是否被闪避 
         {
             Debug.Log($"{gameObject.name} evaded the attack!");
             return false;
         }
+
+        // 获取攻击方的属性，计算穿甲伤害的减少量
+        Entity_Stats attackerStats = damageDealer.GetComponent<Entity_Stats>();
+        float armorReduction = attackerStats != null ? attackerStats.GetArmorReduction() : 0;
+
+        float mitigation = stats.GetArmorMitigation(armorReduction);// 计算护甲的减免效果
+        float finalDamage = damage * (1 - mitigation); // 根据护甲减免计算最终伤害
         
-        Vector2 knockback = CalculateKnockback(damage,damageDealer);// 计算击退方向和距离
-        float duration = CalculateDuration(damage);// 计算根据伤害决定的击退持续时间
+        Vector2 knockback = CalculateKnockback(finalDamage,damageDealer);// 计算击退方向和距离
+        float duration = CalculateDuration(finalDamage);// 计算根据伤害决定的击退持续时间
         
         entity?.ReciveKnockback(knockback,duration);// 如果存在实体对象，执行击退动作
         entityVfx?.PlayOnDamageVfx();// 如果存在伤害视觉效果对象，播放伤害效果
-        ReduceHp(damage);// 调用 ReduceHp 方法扣除生命值
+        ReduceHp(finalDamage);// 调用 ReduceHp 方法扣除生命值
+        Debug.Log("Damage taken: " + finalDamage);
 
         return true;
     }

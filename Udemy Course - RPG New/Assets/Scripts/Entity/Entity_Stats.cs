@@ -32,14 +32,30 @@ public class Entity_Stats : MonoBehaviour
         return finalDamage;// 返回最终伤害值
     }
 
-    // 获取最大生命值
-    public float GetMaxHealth()
+    // 计算护甲缓解效果的方法，接受一个参数：护甲减免（从敌方攻击者获得的护甲穿透）
+    public float GetArmorMitigation(float armorReduction)
     {
-        float baseMaxHealth = maxHealth.GetValue();// 获取基础生命值
-        float bonusMaxHealth = major.vitality.GetValue() * 5;// 每点体质增加5点生命值
-        float finalMaxHealth = baseMaxHealth + bonusMaxHealth;
+        float baseArmor = defense.armor.GetValue();// 获取基础护甲值（通常是角色本身的防御属性）
+        float bonusArmor = major.vitality.GetValue();  // 获取额外护甲值（通常是角色的生命值或其他属性提供的加成）
+        float totalArmor = baseArmor + bonusArmor;// 计算总护甲（基础护甲 + 加成护甲）
+
+        float reductionMutliplier = Mathf.Clamp(1 - armorReduction,0,1);// 计算护甲减免倍数，确保它的范围在 0 到 1 之间（防止减免大于 100%）
+        float effectiveArmor = totalArmor * reductionMutliplier; // 根据护甲减免倍数，计算实际护甲值
+
+        float mitigation = effectiveArmor / (effectiveArmor + 100);// 根据有效护甲计算伤害减免值，公式是有效护甲 / (有效护甲 + 100)
+        float mitigationCap = 0.85f;// 设置最大缓解值为 85%（即护甲无法完全消除伤害，最多能减少 85%）
+
+        float finalMitigation = Mathf.Clamp(mitigation, 0, mitigationCap);// 确保伤害减免值不会超过最大缓解值
+
+        return finalMitigation;// 返回最终的护甲减免效果
+    }
+
+    // 计算敌方的护甲减免效果，返回一个值用于减轻护甲的效果
+    public float GetArmorReduction()
+    {
+        float finalReduction = offense.armorReduction.GetValue() / 100;// 获取攻击者的护甲减免百分比（通常是敌人的某些攻击属性）
         
-        return finalMaxHealth;// 返回基础生命值加上额外生命值
+        return finalReduction; // 返回最终的护甲减免效果（以比例的形式，0.2 代表 20% 的穿透）
     }
 
     // 获取闪避值
@@ -54,5 +70,15 @@ public class Entity_Stats : MonoBehaviour
         float finalEvasion = Mathf.Clamp(totalEvasion, 0, evasionCap); // 返回闪避值，确保不超过上限（0到85之间）
         
         return finalEvasion;
+    }
+    
+    // 获取最大生命值
+    public float GetMaxHealth()
+    {
+        float baseMaxHealth = maxHealth.GetValue();// 获取基础生命值
+        float bonusMaxHealth = major.vitality.GetValue() * 5;// 每点体质增加5点生命值
+        float finalMaxHealth = baseMaxHealth + bonusMaxHealth;
+        
+        return finalMaxHealth;// 返回基础生命值加上额外生命值
     }
 }
