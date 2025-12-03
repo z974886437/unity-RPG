@@ -1,5 +1,6 @@
 using UnityEngine;
 
+
 public class Entity_Stats : MonoBehaviour
 {
     public Stat maxHealth;
@@ -9,7 +10,7 @@ public class Entity_Stats : MonoBehaviour
 
     
     // 计算角色的最终元素伤害，综合火焰、冰霜、闪电伤害及智力加成
-    public float GetElementalDamage()
+    public float GetElementalDamage(out ElementType element)
     {
         float fireDamage = offense.fireDamage.GetValue(); // 获取角色的火焰伤害
         float iceDamage = offense.iceDamage.GetValue();// 获取角色的冰霜伤害
@@ -17,15 +18,25 @@ public class Entity_Stats : MonoBehaviour
         float bonusElementalDamage = major.intelligence.GetValue();// 获取角色的智力加成（用于增加元素伤害）
 
         float highestDamage = fireDamage; // 初始时，火焰伤害视为最高伤害
-        
-        if(iceDamage > highestDamage)// 如果冰霜伤害更高，更新最高伤害为冰霜伤害
-            highestDamage = iceDamage;
-        
-        if(LightningDamage > highestDamage)// 如果闪电伤害更高，更新最高伤害为闪电伤害
-            highestDamage = LightningDamage;
+        element = ElementType.Fire;
 
-        if (highestDamage <= 0)// 如果所有元素伤害都为 0，直接返回 0
+        if (iceDamage > highestDamage) // 如果冰霜伤害更高，更新最高伤害为冰霜伤害
+        {
+            highestDamage = iceDamage;
+            element = ElementType.Ice;
+        }
+
+        if (LightningDamage > highestDamage) // 如果闪电伤害更高，更新最高伤害为闪电伤害
+        {
+            highestDamage = LightningDamage;
+            element = ElementType.Lightning;
+        }
+
+        if (highestDamage <= 0) // 如果所有元素伤害都为 0，直接返回 0
+        {
+            element = ElementType.None;
             return 0;
+        }
 
         float bonusFire = (fireDamage == highestDamage) ? 0 : fireDamage * 0.5f; // 如果火焰伤害不是最高，给予火焰伤害 50% 的加成
         float bonusIce = (iceDamage == highestDamage) ? 0 : iceDamage * 0.5f; // 如果冰霜伤害不是最高，给予冰霜伤害 50% 的加成
@@ -35,6 +46,32 @@ public class Entity_Stats : MonoBehaviour
         float finalDamage = highestDamage + weakerElementsDamage + bonusElementalDamage;// 计算最终的元素伤害（最高伤害 + 较弱元素伤害 + 智力加成）
         
         return finalDamage; // 返回最终的元素伤害
+    }
+
+    // 计算角色对某个元素类型的抗性，接受一个元素类型作为参数
+    public float GetElementalResistance(ElementType element)
+    {
+        float baseResistance = 0;// 初始时，设置基础抗性为 0
+        float bonusResistance = major.intelligence.GetValue() * 0.5f;// 根据角色的智力属性计算抗性加成，假设智力每 1 点加 0.5% 的抗性
+
+        switch (element)// 根据元素类型选择不同的基础抗性
+        {
+            case ElementType.Fire:
+                baseResistance = defense.fireRes.GetValue();// 火焰抗性
+                break;
+            case ElementType.Ice:
+                baseResistance = defense.iceRes.GetValue();// 冰霜抗性
+                break;
+            case ElementType.Lightning:
+                baseResistance = defense.lightningRes.GetValue();// 闪电抗性
+                break;
+        }
+        
+        float resistance = baseResistance + bonusResistance;// 计算总抗性：基础抗性 + 来自智力的抗性加成
+        float resistanceCap = 75f;// 设置最大抗性上限为 75%（即抗性不超过 75%）
+        float finalResistance = Mathf.Clamp(resistance, 0, resistanceCap) / 100;// 将抗性值限制在 0 到 75% 之间，并转换为一个比例值（除以 100）
+
+        return finalResistance;// 返回最终的抗性比例
     }
 
     // 获取物理伤害并判断是否暴击

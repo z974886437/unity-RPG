@@ -10,7 +10,7 @@ public class Chest : MonoBehaviour,IDamgable
     [SerializeField] private Vector2 knockback;
     
     // 处理受伤逻辑
-    public bool TakeDamage(float damage, float elementalDamage,Transform damageDealer)
+    public bool TakeDamage(float damage, float elementalDamage,ElementType element,Transform damageDealer)
     {
         fx.PlayOnDamageVfx(); // 播放受伤特效
         anim.SetBool("chestOpen",true);// 播放胸部打开的动画（例如受伤时角色的动作）

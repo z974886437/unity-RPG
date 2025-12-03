@@ -656,7 +656,7 @@ MonoBehaviour:
     armorReduction:
       baseValue: 0
     fireDamage:
-      baseValue: 10
+      baseValue: 100
     iceDamage:
       baseValue: 7
     lightningDamage:

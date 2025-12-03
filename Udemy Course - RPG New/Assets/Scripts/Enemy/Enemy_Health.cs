@@ -6,9 +6,9 @@ public class Enemy_Health : Entity_Health
     
    
     
-    public override bool TakeDamage(float damage,float elementalDamage,Transform damageDealer)
+    public override bool TakeDamage(float damage,float elementalDamage,ElementType element,Transform damageDealer)
     {
-        bool wasHit = base.TakeDamage(damage,elementalDamage,damageDealer);
+        bool wasHit = base.TakeDamage(damage,elementalDamage,element,damageDealer);
 
         if (wasHit == false)// 如果实体已经死亡，直接返回，停止进一步处理
             return false;

@@ -32,7 +32,7 @@ public class Entity_Health : MonoBehaviour,IDamgable
     }
 
     // 处理实体受到伤害的方法
-    public virtual bool TakeDamage(float damage,float elementalDamage,Transform damageDealer)
+    public virtual bool TakeDamage(float damage,float elementalDamage,ElementType element,Transform damageDealer)
     {
         if (isDead) // 如果实体已经死亡，直接返回，不再处理伤害
             return false;
@@ -42,32 +42,37 @@ public class Entity_Health : MonoBehaviour,IDamgable
             Debug.Log($"{gameObject.name} evaded the attack!");
             return false;
         }
-
-        // 获取攻击方的属性，计算穿甲伤害的减少量
-        Entity_Stats attackerStats = damageDealer.GetComponent<Entity_Stats>();
-        float armorReduction = attackerStats != null ? attackerStats.GetArmorReduction() : 0;
+        
+        Entity_Stats attackerStats = damageDealer.GetComponent<Entity_Stats>();// 获取攻击方的属性，计算穿甲伤害的减少量
+        float armorReduction = attackerStats != null ? attackerStats.GetArmorReduction() : 0; // 获取攻击者的护甲穿透效果（护甲减免百分比）
 
         float mitigation = stats.GetArmorMitigation(armorReduction);// 计算护甲的减免效果
-        float finalDamage = damage * (1 - mitigation); // 根据护甲减免计算最终伤害
+        float physicalDamageTaken = damage * (1 - mitigation); // 根据护甲减免计算最终伤害
+
+        float resistance = stats.GetElementalResistance(element);// 获取当前元素的抗性（每种元素可能有不同的抗性值）
+        float elementalDamageTaken = elementalDamage * (1 - resistance);// 根据元素抗性计算实际承受的元素伤害
         
+        TakeKnockback(damageDealer, physicalDamageTaken);// 计算击退效果，根据伤害处理击退（可能是根据物理伤害或其他因素）
+        ReduceHp(physicalDamageTaken + elementalDamageTaken);// 调用 ReduceHp 方法扣除生命值
+
+        return true;// 返回成功处理伤害
+    }
+
+    private void TakeKnockback(Transform damageDealer, float finalDamage)
+    {
         Vector2 knockback = CalculateKnockback(finalDamage,damageDealer);// 计算击退方向和距离
         float duration = CalculateDuration(finalDamage);// 计算根据伤害决定的击退持续时间
         
         entity?.ReciveKnockback(knockback,duration);// 如果存在实体对象，执行击退动作
-        entityVfx?.PlayOnDamageVfx();// 如果存在伤害视觉效果对象，播放伤害效果
-        ReduceHp(finalDamage);// 调用 ReduceHp 方法扣除生命值
-        Debug.Log("Elemental Damage taken: " + elementalDamage);
-
-        return true;
     }
 
     // 判断攻击是否被闪避
     private bool AttackEvaded() => Random.Range(0, 100) < stats.GetEvasion();
     
-
     // 扣除生命值的方法
     protected void ReduceHp(float damage)
     {
+        entityVfx?.PlayOnDamageVfx();// 如果存在伤害视觉效果对象，播放伤害效果
         currentHp -= damage;// 减少当前生命值（maxHp 可能是当前生命值的变量名称）
         UpdateHealthBar();
 
