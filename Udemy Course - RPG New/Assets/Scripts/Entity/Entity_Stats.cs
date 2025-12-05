@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Entity_Stats : MonoBehaviour
 {
-    public Stat maxHealth;
+    public Stat_ResourceGroup resources;
     public Stat_MajorGroup major;
     public Stat_OffenseGroup offense;
     public Stat_DefenseGroup defense;
@@ -141,7 +141,7 @@ public class Entity_Stats : MonoBehaviour
     // 获取最大生命值
     public float GetMaxHealth()
     {
-        float baseMaxHealth = maxHealth.GetValue();// 获取基础生命值
+        float baseMaxHealth = resources.maxHealth.GetValue();// 获取基础生命值
         float bonusMaxHealth = major.vitality.GetValue() * 5;// 每点体质增加5点生命值
         float finalMaxHealth = baseMaxHealth + bonusMaxHealth;
         

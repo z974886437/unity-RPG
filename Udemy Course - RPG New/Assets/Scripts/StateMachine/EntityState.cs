@@ -7,6 +7,7 @@ public abstract class EntityState
 
     protected Animator anim;//动画师
     protected Rigidbody2D rb;
+    protected Entity_Stats stats;
    
     protected float stateTimer;//状态定时器
     protected bool triggerCalled;//触发呼叫
@@ -48,5 +49,11 @@ public abstract class EntityState
     public virtual void UpdateAnimationParameters()
     {
         
+    }
+
+    public void SyncAttackSpeed()
+    {
+        float attackSpeed = stats.offense.attackSpeed.GetValue();
+        anim.SetFloat("attackSpeedMultiplier",attackSpeed);
     }
 }

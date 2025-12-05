@@ -12,6 +12,7 @@ public abstract class PlayerState : EntityState
       anim = player.anim;// 获取玩家的动画控制器（Animator）
       rb = player.rb;// 获取玩家的刚体（Rigidbody2D）
       input = player.input;// 获取玩家的输入管理器（Input）
+      stats = player.stats;
    }
 
    public override void Update()

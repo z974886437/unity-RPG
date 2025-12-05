@@ -57,7 +57,7 @@ public class Entity_StatusHandler : MonoBehaviour
     private void DoLightningStrike(float damage)
     {
         Instantiate(lightningStrikeVfx, transform.position, Quaternion.identity);// 在目标位置生成雷电特效
-        entityHealth.ReduceHp(damage); // 减少目标的生命值，造成伤害
+        entityHealth.ReduceHealth(damage); // 减少目标的生命值，造成伤害
     }
 
     // 电击效果的协程，持续时间内应用电击状态效果
@@ -93,7 +93,7 @@ public class Entity_StatusHandler : MonoBehaviour
 
         for (int i = 0; i < tickCount; i++)// 按照计算的伤害次数进行逐次伤害
         {
-            entityHealth.ReduceHp(damagePerTick); // 每次伤害减少目标的生命值
+            entityHealth.ReduceHealth(damagePerTick); // 每次伤害减少目标的生命值
             yield return new WaitForSeconds(tickInterval); // 等待设定的时间间隔后再继续
         }
         

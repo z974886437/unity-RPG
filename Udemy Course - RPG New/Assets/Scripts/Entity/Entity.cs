@@ -10,6 +10,7 @@ public class Entity : MonoBehaviour
 
     public Animator anim { get; private set; }//动画师
     public Rigidbody2D rb { get; private set; }//二维刚体
+    public Entity_Stats stats { get; private set; }
     protected StateMachine stateMachine;//状态机
     
     private bool facingRight = true;//面向右
@@ -35,6 +36,7 @@ public class Entity : MonoBehaviour
     {
         anim = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody2D>();
+        stats = GetComponent<Entity_Stats>();
         
         stateMachine = new StateMachine();// 创建状态机实例
     }
