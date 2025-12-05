@@ -70,7 +70,7 @@ public class Entity_Health : MonoBehaviour,IDamgable
     private bool AttackEvaded() => Random.Range(0, 100) < stats.GetEvasion();
     
     // 扣除生命值的方法
-    protected void ReduceHp(float damage)
+    public void ReduceHp(float damage)
     {
         entityVfx?.PlayOnDamageVfx();// 如果存在伤害视觉效果对象，播放伤害效果
         currentHp -= damage;// 减少当前生命值（maxHp 可能是当前生命值的变量名称）

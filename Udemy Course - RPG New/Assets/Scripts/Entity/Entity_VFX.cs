@@ -20,6 +20,7 @@ public class Entity_VFX : MonoBehaviour
     
     [Header("Element Colors")]
     [SerializeField] private Color chillVfx = Color.cyan;
+    [SerializeField] private Color burnVfx = Color.red;
     private Color originalHitVfxColor;
     
     private void Awake()
@@ -35,6 +36,9 @@ public class Entity_VFX : MonoBehaviour
     {
         if (element == ElementType.Ice)// 如果元素类型是冰霜，启动冰霜状态效果的特效协程
             StartCoroutine(PlayStatusVfxCo(duration, chillVfx)); // 播放冰霜效果特效
+        
+        if(element == ElementType.Fire)
+            StartCoroutine(PlayStatusVfxCo(duration, burnVfx));
     }
 
     // 播放状态特效的协程方法，周期性地改变颜色效果

@@ -34,6 +34,7 @@ public class Entity_Combat : MonoBehaviour
 
             float elementalDamage = stats.GetElementalDamage(out ElementType element);// 获取元素伤害和元素类型
             float damage = stats.GetPhyiscalDamage(out bool isCrit);// 获取物理伤害，并判断是否暴击
+            
             bool targetGotHit = damageable.TakeDamage(damage,elementalDamage,element,transform);// 尝试对目标造成伤害，并检查是否成功（目标是否受到伤害）
             
             if(element != ElementType.None) // 如果攻击是元素攻击（非无效元素），应用状态效果
@@ -56,7 +57,7 @@ public class Entity_Combat : MonoBehaviour
     }
 
     // 应用状态效果到目标
-    public void ApplyStatusEffect(Transform target,ElementType element)
+    public void ApplyStatusEffect(Transform target,ElementType element,float scaleFactor = 1)
     {
         Entity_StatusHandler statusHandler = target.GetComponent<Entity_StatusHandler>();// 获取目标的状态管理器（负责处理目标的状态效果）
 
@@ -65,6 +66,12 @@ public class Entity_Combat : MonoBehaviour
         
         if(element == ElementType.Ice && statusHandler.CanBeApplied(ElementType.Ice))// 如果元素类型是冰霜，且目标能够接受冰霜效果，则应用冰冻效果
             statusHandler.ApplyChilledEffect(defaultDuration,chillSlowMutiplier); // 应用冰冻效果，使用默认的持续时间和减速倍率
+
+        if (element == ElementType.Fire && statusHandler.CanBeApplied(ElementType.Fire)) // 如果元素类型是火焰，且目标能够接受火焰效果，则应用燃烧效果
+        {
+            float fireDamage = stats.offense.fireDamage.GetValue();// 获取火焰伤害并根据缩放因子调整伤害
+            statusHandler.ApplyBurnEffect(defaultDuration,fireDamage * scaleFactor);// 应用燃烧效果，使用默认的持续时间和调整后的火焰伤害
+        }
             
     }
 

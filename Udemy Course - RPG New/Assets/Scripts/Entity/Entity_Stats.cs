@@ -10,7 +10,7 @@ public class Entity_Stats : MonoBehaviour
 
     
     // 计算角色的最终元素伤害，综合火焰、冰霜、闪电伤害及智力加成
-    public float GetElementalDamage(out ElementType element)
+    public float GetElementalDamage(out ElementType element,float scaleFactor = 1)
     {
         float fireDamage = offense.fireDamage.GetValue(); // 获取角色的火焰伤害
         float iceDamage = offense.iceDamage.GetValue();// 获取角色的冰霜伤害
@@ -45,7 +45,7 @@ public class Entity_Stats : MonoBehaviour
         float weakerElementsDamage = bonusFire + bonusIce + bonusLightning;// 计算较弱元素的伤害加成（火焰、冰霜和闪电的 50% 加成）
         float finalDamage = highestDamage + weakerElementsDamage + bonusElementalDamage;// 计算最终的元素伤害（最高伤害 + 较弱元素伤害 + 智力加成）
         
-        return finalDamage; // 返回最终的元素伤害
+        return finalDamage * scaleFactor; // 返回最终的元素伤害
     }
 
     // 计算角色对某个元素类型的抗性，接受一个元素类型作为参数
@@ -75,7 +75,7 @@ public class Entity_Stats : MonoBehaviour
     }
 
     // 获取物理伤害并判断是否暴击
-    public float GetPhyiscalDamage(out bool isCrit)
+    public float GetPhyiscalDamage(out bool isCrit,float scaleFactor = 1)
     {
         // 基础伤害 = 攻击力的基础伤害 + 主要属性的力量加成
         float baseDamage = offense.damage.GetValue(); // 获取攻击力基础伤害
@@ -95,7 +95,7 @@ public class Entity_Stats : MonoBehaviour
         isCrit = Random.Range(0, 100) < critChance;// 如果随机值小于暴击几率，则判定为暴击
         float finalDamage = isCrit ? totalBaseDamage * critPower : totalBaseDamage; // 计算最终伤害，若暴击则伤害乘以暴击倍率
 
-        return finalDamage;// 返回最终伤害值
+        return finalDamage * scaleFactor;// 返回最终伤害值
     }
 
     // 计算护甲缓解效果的方法，接受一个参数：护甲减免（从敌方攻击者获得的护甲穿透）
