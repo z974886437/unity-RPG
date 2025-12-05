@@ -28,6 +28,7 @@ public class Entity : MonoBehaviour
 
     private bool isKnocked;
     private Coroutine knockbackCo;
+    private Coroutine slowDownCo;
 
     // 在对象初始化时调用，进行必要的设置
     protected virtual void Awake()
@@ -59,6 +60,21 @@ public class Entity : MonoBehaviour
     public virtual void EntityDeath()
     {
         
+    }
+
+    // 用于使实体减速，启动协程来实现减速效果
+    public virtual void SlowDownEntity(float duration,float slowMultiplier)
+    {
+        if(slowDownCo != null)// 如果已有减速协程在运行，则停止它
+            StopCoroutine(slowDownCo);
+
+        slowDownCo = StartCoroutine(SlowDownEntityCo(duration,slowMultiplier));// 启动新的减速协程，传入持续时间和减速倍率
+    }
+
+    // 实际执行减速效果的协程
+    protected virtual IEnumerator SlowDownEntityCo(float duration,float slowMultiplier)
+    {
+        yield return null;  // 暂时不做任何事情，可以在派生类中重写这个方法实现具体的减速逻辑
     }
 
     //受到击退

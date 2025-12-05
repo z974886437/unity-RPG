@@ -18,11 +18,46 @@ public class Entity_VFX : MonoBehaviour
     [SerializeField] private GameObject hitVfx;
     [SerializeField] private GameObject cirtHitVfx;
     
+    [Header("Element Colors")]
+    [SerializeField] private Color chillVfx = Color.cyan;
+    private Color originalHitVfxColor;
+    
     private void Awake()
     {
         entity = GetComponent<Entity>();
         sr = GetComponentInChildren<SpriteRenderer>();// 获取子物体上的SpriteRenderer组件
         originalMaterial = sr.material;// 记录原始材质
+        originalHitVfxColor = hitVfxColor;
+    }
+
+    // 根据元素类型播放状态效果特效
+    public void PlayOnStatusVfx(float duration, ElementType element)
+    {
+        if (element == ElementType.Ice)// 如果元素类型是冰霜，启动冰霜状态效果的特效协程
+            StartCoroutine(PlayStatusVfxCo(duration, chillVfx)); // 播放冰霜效果特效
+    }
+
+    // 播放状态特效的协程方法，周期性地改变颜色效果
+    private IEnumerator PlayStatusVfxCo(float duration, Color effectColor)
+    {
+        float tickInterval = 0.25f;// 定义每次切换颜色的间隔时间（0.25秒）
+        float timeHasPassed = 0; // 距离开始的时间
+
+        Color lightColor = effectColor * 1.2f; // 亮色是输入颜色的 1.2 倍
+        Color darkColor = effectColor * 0.8f; // 暗色是输入颜色的 0.8 倍
+
+        bool toggle = false; // 切换标志，用于交替显示亮色和暗色
+
+        while (timeHasPassed < duration) // 当经过的时间小于持续时间时，继续执行
+        {
+            sr.color = toggle ? lightColor : darkColor;// 根据 toggle 值切换显示亮色或暗色
+            toggle = !toggle; // 每次切换颜色时反转 toggle 的值
+            
+            yield return new WaitForSeconds(tickInterval);  // 等待一个周期后再继续执行
+            timeHasPassed = timeHasPassed + tickInterval; // 增加已过去的时间
+        }
+
+        sr.color = Color.white; // 恢复为默认的颜色
     }
 
     // 创建命中时的视觉特效（VFX）
@@ -34,6 +69,16 @@ public class Entity_VFX : MonoBehaviour
         
         if(entity.facingDir == -1 && isCrit)
             vfx.transform.Rotate(0,180,0); // 如果敌人面朝左（`facingDir == -1`）且为暴击，旋转特效180度
+    }
+
+    // 更新攻击命中的颜色效果，根据元素类型改变效果颜色
+    public void UpdateOnHitColor(ElementType element)
+    {
+        if (element == ElementType.Ice)// 如果元素是冰霜类型，设置攻击命中的特效颜色为冰霜效果颜色
+            hitVfxColor = chillVfx; // 设置冰霜的特效颜色
+        
+        if(element == ElementType.None) // 如果元素类型是空（表示没有元素类型），恢复原始的攻击命中特效颜色
+            hitVfxColor = originalHitVfxColor; // 恢复默认的攻击命中特效颜色
     }
 
     public void PlayOnDamageVfx()

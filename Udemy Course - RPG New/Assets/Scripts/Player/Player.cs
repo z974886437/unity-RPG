@@ -66,6 +66,43 @@ public class Player : Entity
         stateMachine.Initialize(idleState);// 初始化状态机，设置初始状态为 idleState（空闲状态）
     }
 
+    // 实现实体减速的协程，调整实体的多项属性，如移动速度、跳跃力、动画速度等
+    protected override IEnumerator SlowDownEntityCo(float duration, float slowMultiplier)
+    {
+        float originalMoveSpeed = moveSpeed;// 原始的移动速度
+        float originalJumpForce = jumpForce; // 原始的跳跃力
+        float originalAnimSpeed = anim.speed; // 原始的动画速度
+        Vector2 originalWallJump = wallJumpForce; // 原始的墙跳力
+        Vector2 originalJumpAttack = jumpAttackVelocity; // 原始的跳跃攻击速度
+        Vector2[] originalAttackVelocity = attackVelocity; // 原始的攻击速度（向量数组）
+
+        float speedMultiplier = 1 - slowMultiplier;// 根据减速倍率计算新的速度倍率
+
+        moveSpeed = moveSpeed * speedMultiplier; // 改变移动速度
+        jumpForce = jumpForce * speedMultiplier; // 改变跳跃力
+        anim.speed = anim.speed * speedMultiplier; // 改变动画速度
+        wallJumpForce = wallJumpForce * speedMultiplier; // 改变墙跳力
+        jumpAttackVelocity = jumpAttackVelocity * speedMultiplier; // 改变跳跃攻击速度
+
+        for (int i = 0; i < attackVelocity.Length; i++)// 对攻击速度数组中的每个值应用减速效果
+        {
+            attackVelocity[i] = attackVelocity[i] * speedMultiplier; // 对每个攻击速度进行调整
+        }
+
+        yield return new WaitForSeconds(duration);// 等待减速持续时间
+
+        moveSpeed = originalMoveSpeed; // 恢复原始的移动速度
+        jumpForce = originalJumpForce; // 恢复原始的跳跃力
+        anim.speed = originalAnimSpeed; // 恢复原始的动画速度
+        wallJumpForce = originalWallJump; // 恢复原始的墙跳力
+        jumpAttackVelocity = originalJumpAttack; // 恢复原始的跳跃攻击速度
+
+        for (int i = 0; i < attackVelocity.Length; i++) // 恢复攻击速度数组中的每个值
+        {
+            attackVelocity[i] = originalAttackVelocity[i]; // 恢复每个攻击速度
+        }
+    }
+
     public override void EntityDeath()
     {
         base.EntityDeath();

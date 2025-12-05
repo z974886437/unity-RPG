@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class Enemy : Entity
@@ -34,20 +35,46 @@ public class Enemy : Entity
     [SerializeField] private float playerCheckDistance = 10;//检测玩家距离
     
     public Transform player { get; private set; }
-    
-    
-    public void EnableCounterWindow(bool enable) => canBeStunned = enable;
 
-    public override void EntityDeath()
+
+    // 使实体在指定时间内减速的协程
+    protected override IEnumerator SlowDownEntityCo(float duration, float slowMultiplier)
     {
-        base.EntityDeath();
-        
-        stateMachine.ChangeState(deadState);
+        // 保存原始的移动速度、战斗速度和动画速度
+        float originalMoveSpeed = moveSpeed; // 记录原始的移动速度
+        float originalBattleSpeed = battleMoveSpeed; // 记录原始的战斗速度
+        float originalAnimSpeed = anim.speed; // 记录原始的动画播放速度
+
+        // 计算实际减速比例（减速倍率控制）
+        float speedMultiplier = 1 - slowMultiplier; // 1 减去减速倍率得到新的速度比例
+
+        // 应用减速效果，减缓角色的移动速度、战斗速度和动画速度
+        moveSpeed = moveSpeed * speedMultiplier; // 角色的移动速度按减速比例调整
+        battleMoveSpeed = battleMoveSpeed * speedMultiplier; // 角色的战斗移动速度按减速比例调整
+        anim.speed = anim.speed * speedMultiplier; // 角色的动画速度按减速比例调整
+
+        yield return new WaitForSeconds(duration); // 等待减速效果的持续时间
+
+        moveSpeed = originalMoveSpeed; // 恢复原始的移动速度
+        battleMoveSpeed = originalBattleSpeed; // 恢复原始的战斗速度
+        anim.speed = originalAnimSpeed;// 恢复原始的动画速度
     }
 
+    // 启用或禁用反击窗口（反击窗口决定了是否可以被眩晕或受到控制）
+    public void EnableCounterWindow(bool enable) => canBeStunned = enable;
+
+    // 实体死亡时的处理逻辑
+    public override void EntityDeath()
+    {
+        base.EntityDeath();// 调用父类的死亡逻辑（如果有）
+        
+        stateMachine.ChangeState(deadState); // 通过状态机将实体状态切换到“死亡”状态
+    }
+
+    // 处理玩家死亡时的状态切换
     private void HandlePlayerDeath()
     {
-        stateMachine.ChangeState(idleState);
+        stateMachine.ChangeState(idleState); // 玩家死亡后，切换到“待机”状态
     }
 
     // 尝试进入战斗状态的方法
