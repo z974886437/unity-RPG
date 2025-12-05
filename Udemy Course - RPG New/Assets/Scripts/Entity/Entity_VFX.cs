@@ -21,6 +21,7 @@ public class Entity_VFX : MonoBehaviour
     [Header("Element Colors")]
     [SerializeField] private Color chillVfx = Color.cyan;
     [SerializeField] private Color burnVfx = Color.red;
+    [SerializeField] private Color electrifyVfx = Color.yellow;
     private Color originalHitVfxColor;
     
     private void Awake()
@@ -37,8 +38,19 @@ public class Entity_VFX : MonoBehaviour
         if (element == ElementType.Ice)// 如果元素类型是冰霜，启动冰霜状态效果的特效协程
             StartCoroutine(PlayStatusVfxCo(duration, chillVfx)); // 播放冰霜效果特效
         
-        if(element == ElementType.Fire)
+        if(element == ElementType.Fire) // 如果元素类型是火焰，启动火焰状态效果的特效协程
             StartCoroutine(PlayStatusVfxCo(duration, burnVfx));
+        
+        if(element == ElementType.Lightning)// 如果元素类型是雷电，启动雷电状态效果的特效协程
+            StartCoroutine(PlayStatusVfxCo(duration, electrifyVfx));
+    }
+
+    // 停止所有的视觉效果和特效
+    public void StopAllVfx()
+    {
+        StopAllCoroutines();// 停止所有正在运行的协程
+        sr.color = Color.white;// 将SpriteRenderer的颜色恢复为白色
+        sr.material = originalMaterial;// 恢复原始的材质
     }
 
     // 播放状态特效的协程方法，周期性地改变颜色效果

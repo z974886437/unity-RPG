@@ -15,6 +15,10 @@ public class Entity_Combat : MonoBehaviour
     [Header("Status effect details")]
     [SerializeField] private float defaultDuration = 3;
     [SerializeField] private float chillSlowMutiplier = 0.2f;
+    [SerializeField] private float electrifyChargeBuildUp = 0.4f;
+    [Space]
+    [SerializeField] private float fireScale = 0.8f;
+    [SerializeField] private float lightningScale = 2.5f;
 
     private void Awake()
     {
@@ -65,14 +69,21 @@ public class Entity_Combat : MonoBehaviour
             return;
         
         if(element == ElementType.Ice && statusHandler.CanBeApplied(ElementType.Ice))// 如果元素类型是冰霜，且目标能够接受冰霜效果，则应用冰冻效果
-            statusHandler.ApplyChilledEffect(defaultDuration,chillSlowMutiplier); // 应用冰冻效果，使用默认的持续时间和减速倍率
+            statusHandler.ApplyChillEffect(defaultDuration,chillSlowMutiplier); // 应用冰冻效果，使用默认的持续时间和减速倍率
 
         if (element == ElementType.Fire && statusHandler.CanBeApplied(ElementType.Fire)) // 如果元素类型是火焰，且目标能够接受火焰效果，则应用燃烧效果
         {
-            float fireDamage = stats.offense.fireDamage.GetValue();// 获取火焰伤害并根据缩放因子调整伤害
-            statusHandler.ApplyBurnEffect(defaultDuration,fireDamage * scaleFactor);// 应用燃烧效果，使用默认的持续时间和调整后的火焰伤害
+            scaleFactor = fireScale;// 根据火焰状态缩放因子调整火焰伤害
+            float fireDamage = stats.offense.fireDamage.GetValue() * scaleFactor;// 获取火焰伤害并根据缩放因子调整伤害
+            statusHandler.ApplyBurnEffect(defaultDuration,fireDamage);// 应用燃烧效果，使用默认的持续时间和调整后的火焰伤害
         }
-            
+
+        if (element == ElementType.Lightning && statusHandler.CanBeApplied(ElementType.Lightning)) // 如果元素类型是雷电，且目标能够接受雷电效果，则应用电击效果
+        {
+            scaleFactor = lightningScale;// 根据雷电状态缩放因子调整雷电伤害
+            float lightningDamage = stats.offense.lightningDamage.GetValue() * scaleFactor;// 获取雷电伤害并根据缩放因子调整伤害
+            statusHandler.ApplyElectrifyEffect(defaultDuration,lightningDamage,electrifyChargeBuildUp);// 应用电击效果，使用默认的持续时间、调整后的雷电伤害和电击积蓄
+        }
     }
 
     // 获取攻击范围内的所有碰撞体（即目标）
