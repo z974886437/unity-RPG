@@ -147,4 +147,42 @@ public class Entity_Stats : MonoBehaviour
         
         return finalMaxHealth;// 返回基础生命值加上额外生命值
     }
+
+    // 根据 StatType 类型获取对应的 Stat 对象
+    public Stat GetStatByType(StatType type)
+    {
+        // 使用 switch 语句根据不同的 StatType 返回对应的 Stat 对象
+        switch (type)
+        {
+            case StatType.MaxHealth:return resources.maxHealth; // 返回最大生命值
+                case StatType.HealthRegen: return resources.healthRegen; // 返回生命恢复
+                
+            case StatType.Strength: return major.strength; // 返回力量
+                case StatType.Agility:return major.agility; // 返回敏捷
+                case StatType.Intelligence: return major.intelligence;  // 返回智力
+                case StatType.Vitality: return major.vitality; // 返回体力
+                
+            case StatType.AttackSpeed: return offense.attackSpeed; // 返回攻击速度
+                case StatType.Damage: return offense.damage;// 返回伤害
+                case StatType.CritChance:return offense.critChance; // 返回暴击几率
+                case StatType.CritPower: return offense.critPower;  // 返回暴击伤害
+                
+            case StatType.ArmorReduction: return offense.armorReduction; // 返回护甲穿透
+                case StatType.FireDamage:return offense.fireDamage; // 返回火焰伤害
+                case StatType.IceDamage: return offense.iceDamage; // 返回冰霜伤害
+                case StatType.LightningDamage: return offense.lightningDamage; // 返回闪电伤害
+            
+            case StatType.Armor: return defense.armor; // 返回护甲
+                case StatType.Evasion: return defense.evasion; // 返回闪避值
+            
+            case StatType.IceResistance:return defense.iceRes; // 返回冰霜抗性
+                case StatType.FireResistance: return defense.fireRes; // 返回火焰抗性
+                case StatType.LightningResistance: return defense.lightningRes; // 返回闪电抗性
+                
+            // 如果 StatType 未被实现，输出警告信息并返回 null
+            default:
+                Debug.LogWarning($"StatType{type} not implemented yet");
+                return null;
+        }
+    }
 }
