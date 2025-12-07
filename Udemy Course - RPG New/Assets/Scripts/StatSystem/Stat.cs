@@ -51,6 +51,8 @@ public class Stat
         return finalValue;// 返回计算后的最终值
     }
 
+    public void SetBaseValue(float value) => baseValue = value;
+    
 }
 
 [Serializable]// 使得这个类可以被序列化，可以在 Unity 编辑器或存档中保存数据
