@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b762983948223141a314ac8e695bfe1, type: 3}
+  m_Name: Skill data - Healing wlap
+  m_EditorClassIdentifier: 
+  cost: 2
+  displayName: Healing wisp
+  description: "\u5F53\u5206\u8EAB\u56E0\u654C\u4EBA\u653B\u51FB\u800C\u6B7B\u4EA1\u65F6\uFF0C\u5B83\u4F1A\u91CA\u653E\u4E00\u4E2A\u6CBBt\u7597\u5149\u70B9\uFF0C\u5411\u4F60\u79FB\u52A8\u5E76\u5728\u63A5\u89E6\u65F6\u6062\u590D\u751F\u547D\u503C"
+  icon: {fileID: 1459541394, guid: 6f409a212ffb7af468360ec707ab8e42, type: 3}
