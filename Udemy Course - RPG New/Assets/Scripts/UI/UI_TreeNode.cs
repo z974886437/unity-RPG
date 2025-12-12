@@ -5,28 +5,25 @@ using UnityEngine.UI;
 
 public class UI_TreeNode : MonoBehaviour ,IPointerEnterHandler, IPointerExitHandler,IPointerDownHandler
 {
-    [SerializeField] private Skill_DataSo skillData;
+    private UI ui;
+    private RectTransform rect;
+    
+    [SerializeField] private Skill_DataSO skillData;
     [SerializeField] private string skillName;
-
     [SerializeField] private Image skillIcon;
     [SerializeField] private string lockedColorHex = "#737373";
     private Color lastColor;
     public bool isUnlocked;
     public bool isLocked;
 
-    public void OnValidate()
-    {
-        if (skillData == null)
-            return;
-
-        skillName = skillData.displayName;
-        skillIcon.sprite = skillData.icon;
-        gameObject.name = "UI_TreeNode - " + skillData.displayName;
-    }
+    
 
     // 初始化时更新技能图标的颜色
     private void Awake()
     {
+        ui = GetComponentInParent<UI>();
+        rect = GetComponent<RectTransform>();
+        
         UpdateIconColor(GetColorByHex(lockedColorHex));// 获取并设置图标颜色，使用十六进制颜色值
     }
 
@@ -68,6 +65,8 @@ public class UI_TreeNode : MonoBehaviour ,IPointerEnterHandler, IPointerExitHand
     // 鼠标进入图标时触发
     public void OnPointerEnter(PointerEventData eventData)
     {
+        ui.skillToolTip.ShowToolTip(true,rect,skillData);
+        
         if(isUnlocked == false)// 如果技能没有解锁，更新图标颜色为略暗的白色
             UpdateIconColor(Color.white * 0.9f); // 调暗颜色，表示不可点击状态
     }
@@ -75,6 +74,8 @@ public class UI_TreeNode : MonoBehaviour ,IPointerEnterHandler, IPointerExitHand
     // 鼠标离开图标时触发
     public void OnPointerExit(PointerEventData eventData)
     {
+        ui.skillToolTip.ShowToolTip(false,rect);
+        
         if(isUnlocked == false)// 如果技能没有解锁，恢复图标颜色为原来的颜色
             UpdateIconColor(lastColor);
     }
@@ -87,4 +88,14 @@ public class UI_TreeNode : MonoBehaviour ,IPointerEnterHandler, IPointerExitHand
         return color; // 返回解析后的颜色
     }
     
+    // 在编辑器中验证时调用，用于更新技能数据
+    public void OnValidate()
+    {
+        if (skillData == null)// 如果技能数据为空，直接返回
+            return;
+
+        skillName = skillData.displayName;// 更新技能名称
+        skillIcon.sprite = skillData.icon; // 更新技能图标
+        gameObject.name = "UI_TreeNode - " + skillData.displayName;// 更新对象名称
+    }
 }

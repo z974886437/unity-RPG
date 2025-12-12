@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Skill data - Time Echo
   m_EditorClassIdentifier: 
   cost: 1
-  displayName: Time Echo
+  displayName: "\u5F71\u5206\u8EAB"
   description: "\u521B\u5EFA\u4E00\u4E2A\u5206\u8EAB\uFF0C\u5206\u8EAB\u4F1A\u5206\u6563\u654C\u4EBA\u7684\u6CE8\u610F\u529B\n"
   icon: {fileID: 534621345, guid: 6f409a212ffb7af468360ec707ab8e42, type: 3}
