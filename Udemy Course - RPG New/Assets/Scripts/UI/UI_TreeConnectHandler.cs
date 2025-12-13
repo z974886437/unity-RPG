@@ -13,15 +13,15 @@ public class UI_TreeConnectDetails
 
 public class UI_TreeConnectHandler : MonoBehaviour
 {
-    private RectTransform rect;
+    private RectTransform rect => GetComponent<RectTransform>();
     [SerializeField] private UI_TreeConnectDetails[] connectionDetails;//详细
     [SerializeField] private UI_TreeConnection[] connections;//连接
 
     // 编辑器模式下的验证方法
     private void OnValidate()
     {
-        if (rect == null)// 如果 rect 为空，则获取当前物体的 RectTransform 组件
-            rect = GetComponent<RectTransform>();
+        if(connectionDetails.Length <= 0)
+            return;
         
         if (connectionDetails.Length != connections.Length)// 如果连接详细信息和连接点数量不一致，输出警告
         {
@@ -41,7 +41,7 @@ public class UI_TreeConnectHandler : MonoBehaviour
             Vector2 targetPosition = connection.GetConnectionPoint(rect); // 获取连接点在屏幕上的目标位置
             
             connection.DirectConnection(detail.direction,detail.length); // 设置连接的方向和长度
-            detail.childNode.SetPosition(targetPosition); // 设置子节点的位置
+            detail.childNode?.SetPosition(targetPosition); // 设置子节点的位置
         }
     }
     

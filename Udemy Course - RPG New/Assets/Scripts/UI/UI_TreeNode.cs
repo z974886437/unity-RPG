@@ -7,22 +7,28 @@ public class UI_TreeNode : MonoBehaviour ,IPointerEnterHandler, IPointerExitHand
 {
     private UI ui;
     private RectTransform rect;
+    private UI_SkillTree skillTree;
     
-    [SerializeField] private Skill_DataSO skillData;
-    [SerializeField] private string skillName;
-    [SerializeField] private Image skillIcon;
-    [SerializeField] private string lockedColorHex = "#737373";
-    private Color lastColor;
+    [Header("Unlock details")]
+    public UI_TreeNode[] neededNodes;
+    public UI_TreeNode[] conflictNodes;
     public bool isUnlocked;
     public bool isLocked;
-
     
+    [Header("Skill details")]
+    public Skill_DataSO skillData;
+    [SerializeField] private string skillName;
+    [SerializeField] private Image skillIcon;
+    [SerializeField] private int skillCost;
+    [SerializeField] private string lockedColorHex = "#737373";
+    private Color lastColor;
 
     // 初始化时更新技能图标的颜色
     private void Awake()
     {
         ui = GetComponentInParent<UI>();
         rect = GetComponent<RectTransform>();
+        skillTree = GetComponentInParent<UI_SkillTree>();
         
         UpdateIconColor(GetColorByHex(lockedColorHex));// 获取并设置图标颜色，使用十六进制颜色值
     }
@@ -32,6 +38,8 @@ public class UI_TreeNode : MonoBehaviour ,IPointerEnterHandler, IPointerExitHand
     {
         isUnlocked = true;// 将技能状态设置为已解锁
         UpdateIconColor(Color.white);// 更新图标颜色为白色，表示解锁
+        skillTree.RemoveSkillPoints(skillData.cost);
+        LockConflictNodes();// 锁定冲突节点
     }
 
     // 判断技能是否可以解锁
@@ -40,7 +48,29 @@ public class UI_TreeNode : MonoBehaviour ,IPointerEnterHandler, IPointerExitHand
         if (isLocked || isUnlocked) // 如果技能已锁定或已解锁，则不能解锁
             return false;
         
+        if(skillTree.EnoughSkillPoints(skillData.cost) == false)// 如果技能点不足，不能解锁
+            return false;
+
+        foreach (var node in neededNodes)// 检查所有必需节点是否已解锁
+        {
+            if(node.isUnlocked == false)// 如果有必需节点未解锁，不能解锁
+                return false;
+        }
+
+        foreach (var node in conflictNodes)// 检查是否有冲突节点已解锁
+        {
+            if (node.isUnlocked)// 如果有冲突节点已解锁，不能解锁
+                return false;
+        }
+            
         return true; // 否则可以解锁
+    }
+
+    // 锁定冲突节点
+    private void LockConflictNodes()
+    {
+        foreach (var node in conflictNodes)
+            node.isLocked = true;// 将所有冲突节点锁定
     }
 
     // 更新技能图标的颜色
@@ -65,7 +95,7 @@ public class UI_TreeNode : MonoBehaviour ,IPointerEnterHandler, IPointerExitHand
     // 鼠标进入图标时触发
     public void OnPointerEnter(PointerEventData eventData)
     {
-        ui.skillToolTip.ShowToolTip(true,rect,skillData);
+        ui.skillToolTip.ShowToolTip(true,rect,this);
         
         if(isUnlocked == false)// 如果技能没有解锁，更新图标颜色为略暗的白色
             UpdateIconColor(Color.white * 0.9f); // 调暗颜色，表示不可点击状态
@@ -95,7 +125,8 @@ public class UI_TreeNode : MonoBehaviour ,IPointerEnterHandler, IPointerExitHand
             return;
 
         skillName = skillData.displayName;// 更新技能名称
-        skillIcon.sprite = skillData.icon; // 更新技能图标
+        skillIcon.sprite = skillData.icon; // 
+        skillCost = skillData.cost;
         gameObject.name = "UI_TreeNode - " + skillData.displayName;// 更新对象名称
     }
 }
