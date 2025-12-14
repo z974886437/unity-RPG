@@ -4,6 +4,7 @@ public abstract class PlayerState : EntityState
 {
    protected Player player;
    protected PlayerInputSet input;
+   protected Player_SkillManager skills;
 
    public PlayerState(Player player,StateMachine stateMachine,string animBoolName) : base(stateMachine,animBoolName)
    {
@@ -13,6 +14,7 @@ public abstract class PlayerState : EntityState
       rb = player.rb;// 获取玩家的刚体（Rigidbody2D）
       input = player.input;// 获取玩家的输入管理器（Input）
       stats = player.stats;
+      skills = player.skillManager;
    }
 
    public override void Update()
@@ -20,7 +22,10 @@ public abstract class PlayerState : EntityState
       base.Update();
       
       if(input.Player.Dash.WasPressedThisFrame() && CanDash())// 检查是否按下了冲刺按钮且可以冲刺
-            stateMachine.ChangeState(player.dashState);// 如果按下了冲刺按钮且可以冲刺，切换到冲刺状态
+      {
+         skills.dash.SetSkillOnCooldown();
+         stateMachine.ChangeState(player.dashState);// 如果按下了冲刺按钮且可以冲刺，切换到冲刺状态
+      }
    }
 
    public override void UpdateAnimationParameters()
@@ -33,6 +38,9 @@ public abstract class PlayerState : EntityState
    // 检查玩家是否能够执行冲刺
    private bool CanDash()
    {
+      if(skills.dash.CanUseSkill() == false)
+         return false;
+      
       if (player.wallDetected)// 如果检测到玩家接触到墙壁，不能执行冲刺
          return false;
       

@@ -1,0 +1,39 @@
+using System;
+using UnityEngine;
+
+public class Skill_Base : MonoBehaviour
+{
+    [Header("General Details")]
+    [SerializeField] private float cooldown;
+    private float lastTimeUsed;
+
+    // 在对象初始化时调用
+    protected virtual void Awake()
+    {
+        lastTimeUsed = lastTimeUsed - cooldown;// 将 lastTimeUsed 设置为（当前时间 - 冷却时间），以便技能在初始时可以立即使用
+    }
+
+    // 检查技能是否可以使用
+    public bool CanUseSkill()
+    {
+        if (OnCooldown())// 如果技能在冷却中，则返回 false
+        {
+            Debug.Log("On Cooldown");
+            return false;
+        }
+        
+        return true;// 如果技能不在冷却中，则返回 true
+    }
+
+    // 判断技能是否在冷却中
+    private bool OnCooldown() => Time.time < lastTimeUsed + cooldown;
+    
+    // 设置技能进入冷却状态，并记录冷却开始时间
+    public void SetSkillOnCooldown() => lastTimeUsed = Time.time;
+
+    // 通过减少冷却时间来重置技能冷却（例如减少一定的冷却时间）
+    public void ResetCooldownBy(float cooldownReduction) => lastTimeUsed = lastTimeUsed + cooldownReduction;
+    
+    // 重置技能冷却时间，设置为当前时间
+    public void ResetCooldown() => lastTimeUsed = Time.time;
+}

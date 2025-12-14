@@ -7,6 +7,9 @@ public class Player : Entity
     public static event Action OnPlayerDeath;
     private UI ui;
     public PlayerInputSet input { get; private set; }//输入
+    public Player_SkillManager skillManager { get; private set; }
+    
+    #region State Variables
     
     public Player_IdleState idleState { get; private set; }//空闲状态
     public Player_MoveState moveState { get; private set; }//移动状态
@@ -19,6 +22,8 @@ public class Player : Entity
     public Player_JumpAttackState jumpAttackState { get; private set; }//跳跃攻击状态
     public Player_DeadState deadState { get; private set; }
     public Player_CounterAttackState counterAttackState { get; private set; }
+    
+    #endregion
     
     [Header("Attack details")] 
     public Vector2[] attackVelocity;//攻击速度
@@ -47,6 +52,7 @@ public class Player : Entity
         
         ui = FindAnyObjectByType<UI>();
         input = new PlayerInputSet();// 创建玩家输入设置实例
+        skillManager = GetComponent<Player_SkillManager>();
 
         idleState = new Player_IdleState(this,stateMachine, "idle");// 创建并初始化玩家空闲状态
         moveState = new Player_MoveState(this,stateMachine, "move");// 创建并初始化玩家移动状态

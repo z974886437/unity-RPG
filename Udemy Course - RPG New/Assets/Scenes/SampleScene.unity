@@ -1862,6 +1862,51 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &631732891
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 631732892}
+  - component: {fileID: 631732893}
+  m_Layer: 7
+  m_Name: Skills_Holder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &631732892
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 631732891}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 763083633}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &631732893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 631732891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27d4c2caa0948c744a85d4a9682c432c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cooldown: 3
 --- !u!1 &645852345
 GameObject:
   m_ObjectHideFlags: 0
@@ -2213,6 +2258,7 @@ GameObject:
   - component: {fileID: 763083638}
   - component: {fileID: 763083640}
   - component: {fileID: 763083641}
+  - component: {fileID: 763083642}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -2272,6 +2318,7 @@ Transform:
   - {fileID: 1811148404}
   - {fileID: 440371311}
   - {fileID: 513227829}
+  - {fileID: 631732892}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!70 &763083634
@@ -2491,6 +2538,18 @@ MonoBehaviour:
   lightningStrikeVfx: {fileID: 8422054525807140330, guid: 1ce43b3c80542c44fbccbe96c9ce0e62, type: 3}
   currentCharge: 0
   maximumCharge: 1
+--- !u!114 &763083642
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 763083631}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 470f25e7fbff315458c0ff8d15193ede, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &782304767
 GameObject:
   m_ObjectHideFlags: 0
