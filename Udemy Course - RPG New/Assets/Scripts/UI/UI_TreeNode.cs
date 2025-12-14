@@ -8,6 +8,7 @@ public class UI_TreeNode : MonoBehaviour ,IPointerEnterHandler, IPointerExitHand
     private UI ui;
     private RectTransform rect;
     private UI_SkillTree skillTree;
+    private UI_TreeConnectHandler connectHandler;
     
     [Header("Unlock details")]
     public UI_TreeNode[] neededNodes;
@@ -29,8 +30,20 @@ public class UI_TreeNode : MonoBehaviour ,IPointerEnterHandler, IPointerExitHand
         ui = GetComponentInParent<UI>();
         rect = GetComponent<RectTransform>();
         skillTree = GetComponentInParent<UI_SkillTree>();
+        connectHandler = GetComponent<UI_TreeConnectHandler>();
         
         UpdateIconColor(GetColorByHex(lockedColorHex));// 获取并设置图标颜色，使用十六进制颜色值
+    }
+
+    // 退还技能点
+    public void Refund()
+    {
+        isUnlocked = false; // 将技能的解锁状态设为false
+        isLocked = false;// 将技能的锁定状态设为false
+        UpdateIconColor(GetColorByHex(lockedColorHex));// 更新技能图标的颜色为锁定状态的颜色
+        
+        skillTree.AddSkillPoints(skillData.cost);// 将花费的技能点数退还给玩家
+        connectHandler.UnlockConnectionImage(false); // 更新连接图像的解锁状态为false（例如禁用图像）
     }
 
     // 解锁技能
@@ -39,7 +52,9 @@ public class UI_TreeNode : MonoBehaviour ,IPointerEnterHandler, IPointerExitHand
         isUnlocked = true;// 将技能状态设置为已解锁
         UpdateIconColor(Color.white);// 更新图标颜色为白色，表示解锁
         skillTree.RemoveSkillPoints(skillData.cost);
+        
         LockConflictNodes();// 锁定冲突节点
+        connectHandler.UnlockConnectionImage(true);
     }
 
     // 判断技能是否可以解锁
@@ -88,8 +103,8 @@ public class UI_TreeNode : MonoBehaviour ,IPointerEnterHandler, IPointerExitHand
     {
         if(CanBeUnlocked()) // 如果技能可以解锁，调用 Unlock 解锁技能
             Unlock();
-        else
-            Debug.Log("Cannot be unlocked!"); // 如果不能解锁，输出提示信息
+        else if (isLocked)
+            ui.skillToolTip.LockedSkillEffect(); // 如果不能解锁，输出提示信息
     }
     
     // 鼠标进入图标时触发
@@ -97,8 +112,13 @@ public class UI_TreeNode : MonoBehaviour ,IPointerEnterHandler, IPointerExitHand
     {
         ui.skillToolTip.ShowToolTip(true,rect,this);
         
-        if(isUnlocked == false)// 如果技能没有解锁，更新图标颜色为略暗的白色
-            UpdateIconColor(Color.white * 0.9f); // 调暗颜色，表示不可点击状态
+        if(isUnlocked || isLocked)// 如果技能没有解锁，更新图标颜色为略暗的白色
+            return;
+        
+        Color color = Color.white * 0.9f;
+        color.a = 1;
+        UpdateIconColor(color); // 调暗颜色，表示不可点击状态
+        
     }
 
     // 鼠标离开图标时触发
@@ -106,8 +126,10 @@ public class UI_TreeNode : MonoBehaviour ,IPointerEnterHandler, IPointerExitHand
     {
         ui.skillToolTip.ShowToolTip(false,rect);
         
-        if(isUnlocked == false)// 如果技能没有解锁，恢复图标颜色为原来的颜色
-            UpdateIconColor(lastColor);
+        if(isUnlocked || isLocked)// 如果技能没有解锁，恢复图标颜色为原来的颜色
+            return;
+        
+        UpdateIconColor(lastColor);
     }
 
     // 根据十六进制字符串返回颜色

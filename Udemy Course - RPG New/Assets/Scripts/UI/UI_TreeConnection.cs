@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UI_TreeConnection : MonoBehaviour
 {
@@ -7,15 +8,17 @@ public class UI_TreeConnection : MonoBehaviour
     [SerializeField] private RectTransform childNodeConnectionPoint;
 
     // 根据连接方向和长度设置连接
-    public void DirectConnection(NodeDirectionType direction, float length)
+    public void DirectConnection(NodeDirectionType direction, float length,float offset)
     {
         bool shouldBeActive = direction != NodeDirectionType.None;// 判断连接是否有效，若方向不为“None”则为有效
         float finalLength = shouldBeActive ? length : 0f;// 如果连接有效，则使用指定的长度，否则设为0
         float angle = GetDirectionAngle(direction);// 获取连接方向的角度
 
-        rotationPoint.localRotation = Quaternion.Euler(0, 0, angle); // 设置连接的旋转角度
+        rotationPoint.localRotation = Quaternion.Euler(0, 0, angle + offset); // 设置连接的旋转角度
         connectionLength.sizeDelta = new Vector2(finalLength, connectionLength.sizeDelta.y); // 设置连接的长度
     }
+    
+    public Image GetConnectionImage() => connectionLength.GetComponent<Image>();
 
     // 获取连接点的本地坐标
     public Vector2 GetConnectionPoint(RectTransform rect)

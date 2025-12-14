@@ -1,9 +1,11 @@
+using System.Collections;
 using System.Text;
 using TMPro;
 using UnityEngine;
 
 public class UI_SkillToolTip : UI_ToolTip
 {
+    private UI ui;
     private UI_SkillTree skillTree;
     
     [SerializeField] private TextMeshProUGUI skillName;
@@ -17,11 +19,14 @@ public class UI_SkillToolTip : UI_ToolTip
     [SerializeField] private Color exampleColor;//示例颜色
     [SerializeField] private string lockedSkillText = "你选择了不同分支 - 此分支已锁定";
 
+    private Coroutine textEffectCo;
+
     protected override void Awake()
     {
         base.Awake();
 
-        skillTree = GetComponentInParent<UI_SkillTree>();
+        ui = GetComponentInParent<UI>();
+        skillTree = ui.GetComponentInChildren<UI_SkillTree>();
     }
 
     public override void ShowToolTip(bool show, RectTransform targetRect)
@@ -45,6 +50,28 @@ public class UI_SkillToolTip : UI_ToolTip
         
         skillRequirements.text = requirements;// 设置技能要求
 
+    }
+
+    //锁定技能效果
+    public void LockedSkillEffect()
+    {
+        if(textEffectCo != null)// 如果文本效果协程正在运行，则停止当前协程
+            StopCoroutine(textEffectCo);
+
+        textEffectCo = StartCoroutine(TextBlinkEffectCO(skillRequirements, 0.15f, 3));// 启动新的文本闪烁效果协程（每隔0.15秒闪烁3次）
+    }
+    
+    //文本闪烁效果 CO
+    private IEnumerator TextBlinkEffectCO(TextMeshProUGUI text,float blinkInterval,int blinkCount)
+    {
+        for (int i = 0; i < blinkCount; i++)// 循环执行指定次数的闪烁效果
+        {
+            text.text = GetColoredText(notMetConditionHex, lockedSkillText);// 设置文本为锁定状态的颜色（文本颜色为 notMetConditionHex）
+            yield return new WaitForSeconds(blinkInterval); // 等待指定的闪烁间隔时间（如0.15秒）
+
+            text.text = GetColoredText(importantInfoHex, lockedSkillText);// 设置文本为重要信息颜色（文本颜色为 importantInfoHex）
+            yield return new WaitForSeconds(blinkInterval);// 等待指定的闪烁间隔时间
+        }
     }
 
     // 获取技能要求的字符串，包括技能点、必需节点和冲突节点
@@ -77,4 +104,11 @@ public class UI_SkillToolTip : UI_ToolTip
         
         return sb.ToString(); // 返回构建的字符串
     }
+
+    private string GetColoredText(string color, string text)
+    {
+        return $"<color={color}>{text} </color>";
+    }
+
+    
 }
