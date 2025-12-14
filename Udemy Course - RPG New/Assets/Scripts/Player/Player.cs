@@ -5,6 +5,7 @@ using UnityEngine;
 public class Player : Entity
 {
     public static event Action OnPlayerDeath;
+    private UI ui;
     public PlayerInputSet input { get; private set; }//输入
     
     public Player_IdleState idleState { get; private set; }//空闲状态
@@ -44,6 +45,7 @@ public class Player : Entity
     {
         base.Awake();
         
+        ui = FindAnyObjectByType<UI>();
         input = new PlayerInputSet();// 创建玩家输入设置实例
 
         idleState = new Player_IdleState(this,stateMachine, "idle");// 创建并初始化玩家空闲状态
@@ -134,6 +136,8 @@ public class Player : Entity
 
         input.Player.Movement.performed += ctx => moveInput = ctx.ReadValue<Vector2>();// 监听移动输入事件，按下时读取输入值
         input.Player.Movement.canceled += ctx => moveInput = Vector2.zero;// 监听移动输入取消事件，按下时清空输入值
+
+        input.Player.ToggleSkillTreeUI.performed += ctx => ui.ToggleSkillTreeUI();
     }
     
     // 当对象禁用时调用，通常用于释放资源

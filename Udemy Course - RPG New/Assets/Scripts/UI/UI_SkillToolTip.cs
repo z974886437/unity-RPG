@@ -26,7 +26,7 @@ public class UI_SkillToolTip : UI_ToolTip
         base.Awake();
 
         ui = GetComponentInParent<UI>();
-        skillTree = ui.GetComponentInChildren<UI_SkillTree>();
+        skillTree = ui.GetComponentInChildren<UI_SkillTree>(true);
     }
 
     public override void ShowToolTip(bool show, RectTransform targetRect)
@@ -45,7 +45,7 @@ public class UI_SkillToolTip : UI_ToolTip
         skillName.text = node.skillData.displayName;// 设置技能名称
         skillDescription.text = node.skillData.description;// 设置技能描述
 
-        string skillLockedText = $"<color={importantInfoHex}>{lockedSkillText} </color>";
+        string skillLockedText = GetColoredText(importantInfoHex, lockedSkillText);
         string requirements = node.isLocked ? skillLockedText : GetRequirements(node.skillData.cost,node.neededNodes,node.conflictNodes);
         
         skillRequirements.text = requirements;// 设置技能要求
@@ -82,33 +82,33 @@ public class UI_SkillToolTip : UI_ToolTip
         sb.AppendLine("要求:");// 添加要求的标题
         
         string costColor = skillTree.EnoughSkillPoints(skillCost) ? metConditionHex : notMetConditionHex;// 判断技能点是否足够，设置颜色
+        string costText = $"- {skillCost} 技能点";
+        string filnalCostText = GetColoredText(costColor, costText);
 
-        sb.AppendLine($"<color={costColor}> - {skillCost} 技能点 </color>");// 添加技能点要求并设置颜色
+        sb.AppendLine(filnalCostText);// 添加技能点要求并设置颜色
 
         foreach (var node in neededNodes)    // 添加所有必需节点信息，设置已解锁或未解锁颜色
         {
             string nodeColor = node.isUnlocked ? metConditionHex : notMetConditionHex;
-            sb.AppendLine($"<color={nodeColor}> - {node.skillData.displayName} </color>");
+            string nodeText = $"- {node.skillData.displayName}";
+            string filnalNodeText = GetColoredText(nodeColor, nodeText);
+            sb.AppendLine(filnalNodeText);
         }
 
         if(conflictNodes.Length <= 0)// 如果没有冲突节点，直接返回
             return sb.ToString();
 
         sb.AppendLine();// 添加空行
-        sb.AppendLine($"<color={importantInfoHex}> 无法选择： </color>");// 添加冲突节点标题
+        //sb.AppendLine($"<color={importantInfoHex}> 无法选择： </color>");// 添加冲突节点标题
+        sb.AppendLine(GetColoredText(importantInfoHex, "无法选择："));// 添加冲突节点标题
 
         foreach (var node in conflictNodes) // 添加所有冲突节点信息
         {
-            sb.AppendLine($"<color={importantInfoHex}> - {node.skillData.displayName} </color>");
+            string nodeText = $"- {node.skillData.displayName}";
+            string finalNodeText = GetColoredText(importantInfoHex, nodeText);
+            sb.AppendLine(finalNodeText);
         }
         
         return sb.ToString(); // 返回构建的字符串
     }
-
-    private string GetColoredText(string color, string text)
-    {
-        return $"<color={color}>{text} </color>";
-    }
-
-    
 }

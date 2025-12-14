@@ -112,12 +112,9 @@ public class UI_TreeNode : MonoBehaviour ,IPointerEnterHandler, IPointerExitHand
     {
         ui.skillToolTip.ShowToolTip(true,rect,this);
         
-        if(isUnlocked || isLocked)// 如果技能没有解锁，更新图标颜色为略暗的白色
-            return;
+        if(isUnlocked == false || isLocked == false)// 如果技能没有解锁，更新图标颜色为略暗的白色
+            ToggleNodeHighlight(true);
         
-        Color color = Color.white * 0.9f;
-        color.a = 1;
-        UpdateIconColor(color); // 调暗颜色，表示不可点击状态
         
     }
 
@@ -125,12 +122,21 @@ public class UI_TreeNode : MonoBehaviour ,IPointerEnterHandler, IPointerExitHand
     public void OnPointerExit(PointerEventData eventData)
     {
         ui.skillToolTip.ShowToolTip(false,rect);
-        
-        if(isUnlocked || isLocked)// 如果技能没有解锁，恢复图标颜色为原来的颜色
-            return;
-        
-        UpdateIconColor(lastColor);
+
+        if (isUnlocked == false || isLocked == false) // 如果技能没有解锁，更新图标颜色为略暗的白色
+            ToggleNodeHighlight(false);
     }
+
+    //切换节点高亮
+    private void ToggleNodeHighlight(bool highlight)
+    {
+        Color highlightColor = Color.white * 0.9f; // 定义高亮颜色，稍微降低亮度（0.9倍白色）
+        highlightColor.a = 1;// 设置高亮颜色的透明度为完全不透明（alpha = 1）
+        Color colorToApply = highlight ? highlightColor : lastColor;// 根据 highlight 参数选择颜色，如果 highlight 为 true，则使用高亮颜色，否则使用上次的颜色
+        
+        UpdateIconColor(colorToApply);// 更新图标颜色
+    }
+    
 
     // 根据十六进制字符串返回颜色
     private Color GetColorByHex(string hexNumber)
@@ -138,6 +144,16 @@ public class UI_TreeNode : MonoBehaviour ,IPointerEnterHandler, IPointerExitHand
         ColorUtility.TryParseHtmlString(hexNumber, out Color color);  // 使用 ColorUtility 来解析十六进制颜色字符串
         
         return color; // 返回解析后的颜色
+    }
+
+    //关闭
+    private void OnDisable()
+    {
+        if(isLocked)// 如果技能被锁定，则更新图标颜色为锁定状态的颜色
+            UpdateIconColor(GetColorByHex(lockedColorHex));
+        
+        if(isUnlocked)// 如果技能已解锁，则更新图标颜色为白色（表示解锁状态）
+            UpdateIconColor(Color.white);
     }
     
     // 在编辑器中验证时调用，用于更新技能数据
