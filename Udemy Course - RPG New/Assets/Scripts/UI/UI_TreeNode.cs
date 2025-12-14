@@ -54,7 +54,10 @@ public class UI_TreeNode : MonoBehaviour ,IPointerEnterHandler, IPointerExitHand
         skillTree.RemoveSkillPoints(skillData.cost);
         
         LockConflictNodes();// 锁定冲突节点
-        connectHandler.UnlockConnectionImage(true);
+        connectHandler.UnlockConnectionImage(true);// 解锁连接图像并更新为解锁状态
+
+        // 获取技能树中与当前技能类型对应的技能，并设置其升级信息
+        skillTree.skillManager.GetSkillByType(skillData.skillType).SetSkillUpgrade(skillData.skillUpgrade);
     }
 
     // 判断技能是否可以解锁
@@ -112,10 +115,9 @@ public class UI_TreeNode : MonoBehaviour ,IPointerEnterHandler, IPointerExitHand
     {
         ui.skillToolTip.ShowToolTip(true,rect,this);
         
-        if(isUnlocked == false || isLocked == false)// 如果技能没有解锁，更新图标颜色为略暗的白色
-            ToggleNodeHighlight(true);
-        
-        
+        if(isUnlocked  || isLocked )// 如果技能没有解锁，更新图标颜色为略暗的白色
+            return;
+        ToggleNodeHighlight(true);
     }
 
     // 鼠标离开图标时触发
@@ -123,8 +125,10 @@ public class UI_TreeNode : MonoBehaviour ,IPointerEnterHandler, IPointerExitHand
     {
         ui.skillToolTip.ShowToolTip(false,rect);
 
-        if (isUnlocked == false || isLocked == false) // 如果技能没有解锁，更新图标颜色为略暗的白色
-            ToggleNodeHighlight(false);
+        if (isUnlocked || isLocked) // 如果技能没有解锁，更新图标颜色为略暗的白色
+            return;
+        
+        ToggleNodeHighlight(false);
     }
 
     //切换节点高亮

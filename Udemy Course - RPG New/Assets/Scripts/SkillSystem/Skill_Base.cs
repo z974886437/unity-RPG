@@ -4,6 +4,8 @@ using UnityEngine;
 public class Skill_Base : MonoBehaviour
 {
     [Header("General Details")]
+    [SerializeField] protected SkillType skillType;
+    [SerializeField] protected SkillUpgradeType upgradeType;
     [SerializeField] private float cooldown;
     private float lastTimeUsed;
 
@@ -11,6 +13,11 @@ public class Skill_Base : MonoBehaviour
     protected virtual void Awake()
     {
         lastTimeUsed = lastTimeUsed - cooldown;// 将 lastTimeUsed 设置为（当前时间 - 冷却时间），以便技能在初始时可以立即使用
+    }
+
+    public void SetSkillUpgrade(SkillUpgradeType upgrade)
+    {
+        upgradeType = upgrade;
     }
 
     // 检查技能是否可以使用

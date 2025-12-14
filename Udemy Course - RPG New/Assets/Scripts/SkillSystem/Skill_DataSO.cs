@@ -5,6 +5,8 @@ using UnityEngine;
 public class Skill_DataSO : ScriptableObject
 {
     public int cost;// 技能消耗
+    public SkillType skillType;
+    public SkillUpgradeType skillUpgrade;
     
     [Header("Skill description")]
     public string displayName;// 技能名称

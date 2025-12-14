@@ -9,4 +9,16 @@ public class Player_SkillManager : MonoBehaviour
     {
         dash = GetComponentInChildren<Skill_Dash>();
     }
+
+    public Skill_Base GetSkillByType(SkillType type)
+    {
+        switch (type)// 根据传入的技能类型返回对应的技能对象
+        {
+            case SkillType.Dash: return dash; // 如果技能类型是 Dash，则返回 Dash 技能对象
+            
+            default:
+                Debug.Log($"skill type {type} is not implemented yet"); // 如果技能类型未实现，输出警告日志并返回 null
+                return null;
+        }
+    }
 }

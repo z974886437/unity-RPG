@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b762983948223141a314ac8e695bfe1, type: 3}
+  m_Name: Skill data - Deja Vu
+  m_EditorClassIdentifier: 
+  cost: 3
+  skillType: 0
+  skillUpgrade: 2
+  displayName: "\u65F6\u7A7A\u56DE\u54CD"
+  description: "\u77AC\u95F4\u51B2\u523A\u81F3\u76EE\u6807\u4F4D\u7F6E\uFF0C\u4EA7\u751F\u65F6\u95F4\u56DE\u6CE2\u6548\u5E94\u3002\u56DE\u6CE2\u4F1A\u89E6\u53D1\u65F6\u95F4\u56DE\u54CD\u80FD\u529B\u7684\u5347\u7EA7\u6548\u679C"
+  icon: {fileID: -520629593, guid: 6f409a212ffb7af468360ec707ab8e42, type: 3}
