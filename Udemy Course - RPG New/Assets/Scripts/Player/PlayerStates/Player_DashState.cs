@@ -13,6 +13,10 @@ public class Player_DashState : PlayerState
     {
         base.Enter();
         
+        // 在冲刺开始时，触发技能的效果
+        skillManager.dash.OnStartEffect();// 调用 Dash 技能的起始效果
+        player.vfx.DoImageEchoEffect(player.dashDuration); // 播放冲刺技能的视觉效果（如图像回声效果）
+        
         // 设置冲刺方向和冲刺持续时间
         dashDir = player.moveInput.x != 0 ? ((int)player.moveInput.x) : player.facingDir;; // 根据玩家的朝向设置冲刺方向
         stateTimer = player.dashDuration;// 设置冲刺的持续时间
@@ -40,6 +44,8 @@ public class Player_DashState : PlayerState
     public override void Exit()
     {
         base.Exit();
+        
+        skillManager.dash.OnEndEffect();
         
         // 重置玩家速度和恢复重力
         player.SetVelocity(0,0);// 将玩家的速度设置为 0，停止移动

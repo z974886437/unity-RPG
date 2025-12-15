@@ -8,6 +8,7 @@ public class Player : Entity
     private UI ui;
     public PlayerInputSet input { get; private set; }//输入
     public Player_SkillManager skillManager { get; private set; }
+    public Player_VFX vfx { get; private set; }
     
     #region State Variables
     
@@ -53,6 +54,7 @@ public class Player : Entity
         ui = FindAnyObjectByType<UI>();
         input = new PlayerInputSet();// 创建玩家输入设置实例
         skillManager = GetComponent<Player_SkillManager>();
+        vfx = GetComponent<Player_VFX>();
 
         idleState = new Player_IdleState(this,stateMachine, "idle");// 创建并初始化玩家空闲状态
         moveState = new Player_MoveState(this,stateMachine, "move");// 创建并初始化玩家移动状态

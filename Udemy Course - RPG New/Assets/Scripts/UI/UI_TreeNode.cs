@@ -57,7 +57,7 @@ public class UI_TreeNode : MonoBehaviour ,IPointerEnterHandler, IPointerExitHand
         connectHandler.UnlockConnectionImage(true);// 解锁连接图像并更新为解锁状态
 
         // 获取技能树中与当前技能类型对应的技能，并设置其升级信息
-        skillTree.skillManager.GetSkillByType(skillData.skillType).SetSkillUpgrade(skillData.skillUpgrade);
+        skillTree.skillManager.GetSkillByType(skillData.skillType).SetSkillUpgrade(skillData.upgradeData);
     }
 
     // 判断技能是否可以解锁

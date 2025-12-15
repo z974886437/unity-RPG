@@ -15,9 +15,10 @@ public class Skill_Base : MonoBehaviour
         lastTimeUsed = lastTimeUsed - cooldown;// 将 lastTimeUsed 设置为（当前时间 - 冷却时间），以便技能在初始时可以立即使用
     }
 
-    public void SetSkillUpgrade(SkillUpgradeType upgrade)
+    public void SetSkillUpgrade(UpgradeData upgrade)
     {
-        upgradeType = upgrade;
+        upgradeType = upgrade.upgradeType;
+        cooldown = upgrade.cooldown;
     }
 
     // 检查技能是否可以使用
@@ -31,6 +32,9 @@ public class Skill_Base : MonoBehaviour
         
         return true;// 如果技能不在冷却中，则返回 true
     }
+
+    //技能升级是否已经解锁
+    protected bool Unlocked(SkillUpgradeType upgradeToCheck) => upgradeType == upgradeToCheck;
 
     // 判断技能是否在冷却中
     private bool OnCooldown() => Time.time < lastTimeUsed + cooldown;

@@ -1,14 +1,21 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class VFX_AutoController : MonoBehaviour
 {
+    private SpriteRenderer sr;
+    
     [SerializeField] private bool autoDestroy = true;
     [SerializeField] private float destroyDelay = 1;
     [Space]
     [SerializeField] private bool randomOffset = true;
     [SerializeField] private bool randomRotation = true;
+    
+    [Header("Fade effect")]
+    [SerializeField] private bool canFade;
+    [SerializeField] private float fadeSpeed =1;
     
     [Header("Random rotation")]
     [SerializeField] private float minRotation = 0;
@@ -21,13 +28,36 @@ public class VFX_AutoController : MonoBehaviour
     [SerializeField] private float yMinOffset = -0.3f;
     [SerializeField] private float yMaxOffset = 0.3f;
 
+    private void Awake()
+    {
+        sr = GetComponentInChildren<SpriteRenderer>();
+    }
+
     private void Start()
     {
+        if(canFade)
+            StartCoroutine(FadeCo());
+        
         ApplyRandomOffset(); // 应用随机偏移
         ApplyRandomRotation(); // 应用随机旋转
         
         if(autoDestroy)// 如果启用自动销毁，延迟销毁该物体
             Destroy(gameObject,destroyDelay);
+    }
+
+    //淡出
+    private IEnumerator FadeCo()
+    {
+        Color targetColor = Color.white;// 设置目标颜色为完全不透明的白色
+
+        while (targetColor.a > 0)// 循环，直到目标颜色的 alpha 值为 0（完全透明）
+        {
+            targetColor.a = targetColor.a - (fadeSpeed * Time.deltaTime);// 逐渐减少目标颜色的 alpha 值，使图像逐渐变得透明
+            sr.color = targetColor;// 更新 SpriteRenderer 的颜色，使其变为目标颜色
+            yield return null; // 等待下一帧继续执行，直到 alpha 值逐渐变为 0
+        }
+
+        sr.color = targetColor;// 最后一次确保完全透明
     }
 
     // 应用随机偏移量

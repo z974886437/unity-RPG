@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Entity_VFX : MonoBehaviour
 {
-    private SpriteRenderer sr;// 声明SpriteRenderer变量，用于操作精灵的材质和渲染效果
+    protected SpriteRenderer sr;// 声明SpriteRenderer变量，用于操作精灵的材质和渲染效果
     private Entity entity;
     
     [Header("On Taking Damage VFX")]
