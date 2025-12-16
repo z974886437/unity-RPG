@@ -35,6 +35,13 @@ public class UI_TreeNode : MonoBehaviour ,IPointerEnterHandler, IPointerExitHand
         UpdateIconColor(GetColorByHex(lockedColorHex));// 获取并设置图标颜色，使用十六进制颜色值
     }
 
+    // 游戏对象初始化时调用的方法
+    private void Start()
+    {
+        if (skillData.unlockedByDefault) // 检查技能数据是否默认解锁
+            Unlock();// 如果默认解锁，调用 Unlock 方法
+    }
+
     // 退还技能点
     public void Refund()
     {
@@ -87,8 +94,21 @@ public class UI_TreeNode : MonoBehaviour ,IPointerEnterHandler, IPointerExitHand
     // 锁定冲突节点
     private void LockConflictNodes()
     {
-        foreach (var node in conflictNodes)
+        foreach (var node in conflictNodes)// 遍历所有冲突节点
+        {
             node.isLocked = true;// 将所有冲突节点锁定
+            node.LockChildNodes();// 锁定冲突节点的子节点
+        }
+    }
+
+    // 锁定当前节点及其所有子节点
+    public void LockChildNodes()
+    {
+        isLocked = true;// 将当前节点设置为锁定状态
+
+        // 获取当前节点的所有子节点并递归锁定它们
+        foreach (var node in connectHandler.GetChildNodes())
+            node.LockChildNodes();
     }
 
     // 更新技能图标的颜色

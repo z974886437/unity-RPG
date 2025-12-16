@@ -24,6 +24,9 @@ public class Skill_Base : MonoBehaviour
     // 检查技能是否可以使用
     public bool CanUseSkill()
     {
+        if (upgradeType == SkillUpgradeType.None)
+            return false;
+        
         if (OnCooldown())// 如果技能在冷却中，则返回 false
         {
             Debug.Log("On Cooldown");

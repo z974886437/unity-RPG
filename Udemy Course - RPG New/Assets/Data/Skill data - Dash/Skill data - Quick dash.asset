@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: Skill data - Quick dash
   m_EditorClassIdentifier: 
   cost: 0
+  unlockedByDefault: 1
   skillType: 0
   upgradeData:
-    upgradeType: 0
+    upgradeType: 1
     cooldown: 3
   displayName: "\u6697\u5F71\u95EA\u907F"
   description: "\u6FC0\u53D1\u6697\u5F71\u4E4B\u529B\uFF0C\u8FC5\u901F\u51B2\u523A\u5E76\u8FDB\u5165\u65E0\u654C\u72B6\u6001\uFF0C\u671F\u95F4\u65E0\u4EFB\u4F55\u4F24\u5BB3\u53EF\u53CA\uFF0C\u6210\u529F\u8EB2\u907F\u654C\u4EBA\u7684\u6240\u6709\u653B\u51FB\u3002"

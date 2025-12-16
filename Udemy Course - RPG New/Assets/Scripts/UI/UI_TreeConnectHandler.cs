@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Numerics;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,7 +10,7 @@ public class UI_TreeConnectDetails
 {
     public UI_TreeConnectHandler childNode;
     public NodeDirectionType direction;
-    [Range(100f, 350f)] public float length;
+    [Range(100f, 350f)] public float length = 150f;
     [Range(-50f, 50f)] public float rotation;
 }
 
@@ -28,22 +29,21 @@ public class UI_TreeConnectHandler : MonoBehaviour
             originalColor = connectionImage.color;
     }
 
-    // 编辑器模式下的验证方法
-    private void OnValidate()
+    public UI_TreeNode[] GetChildNodes()
     {
-        if(connectionDetails.Length <= 0)
-            return;
-        
-        if (connectionDetails.Length != connections.Length)// 如果连接详细信息和连接点数量不一致，输出警告
+        List<UI_TreeNode> childrenToReturn = new List<UI_TreeNode>();
+        foreach (var node in connectionDetails)
         {
-            Debug.Log("Amount of details should be same as amount of connections. - " + gameObject.name);
+            if (node.childNode != null)
+                childrenToReturn.Add(node.childNode.GetComponent<UI_TreeNode>());
         }
+
+        return childrenToReturn.ToArray();
         
-        UpdateAllConnections();// 更新连接
     }
 
     // 更新所有连接
-    private void UpdateConnections()
+    public void UpdateConnections()
     {
         for (int i = 0; i < connectionDetails.Length; i++)// 遍历连接详细信息和连接点
         {
@@ -72,7 +72,7 @@ public class UI_TreeConnectHandler : MonoBehaviour
         foreach (var node in connectionDetails)// 遍历连接详细信息数组，更新每个子节点的连接
         {
             if (node.childNode == null) continue;// 如果子节点为空，则跳过
-            node.childNode.UpdateConnections();// 更新子节点的连接
+            node.childNode?.UpdateConnections();// 更新子节点的连接
         }
     }
 
@@ -90,4 +90,18 @@ public class UI_TreeConnectHandler : MonoBehaviour
     
     // 设置UI元素的位置
     public void SetPosition(Vector2 position) => rect.anchoredPosition = position;
+    
+    // 编辑器模式下的验证方法
+    private void OnValidate()
+    {
+        if(connectionDetails.Length <= 0)
+            return;
+        
+        if (connectionDetails.Length != connections.Length)// 如果连接详细信息和连接点数量不一致，输出警告
+        {
+            Debug.Log("Amount of details should be same as amount of connections. - " + gameObject.name);
+        }
+        
+        UpdateConnections();// 更新连接
+    }
 }

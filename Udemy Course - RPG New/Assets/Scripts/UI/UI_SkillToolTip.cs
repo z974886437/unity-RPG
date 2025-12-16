@@ -89,6 +89,8 @@ public class UI_SkillToolTip : UI_ToolTip
 
         foreach (var node in neededNodes)    // 添加所有必需节点信息，设置已解锁或未解锁颜色
         {
+            if (node == null) continue;
+            
             string nodeColor = node.isUnlocked ? metConditionHex : notMetConditionHex;
             string nodeText = $"- {node.skillData.displayName}";
             string filnalNodeText = GetColoredText(nodeColor, nodeText);
@@ -104,6 +106,8 @@ public class UI_SkillToolTip : UI_ToolTip
 
         foreach (var node in conflictNodes) // 添加所有冲突节点信息
         {
+            if (node == null) continue;
+            
             string nodeText = $"- {node.skillData.displayName}";
             string finalNodeText = GetColoredText(importantInfoHex, nodeText);
             sb.AppendLine(finalNodeText);
