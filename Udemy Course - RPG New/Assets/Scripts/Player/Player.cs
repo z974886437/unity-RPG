@@ -146,6 +146,7 @@ public class Player : Entity
         input.Player.Movement.canceled += ctx => moveInput = Vector2.zero;// 监听移动输入取消事件，按下时清空输入值
 
         input.Player.ToggleSkillTreeUI.performed += ctx => ui.ToggleSkillTreeUI();
+        input.Player.Spell.performed += ctx => skillManager.shard.CreateShard();
     }
     
     // 当对象禁用时调用，通常用于释放资源
