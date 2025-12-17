@@ -22,6 +22,28 @@ public class SkillObject_Base : MonoBehaviour
         }
     }
 
+    // 查找离当前物体最近的敌人
+    protected Transform FindClosestTarget()
+    {
+        Transform target = null;// 初始化目标为null
+        float closesDistance = Mathf.Infinity; // 设置初始最小距离为无穷大
+
+        // 遍历周围的敌人
+        foreach (var enemy in EnemiesAround(transform, 10))
+        {
+            float distance = Vector2.Distance(transform.position, enemy.transform.position);// 计算当前物体与敌人之间的距离
+
+            // 如果当前敌人的距离小于最小距离，更新目标
+            if (distance < closesDistance)
+            {
+                target = enemy.transform;// 更新目标为当前敌人
+                closesDistance = distance;// 更新最小距离
+            }
+        }
+
+        return target; // 返回找到的最近敌人
+    }
+
     // 获取指定transform位置半径范围内的所有敌人
     protected Collider2D[] EnemiesAround(Transform t, float radius)
     {

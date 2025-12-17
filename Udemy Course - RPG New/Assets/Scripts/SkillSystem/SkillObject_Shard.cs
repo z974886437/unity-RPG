@@ -6,6 +6,26 @@ public class SkillObject_Shard : SkillObject_Base
 
     [SerializeField] private GameObject vfxPrefab;
 
+    private Transform target;
+    private float speed;
+
+
+    // 每帧更新，移动物体
+    private void Update()
+    {
+        if (target == null)// 如果目标为空，直接返回
+            return;
+
+        // 将物体朝目标移动
+        transform.position = Vector3.MoveTowards(transform.position, target.position, speed * Time.deltaTime);
+    }
+
+    // 移动物体朝最近的目标
+    public void MoveTowardsClosestTarget(float speed)
+    {
+        target = FindClosestTarget();// 获取最近的目标
+        this.speed = speed; // 设置物体的移动速度
+    }
 
     // 设置碎片的爆炸延迟时间，detinationTime 为爆炸时间
     public void SetupShard(float detinationTime)

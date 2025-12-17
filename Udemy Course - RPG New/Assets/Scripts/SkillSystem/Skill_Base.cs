@@ -6,7 +6,7 @@ public class Skill_Base : MonoBehaviour
     [Header("General Details")]
     [SerializeField] protected SkillType skillType;
     [SerializeField] protected SkillUpgradeType upgradeType;
-    [SerializeField] private float cooldown;
+    [SerializeField] protected float cooldown;
     private float lastTimeUsed;
 
     // 在对象初始化时调用
@@ -15,10 +15,17 @@ public class Skill_Base : MonoBehaviour
         lastTimeUsed = lastTimeUsed - cooldown;// 将 lastTimeUsed 设置为（当前时间 - 冷却时间），以便技能在初始时可以立即使用
     }
 
+    // 尝试使用技能，子类可以重写此方法实现具体逻辑
+    public virtual void TryUseSkill()
+    {
+        
+    }
+
+    // 设置技能升级的属性
     public void SetSkillUpgrade(UpgradeData upgrade)
     {
-        upgradeType = upgrade.upgradeType;
-        cooldown = upgrade.cooldown;
+        upgradeType = upgrade.upgradeType;// 设置技能的升级类型
+        cooldown = upgrade.cooldown;// 设置技能的冷却时间
     }
 
     // 检查技能是否可以使用
