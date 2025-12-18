@@ -76,6 +76,9 @@ public class Player : Entity
         stateMachine.Initialize(idleState);// 初始化状态机，设置初始状态为 idleState（空闲状态）
     }
 
+    // 传送玩家到指定位置
+    public void TeleportPlayer(Vector3 position) => transform.position = position;// 将玩家位置设置为目标位置
+
     // 实现实体减速的协程，调整实体的多项属性，如移动速度、跳跃力、动画速度等
     protected override IEnumerator SlowDownEntityCo(float duration, float slowMultiplier)
     {

@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class Skill_Base : MonoBehaviour
 {
+    public Player player { get; private set; }
+    
     [Header("General Details")]
     [SerializeField] protected SkillType skillType;
     [SerializeField] protected SkillUpgradeType upgradeType;
@@ -12,6 +14,7 @@ public class Skill_Base : MonoBehaviour
     // 在对象初始化时调用
     protected virtual void Awake()
     {
+        player = GetComponentInParent<Player>();
         lastTimeUsed = lastTimeUsed - cooldown;// 将 lastTimeUsed 设置为（当前时间 - 冷却时间），以便技能在初始时可以立即使用
     }
 
@@ -47,7 +50,7 @@ public class Skill_Base : MonoBehaviour
     protected bool Unlocked(SkillUpgradeType upgradeToCheck) => upgradeType == upgradeToCheck;
 
     // 判断技能是否在冷却中
-    private bool OnCooldown() => Time.time < lastTimeUsed + cooldown;
+    protected bool OnCooldown() => Time.time < lastTimeUsed + cooldown;
     
     // 设置技能进入冷却状态，并记录冷却开始时间
     public void SetSkillOnCooldown() => lastTimeUsed = Time.time;

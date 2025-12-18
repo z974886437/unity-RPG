@@ -107,6 +107,16 @@ public class Entity_Health : MonoBehaviour,IDamgable
         entity?.EntityDeath();
     }
 
+    // 获取当前生命百分比
+    public float GetHealthPercent() => currentHealth / entityStats.GetMaxHealth();// 当前生命除以最大生命，返回百分比
+
+    // 设置生命为指定的百分比
+    public void SetHealthToPercent(float percent)
+    {
+        currentHealth = entityStats.GetMaxHealth() * Mathf.Clamp01(percent); // 根据最大生命值和指定百分比计算并设置当前生命
+        UpdateHealthBar();// 更新生命条显示
+    }
+
     // 更新血条的显示
     private void UpdateHealthBar()
     {

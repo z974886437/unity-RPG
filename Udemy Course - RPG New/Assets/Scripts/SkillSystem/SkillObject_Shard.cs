@@ -3,7 +3,8 @@ using UnityEngine;
 
 public class SkillObject_Shard : SkillObject_Base
 {
-
+    public event Action OnExplode;
+    
     [SerializeField] private GameObject vfxPrefab;
 
     private Transform target;
@@ -34,11 +35,12 @@ public class SkillObject_Shard : SkillObject_Base
     }
     
     // 执行碎片爆炸
-    private void Explode()
+    public void Explode()
     {
         DamageEnemiesInRadius(transform,checkRadius);// 在碎片位置范围内对敌人造成伤害
         Instantiate(vfxPrefab,transform.position,Quaternion.identity);// 实例化爆炸特效（VFX）
         
+        OnExplode?.Invoke();// 触发爆炸事件（如果有订阅）
         Destroy(gameObject); // 销毁碎片对象
     }
     
