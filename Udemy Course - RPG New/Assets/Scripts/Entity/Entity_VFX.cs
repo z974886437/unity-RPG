@@ -21,7 +21,7 @@ public class Entity_VFX : MonoBehaviour
     [Header("Element Colors")]
     [SerializeField] private Color chillVfx = Color.cyan;
     [SerializeField] private Color burnVfx = Color.red;
-    [SerializeField] private Color electrifyVfx = Color.yellow;
+    [SerializeField] private Color shockVfx = Color.yellow;
     private Color originalHitVfxColor;
     
     private void Awake()
@@ -42,7 +42,7 @@ public class Entity_VFX : MonoBehaviour
             StartCoroutine(PlayStatusVfxCo(duration, burnVfx));
         
         if(element == ElementType.Lightning)// 如果元素类型是雷电，启动雷电状态效果的特效协程
-            StartCoroutine(PlayStatusVfxCo(duration, electrifyVfx));
+            StartCoroutine(PlayStatusVfxCo(duration, shockVfx));
     }
 
     // 停止所有的视觉效果和特效
@@ -77,24 +77,27 @@ public class Entity_VFX : MonoBehaviour
     }
 
     // 创建命中时的视觉特效（VFX）
-    public void CreateOnHitVFX(Transform target,bool isCrit)
+    public void CreateOnHitVFX(Transform target,bool isCrit,ElementType element)
     {
         GameObject hitPrefab = isCrit ? cirtHitVfx : hitVfx;// 如果是暴击，使用暴击特效；否则使用普通命中特效
         GameObject vfx = Instantiate(hitPrefab, target.position, Quaternion.identity);// 在目标位置生成特效，保持原始旋转
-        vfx.GetComponentInChildren<SpriteRenderer>().color = hitVfxColor;// 修改特效的颜色为预设颜色
+        vfx.GetComponentInChildren<SpriteRenderer>().color = GetElementColor(element);// 修改特效的颜色为预设颜色
         
         if(entity.facingDir == -1 && isCrit)
             vfx.transform.Rotate(0,180,0); // 如果敌人面朝左（`facingDir == -1`）且为暴击，旋转特效180度
     }
 
     // 更新攻击命中的颜色效果，根据元素类型改变效果颜色
-    public void UpdateOnHitColor(ElementType element)
+    public Color GetElementColor(ElementType element)
     {
-        if (element == ElementType.Ice)// 如果元素是冰霜类型，设置攻击命中的特效颜色为冰霜效果颜色
-            hitVfxColor = chillVfx; // 设置冰霜的特效颜色
-        
-        if(element == ElementType.None) // 如果元素类型是空（表示没有元素类型），恢复原始的攻击命中特效颜色
-            hitVfxColor = originalHitVfxColor; // 恢复默认的攻击命中特效颜色
+        switch (element)
+        {
+            case ElementType.Ice: return chillVfx;
+            case ElementType.Fire: return burnVfx;
+            case ElementType.Lightning: return shockVfx;
+            
+            default: return Color.white;
+        }
     }
 
     public void PlayOnDamageVfx()

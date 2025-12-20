@@ -4445,7 +4445,7 @@ MonoBehaviour:
   cirtHitVfx: {fileID: 8360269195536152075, guid: 17b6276e84b743e4a915dee35c7143c6, type: 3}
   chillVfx: {r: 0, g: 1, b: 1, a: 1}
   burnVfx: {r: 1, g: 0, b: 0, a: 1}
-  electrifyVfx: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  shockVfx: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   imageEchoInterval: 0.08
   imageEchoPrefab: {fileID: 6625701704227884156, guid: 2db883838fcede24596f069bc12481a8, type: 3}
 --- !u!1 &782304767
@@ -22695,9 +22695,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   neededNodes:
   - {fileID: 645789211}
+  - {fileID: 1577930272}
   conflictNodes:
   - {fileID: 1717825547}
-  - {fileID: 995927548}
   isUnlocked: 0
   isLocked: 0
   skillData: {fileID: 11400000, guid: 7c2405de2c959da4087c210c29d98830, type: 2}

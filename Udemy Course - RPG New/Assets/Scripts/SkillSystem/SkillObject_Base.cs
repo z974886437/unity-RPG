@@ -8,6 +8,7 @@ public class SkillObject_Base : MonoBehaviour
 
     protected Entity_Stats playerStats;
     protected DamageScaleData damageScaleData;
+    protected ElementType usedElement;
 
 
     // 在指定半径内对所有敌人造成伤害
@@ -29,8 +30,8 @@ public class SkillObject_Base : MonoBehaviour
             
             if(element != ElementType.None)// 如果有元素伤害，应用相应的状态效果
                 target.GetComponent<Entity_StatusHandler>().ApplyStatusEffect(element,effectData);
-            
-            
+
+            usedElement = element;
         }
     }
 

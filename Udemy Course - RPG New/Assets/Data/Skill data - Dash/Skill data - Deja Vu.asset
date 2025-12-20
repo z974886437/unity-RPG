@@ -13,10 +13,21 @@ MonoBehaviour:
   m_Name: Skill data - Deja Vu
   m_EditorClassIdentifier: 
   cost: 3
+  unlockedByDefault: 0
   skillType: 0
   upgradeData:
-    upgradeType: 2
+    upgradeType: 3
     cooldown: 3
+    damageScaleData:
+      phyiscal: 1
+      elemental: 1
+      chillDuration: 3
+      chillSlowMultiplier: 0.2
+      burnDuration: 3
+      burnDamageScale: 1
+      shockDuration: 3
+      shockDamageScale: 1
+      shockCharge: 0.4
   displayName: "\u65F6\u7A7A\u56DE\u54CD"
   description: "\u77AC\u95F4\u51B2\u523A\u81F3\u76EE\u6807\u4F4D\u7F6E\uFF0C\u4EA7\u751F\u65F6\u95F4\u56DE\u6CE2\u6548\u5E94\u3002\u56DE\u6CE2\u4F1A\u89E6\u53D1\u65F6\u95F4\u56DE\u54CD\u80FD\u529B\u7684\u5347\u7EA7\u6548\u679C"
   icon: {fileID: -520629593, guid: 6f409a212ffb7af468360ec707ab8e42, type: 3}

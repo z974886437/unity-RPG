@@ -48,10 +48,8 @@ public class Entity_Combat : MonoBehaviour
                 target.GetComponent<Entity_StatusHandler>().ApplyStatusEffect(element,effectData);
 
             if (targetGotHit) // 如果目标成功受到伤害，创建攻击命中的特效（VFX）
-            {
-                vfx.UpdateOnHitColor(element);// 更新特效的颜色（可能根据元素类型改变）
-                vfx.CreateOnHitVFX(target.transform,isCrit); // 创建攻击命中的特效
-            }
+                vfx.CreateOnHitVFX(target.transform,isCrit,element); // 创建攻击命中的特效
+            
             
             // 获取目标的 Entity_Health 组件，这个组件负责管理目标的生命值
             //Entity_Health targetHealth = target.GetComponent<Entity_Health>();

@@ -13,11 +13,21 @@ MonoBehaviour:
   m_Name: Skill data - Time shard
   m_EditorClassIdentifier: 
   cost: 0
-  unlockedByDefault: 1
+  unlockedByDefault: 0
   skillType: 2
   upgradeData:
     upgradeType: 6
     cooldown: 1
+    damageScaleData:
+      phyiscal: 1
+      elemental: 1
+      chillDuration: 3
+      chillSlowMultiplier: 0.2
+      burnDuration: 3
+      burnDamageScale: 1
+      shockDuration: 3
+      shockDamageScale: 1
+      shockCharge: 0.4
   displayName: "\u65F6\u95F4\u788E\u7247"
   description: "\u53EC\u5524\u51FA\u4E00\u4E2A\u5145\u6EE1\u539F\u59CB\u5143\u7D20\u80FD\u91CF\u7684\u65F6\u95F4\u788E\u7247\uFF0C\u8FD9\u4E2A\u788E\u7247\u88AB\u65F6\u95F4\u9B54\u6CD5\u6240\u675F\u7F1A\uFF0C\u60AC\u6D6E\u5728\u7A7A\u4E2D\uFF0C\u8109\u52A8\u7740\u4E0D\u540C\u5143\u7D20\u7684\u529B\u91CF\u3002\u788E\u7247\u4F1A\u5728\u654C\u4EBA\u89E6\u78B0\u6216\u65F6\u95F4\u7ED3\u675F\u65F6\u7206\u70B8\uFF0C\u9020\u6210\u5DE8\u5927\u7684\u5143\u7D20\u4F24\u5BB3\uFF0C\u5E76\u9644\u5E26\u5BF9\u5E94\u7684\u5143\u7D20\u6548\u679C"
   icon: {fileID: -776464224, guid: 6f409a212ffb7af468360ec707ab8e42, type: 3}

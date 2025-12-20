@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class Skill_Base : MonoBehaviour
 {
+    public Player_SkillManager skillManager { get; private set; }
     public Player player { get; private set; }
-    
     public DamageScaleData damageScaleData { get; private set; }
     
     [Header("General Details")]
@@ -16,6 +16,7 @@ public class Skill_Base : MonoBehaviour
     // 在对象初始化时调用
     protected virtual void Awake()
     {
+        skillManager = GetComponentInParent<Player_SkillManager>();
         player = GetComponentInParent<Player>();
         lastTimeUsed = lastTimeUsed - cooldown;// 将 lastTimeUsed 设置为（当前时间 - 冷却时间），以便技能在初始时可以立即使用
     }

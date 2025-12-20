@@ -31,7 +31,7 @@ public class Skill_Dash : Skill_Base
     // 创建时间碎片
     private void CreateShard()
     {
-        Debug.Log("Create time shard!");
+        skillManager.shard.CreateRawShard();
     }
 
     // 创建时间回声

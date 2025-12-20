@@ -32,21 +32,35 @@ public class SkillObject_Shard : SkillObject_Base
     // 设置碎片的爆炸延迟时间，detinationTime 为爆炸时间
     public void SetupShard(Skill_Shard shardManager)
     {
-        this.shardManager = shardManager;
+        this.shardManager = shardManager;// 缓存碎片所属的技能管理器，便于访问技能数据
 
-        playerStats = shardManager.player.stats;
-        damageScaleData = shardManager.damageScaleData;
+        playerStats = shardManager.player.stats;// 从技能管理器中获取玩家属性，用于后续伤害计算
+        damageScaleData = shardManager.damageScaleData;// 从技能管理器中获取伤害倍率数据，用于元素与数值缩放
 
-        float detonationTime = shardManager.GetDetonateTime();
+        float detonationTime = shardManager.GetDetonateTime();// 从技能管理器中获取碎片的引爆时间，便于统一由技能控制
         
-        Invoke(nameof(Explode),detonationTime); // 在 detinationTime 秒后调用 Explode 方法
+        Invoke(nameof(Explode),detonationTime); // 在指定引爆时间后自动调用 Explode，实现延迟爆炸效果
+    }
+
+    // 初始化碎片（增强版本：支持移动与自定义引爆时间）
+    public void SetupShard(Skill_Shard shardManager, float detonationTime, bool canMove, float shardSpeed)
+    {
+        this.shardManager = shardManager;// 缓存碎片所属的技能管理器，确保碎片与技能数据绑定
+        playerStats = shardManager.player.stats;// 从技能管理器中获取玩家属性，用于碎片造成的伤害计算
+        damageScaleData = shardManager.damageScaleData;// 从技能管理器中获取伤害倍率数据，用于元素与数值缩放
+        
+        Invoke(nameof(Explode),detonationTime); // 使用外部传入的引爆时间调用 Explode，支持升级或特殊逻辑控制
+        
+        if(canMove)// 如果碎片允许移动，则朝最近的敌人移动
+            MoveTowardsClosestTarget(shardSpeed);
     }
     
     // 执行碎片爆炸
     public void Explode()
     {
         DamageEnemiesInRadius(transform,checkRadius);// 在碎片位置范围内对敌人造成伤害
-        Instantiate(vfxPrefab,transform.position,Quaternion.identity);// 实例化爆炸特效（VFX）
+        GameObject vfx = Instantiate(vfxPrefab,transform.position,Quaternion.identity);// 实例化爆炸特效（VFX）
+        vfx.GetComponentInChildren<SpriteRenderer>().color = shardManager.player.vfx.GetElementColor(usedElement);
         
         OnExplode?.Invoke();// 触发爆炸事件（如果有订阅）
         Destroy(gameObject); // 销毁碎片对象
