@@ -148,7 +148,7 @@ public class Skill_Shard : Skill_Base
         
         GameObject shard = Instantiate(shardPrefab, transform.position, Quaternion.identity);// 实例化碎片预制体，生成一个碎片对象在当前物体位置
         currentShard = shard.GetComponent<SkillObject_Shard>();// 获取碎片的组件
-        currentShard.SetupShard(detonationTime);// 设置碎片的爆炸时间
+        currentShard.SetupShard(this);// 设置碎片的爆炸时间
 
         // 如果解锁了相关技能，注册碎片爆炸后的冷却回调
         if (Unlocked(SkillUpgradeType.Shard_Teleport) || Unlocked(SkillUpgradeType.Shard_TeleportHpRewind))

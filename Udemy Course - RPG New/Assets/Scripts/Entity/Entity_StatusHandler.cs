@@ -10,11 +10,11 @@ public class Entity_StatusHandler : MonoBehaviour
     private Entity_Health entityHealth;
     private ElementType currentEffect = ElementType.None;
     
-    [Header("Electrify effect details")]
+    [Header("Shock effect details")]
     [SerializeField] private GameObject lightningStrikeVfx;
     [SerializeField] private float currentCharge;
     [SerializeField] private float maximumCharge = 1;
-    private Coroutine electrifyCo;
+    private Coroutine shockCo;
 
     // 在组件启用时调用，获取相关的组件引用
     private void Awake()
@@ -25,8 +25,21 @@ public class Entity_StatusHandler : MonoBehaviour
         entityVFX = GetComponent<Entity_VFX>();
     }
 
+    // 应用元素状态效果，根据传入的元素类型和效果数据
+    public void ApplyStatusEffect(ElementType element,ElementalEffectData effectData)
+    {
+        if(element == ElementType.Ice && CanBeApplied(ElementType.Ice))// 如果元素是冰霜且可以应用冰霜效果，则应用寒冷效果
+            ApplyChillEffect(effectData.chillDuration,effectData.chillSlowMultiplier);
+        
+        if(element == ElementType.Fire && CanBeApplied(ElementType.Fire))// 如果元素是火焰且可以应用火焰效果，则应用燃烧效果
+            ApplyBurnEffect(effectData.burnDuration,effectData.totalBurnDamage);
+        
+        if(element == ElementType.Lightning && CanBeApplied(ElementType.Lightning))// 如果元素是闪电且可以应用闪电效果，则应用闪电效果
+            ApplyShockEffect(effectData.shockDuration,effectData.shockDamage,effectData.shockCharge);
+    }
+
     // 应用电击效果，计算电击积蓄并可能触发雷电攻击
-    public void ApplyElectrifyEffect(float duration,float damage,float charge)
+    public void ApplyShockEffect(float duration,float damage,float charge)
     {
         float lightningResistance = entityStats.GetElementalResistance(ElementType.Lightning);// 获取目标的雷电抗性
         float finalCharge = charge * (1 - lightningResistance);// 根据目标的雷电抗性计算电击积蓄的最终值
@@ -35,18 +48,18 @@ public class Entity_StatusHandler : MonoBehaviour
         if (currentCharge >= maximumCharge)// 如果电击积蓄达到最大值，则触发雷电攻击并停止电击效果
         {
             DoLightningStrike(damage);// 执行雷电攻击
-            StopElectrifyEffect();// 停止电击效果
+            StopShockEffect();// 停止电击效果
             return;
         }
         
-        if(electrifyCo != null) // 如果电击效果协程正在运行，停止它
-            StopCoroutine(electrifyCo);
+        if(shockCo != null) // 如果电击效果协程正在运行，停止它
+            StopCoroutine(shockCo);
 
-        electrifyCo = StartCoroutine(ElectrifyEffectCo(duration)); // 启动新的电击效果协程
+        shockCo = StartCoroutine(ShockEffectCo(duration)); // 启动新的电击效果协程
     }
 
     // 停止电击效果，重置状态
-    private void StopElectrifyEffect()
+    private void StopShockEffect()
     {
         currentEffect = ElementType.None;// 重置当前状态效果
         currentCharge = 0; // 重置电击积蓄
@@ -61,13 +74,13 @@ public class Entity_StatusHandler : MonoBehaviour
     }
 
     // 电击效果的协程，持续时间内应用电击状态效果
-    private IEnumerator ElectrifyEffectCo(float duration)
+    private IEnumerator ShockEffectCo(float duration)
     {
         currentEffect = ElementType.Lightning;// 设置当前效果为雷电
         entityVFX.PlayOnStatusVfx(duration,ElementType.Lightning); // 播放雷电状态的视觉效果
         
         yield return new WaitForSeconds(duration); // 等待电击效果持续时间
-        StopElectrifyEffect();// 停止电击效果
+        StopShockEffect();// 停止电击效果
     }
 
     // 应用燃烧效果，计算总伤害并启动燃烧协程

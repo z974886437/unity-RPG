@@ -5,7 +5,8 @@ public class Entity_Combat : MonoBehaviour
 {
     private Entity_VFX vfx;
     private Entity_Stats stats;
-    
+
+    public DamageScaleData basicAttackScale;
     
     [Header("Target detection")]
     [SerializeField] private Transform targetCheck;//目标检查
@@ -36,13 +37,15 @@ public class Entity_Combat : MonoBehaviour
             if (damageable == null) // 如果目标没有实现 IDamgable 接口，跳过此目标
                 continue;
 
+            ElementalEffectData effectData = new ElementalEffectData(stats, basicAttackScale);
+
             float elementalDamage = stats.GetElementalDamage(out ElementType element);// 获取元素伤害和元素类型
             float damage = stats.GetPhyiscalDamage(out bool isCrit);// 获取物理伤害，并判断是否暴击
             
             bool targetGotHit = damageable.TakeDamage(damage,elementalDamage,element,transform);// 尝试对目标造成伤害，并检查是否成功（目标是否受到伤害）
             
             if(element != ElementType.None) // 如果攻击是元素攻击（非无效元素），应用状态效果
-                ApplyStatusEffect(target.transform,element);
+                target.GetComponent<Entity_StatusHandler>().ApplyStatusEffect(element,effectData);
 
             if (targetGotHit) // 如果目标成功受到伤害，创建攻击命中的特效（VFX）
             {
@@ -60,31 +63,7 @@ public class Entity_Combat : MonoBehaviour
         }
     }
 
-    // 应用状态效果到目标
-    public void ApplyStatusEffect(Transform target,ElementType element,float scaleFactor = 1)
-    {
-        Entity_StatusHandler statusHandler = target.GetComponent<Entity_StatusHandler>();// 获取目标的状态管理器（负责处理目标的状态效果）
-
-        if (statusHandler == null)// 如果目标没有状态管理器，直接返回
-            return;
-        
-        if(element == ElementType.Ice && statusHandler.CanBeApplied(ElementType.Ice))// 如果元素类型是冰霜，且目标能够接受冰霜效果，则应用冰冻效果
-            statusHandler.ApplyChillEffect(defaultDuration,chillSlowMutiplier); // 应用冰冻效果，使用默认的持续时间和减速倍率
-
-        if (element == ElementType.Fire && statusHandler.CanBeApplied(ElementType.Fire)) // 如果元素类型是火焰，且目标能够接受火焰效果，则应用燃烧效果
-        {
-            scaleFactor = fireScale;// 根据火焰状态缩放因子调整火焰伤害
-            float fireDamage = stats.offense.fireDamage.GetValue() * scaleFactor;// 获取火焰伤害并根据缩放因子调整伤害
-            statusHandler.ApplyBurnEffect(defaultDuration,fireDamage);// 应用燃烧效果，使用默认的持续时间和调整后的火焰伤害
-        }
-
-        if (element == ElementType.Lightning && statusHandler.CanBeApplied(ElementType.Lightning)) // 如果元素类型是雷电，且目标能够接受雷电效果，则应用电击效果
-        {
-            scaleFactor = lightningScale;// 根据雷电状态缩放因子调整雷电伤害
-            float lightningDamage = stats.offense.lightningDamage.GetValue() * scaleFactor;// 获取雷电伤害并根据缩放因子调整伤害
-            statusHandler.ApplyElectrifyEffect(defaultDuration,lightningDamage,electrifyChargeBuildUp);// 应用电击效果，使用默认的持续时间、调整后的雷电伤害和电击积蓄
-        }
-    }
+   
 
     // 获取攻击范围内的所有碰撞体（即目标）
     protected Collider2D[] GetDetectedColliders()

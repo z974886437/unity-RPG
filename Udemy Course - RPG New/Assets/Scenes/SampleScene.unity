@@ -4304,17 +4304,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cebf938320b69c444947774a17c19974, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  basicAttackScale:
+    phyiscal: 1
+    elemental: 0.4
+    chillDuration: 3
+    chillSlowMultiplier: 0.2
+    burnDuration: 3
+    burnDamageScale: 1
+    shockDuration: 3
+    shockDamageScale: 1
+    shockCharge: 0.4
   targetCheck: {fileID: 440371311}
   targetCheckRadius: 1
   whatIsTarget:
     serializedVersion: 2
     m_Bits: 256
   defaultDuration: 3
-  chillSlowMutiplier: 0.4
+  chillSlowMutiplier: 0.2
   electrifyChargeBuildUp: 0.4
   fireScale: 0.8
   lightningScale: 2.5
-  counterRecovery: 0.25
+  counterRecovery: 0.4
 --- !u!114 &763083640
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10525,9 +10535,9 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 645789213}
-  - {fileID: 995927546}
   - {fileID: 2028857481}
   - {fileID: 1717825549}
+  - {fileID: 995927546}
   - {fileID: 1980558327}
   m_Father: {fileID: 1207290805}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

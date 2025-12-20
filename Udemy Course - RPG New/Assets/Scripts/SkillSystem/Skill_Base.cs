@@ -5,6 +5,8 @@ public class Skill_Base : MonoBehaviour
 {
     public Player player { get; private set; }
     
+    public DamageScaleData damageScaleData { get; private set; }
+    
     [Header("General Details")]
     [SerializeField] protected SkillType skillType;
     [SerializeField] protected SkillUpgradeType upgradeType;
@@ -29,6 +31,7 @@ public class Skill_Base : MonoBehaviour
     {
         upgradeType = upgrade.upgradeType;// 设置技能的升级类型
         cooldown = upgrade.cooldown;// 设置技能的冷却时间
+        damageScaleData = upgrade.damageScaleData;
     }
 
     // 检查技能是否可以使用

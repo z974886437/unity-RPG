@@ -4,6 +4,7 @@ using UnityEngine;
 public class SkillObject_Shard : SkillObject_Base
 {
     public event Action OnExplode;
+    private Skill_Shard shardManager;
     
     [SerializeField] private GameObject vfxPrefab;
 
@@ -29,9 +30,16 @@ public class SkillObject_Shard : SkillObject_Base
     }
 
     // 设置碎片的爆炸延迟时间，detinationTime 为爆炸时间
-    public void SetupShard(float detinationTime)
+    public void SetupShard(Skill_Shard shardManager)
     {
-        Invoke(nameof(Explode),detinationTime); // 在 detinationTime 秒后调用 Explode 方法
+        this.shardManager = shardManager;
+
+        playerStats = shardManager.player.stats;
+        damageScaleData = shardManager.damageScaleData;
+
+        float detonationTime = shardManager.GetDetonateTime();
+        
+        Invoke(nameof(Explode),detonationTime); // 在 detinationTime 秒后调用 Explode 方法
     }
     
     // 执行碎片爆炸

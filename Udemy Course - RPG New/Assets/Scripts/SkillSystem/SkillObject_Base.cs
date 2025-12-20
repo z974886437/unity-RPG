@@ -6,6 +6,8 @@ public class SkillObject_Base : MonoBehaviour
     [SerializeField] protected Transform targetCheck;
     [SerializeField] protected float checkRadius = 1;
 
+    protected Entity_Stats playerStats;
+    protected DamageScaleData damageScaleData;
 
 
     // 在指定半径内对所有敌人造成伤害
@@ -18,7 +20,17 @@ public class SkillObject_Base : MonoBehaviour
             if (damgable == null)// 如果敌人不可受伤，跳过当前循环
                 continue;
 
-            damgable.TakeDamage(1, 1, ElementType.None, transform);// 对敌人造成1点伤害，伤害类型为None，伤害来源为当前transform
+            ElementalEffectData effectData = new ElementalEffectData(playerStats, damageScaleData); // 创建一个元素效果数据，包含玩家的属性和伤害加成数据
+
+            float physDamage = playerStats.GetPhyiscalDamage(out bool isCrit, damageScaleData.phyiscal);// 计算物理伤害，并判断是否为暴击
+            float elemDamage = playerStats.GetElementalDamage(out ElementType element, damageScaleData.elemental);// 计算元素伤害，并获取元素类型
+
+            damgable.TakeDamage(physDamage, elemDamage, element, transform);// 对敌人造成物理伤害和元素伤害，伤害类型为元素类型，伤害来源为当前物体
+            
+            if(element != ElementType.None)// 如果有元素伤害，应用相应的状态效果
+                target.GetComponent<Entity_StatusHandler>().ApplyStatusEffect(element,effectData);
+            
+            
         }
     }
 
