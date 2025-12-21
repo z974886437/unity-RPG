@@ -7,10 +7,15 @@ public class Entity_Stats : MonoBehaviour
     
     
     public Stat_ResourceGroup resources;
-    public Stat_MajorGroup major;
     public Stat_OffenseGroup offense;
     public Stat_DefenseGroup defense;
+    public Stat_MajorGroup major;
 
+
+    public AttackData GetAttackData(DamageScaleData scaleData)
+    {
+        return new AttackData(this, scaleData);
+    }
     
     // 计算角色的最终元素伤害，综合火焰、冰霜、闪电伤害及智力加成
     public float GetElementalDamage(out ElementType element,float scaleFactor = 1)

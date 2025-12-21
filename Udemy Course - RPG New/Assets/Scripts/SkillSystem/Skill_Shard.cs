@@ -21,7 +21,7 @@ public class Skill_Shard : Skill_Base
     [SerializeField] private float shardExistDuration = 10;//碎片存在持续时间
     
     [Header("Health Rewind Shard Upgrade")]
-    [SerializeField] private float saveHealthPercent;
+    [SerializeField] private float savedHealthPercent;
     
 
     // 覆盖基类的Awake方法，初始化技能相关属性
@@ -40,7 +40,7 @@ public class Skill_Shard : Skill_Base
 
         // 检查并处理不同技能升级
         if (Unlocked(SkillUpgradeType.Shard))
-            HandleShardUpgrade();// 处理碎片升级
+            HandleShardRegular();// 处理碎片升级
         
         if(Unlocked(SkillUpgradeType.Shard_MoveToEnemy))
             HandleShardMoving();// 处理碎片向敌人移动
@@ -61,12 +61,12 @@ public class Skill_Shard : Skill_Base
         if (currentShard == null)// 如果当前没有碎片
         {
             CreateShard();// 创建一个新的碎片
-            saveHealthPercent = playerHealth.GetHealthPercent();// 保存当前生命百分比
+            savedHealthPercent = playerHealth.GetHealthPercent();// 保存当前生命百分比
         }
         else// 如果已有碎片
         {
             SwapPlayerAndShard();// 交换玩家与碎片的位置
-            playerHealth.SetHealthToPercent(saveHealthPercent);// 恢复生命到保存的百分比
+            playerHealth.SetHealthToPercent(savedHealthPercent);// 恢复生命到保存的百分比
             SetSkillOnCooldown();// 设置技能进入冷却
         }
     }
@@ -135,7 +135,7 @@ public class Skill_Shard : Skill_Base
     }
 
     // 处理碎片升级的技能
-    private void HandleShardUpgrade()
+    private void HandleShardRegular()
     {
         CreateShard();// 创建碎片
         SetSkillOnCooldown();// 设置技能进入冷却状态

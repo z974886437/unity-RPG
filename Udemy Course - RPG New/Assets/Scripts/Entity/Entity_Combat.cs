@@ -13,13 +13,13 @@ public class Entity_Combat : MonoBehaviour
     [SerializeField] private float targetCheckRadius = 1;//目标检查半径
     [SerializeField] private LayerMask whatIsTarget;//什么是目标
     
-    [Header("Status effect details")]
-    [SerializeField] private float defaultDuration = 3;
-    [SerializeField] private float chillSlowMutiplier = 0.2f;
-    [SerializeField] private float electrifyChargeBuildUp = 0.4f;
-    [Space]
-    [SerializeField] private float fireScale = 0.8f;
-    [SerializeField] private float lightningScale = 2.5f;
+    // [Header("Status effect details")]
+    // [SerializeField] private float defaultDuration = 3;
+    // [SerializeField] private float chillSlowMutiplier = 0.2f;
+    // [SerializeField] private float electrifyChargeBuildUp = 0.4f;
+    // [Space]
+    // [SerializeField] private float fireScale = 0.8f;
+    // [SerializeField] private float lightningScale = 2.5f;
 
     private void Awake()
     {
@@ -37,18 +37,20 @@ public class Entity_Combat : MonoBehaviour
             if (damageable == null) // 如果目标没有实现 IDamgable 接口，跳过此目标
                 continue;
 
-            ElementalEffectData effectData = new ElementalEffectData(stats, basicAttackScale);
+            AttackData attackData = stats.GetAttackData(basicAttackScale);
+            Entity_StatusHandler statusHandler = target.GetComponent<Entity_StatusHandler>();
 
-            float elementalDamage = stats.GetElementalDamage(out ElementType element);// 获取元素伤害和元素类型
-            float damage = stats.GetPhyiscalDamage(out bool isCrit);// 获取物理伤害，并判断是否暴击
+            float physDamage = attackData.phyiscalDamage;// 获取物理伤害，并判断是否暴击
+            float elementalDamage = attackData.elementalDamage;// 获取元素伤害和元素类型
+            ElementType element = attackData.element;
             
-            bool targetGotHit = damageable.TakeDamage(damage,elementalDamage,element,transform);// 尝试对目标造成伤害，并检查是否成功（目标是否受到伤害）
+            bool targetGotHit = damageable.TakeDamage(physDamage,elementalDamage,element,transform);// 尝试对目标造成伤害，并检查是否成功（目标是否受到伤害）
             
             if(element != ElementType.None) // 如果攻击是元素攻击（非无效元素），应用状态效果
-                target.GetComponent<Entity_StatusHandler>().ApplyStatusEffect(element,effectData);
+                statusHandler?.ApplyStatusEffect(element,attackData.effectData);
 
             if (targetGotHit) // 如果目标成功受到伤害，创建攻击命中的特效（VFX）
-                vfx.CreateOnHitVFX(target.transform,isCrit,element); // 创建攻击命中的特效
+                vfx.CreateOnHitVFX(target.transform,attackData.isCrit,element); // 创建攻击命中的特效
             
             
             // 获取目标的 Entity_Health 组件，这个组件负责管理目标的生命值

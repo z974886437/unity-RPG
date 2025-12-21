@@ -24,7 +24,7 @@ public class Entity_VFX : MonoBehaviour
     [SerializeField] private Color shockVfx = Color.yellow;
     private Color originalHitVfxColor;
     
-    private void Awake()
+    protected virtual void Awake()
     {
         entity = GetComponent<Entity>();
         sr = GetComponentInChildren<SpriteRenderer>();// 获取子物体上的SpriteRenderer组件
