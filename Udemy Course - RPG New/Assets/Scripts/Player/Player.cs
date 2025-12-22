@@ -9,6 +9,8 @@ public class Player : Entity
     public PlayerInputSet input { get; private set; }//输入
     public Player_SkillManager skillManager { get; private set; }
     public Player_VFX vfx { get; private set; }
+    public Entity_Health health { get; private set; }
+    public Entity_StatusHandler statusHandler { get; private set; }
     
     #region State Variables
     
@@ -23,6 +25,7 @@ public class Player : Entity
     public Player_JumpAttackState jumpAttackState { get; private set; }//跳跃攻击状态
     public Player_DeadState deadState { get; private set; }
     public Player_CounterAttackState counterAttackState { get; private set; }
+    public Player_SwordThrowState swordThrowState { get; private set; }
     
     #endregion
     
@@ -46,16 +49,20 @@ public class Player : Entity
     public float dashSpeed = 20;//冲刺速度
     
     public Vector2 moveInput { get; private set; }//移动输入
+    public Vector2 mousePosition { get; private set; }
 
     protected override void Awake()
     {
         base.Awake();
         
         ui = FindAnyObjectByType<UI>();
-        input = new PlayerInputSet();// 创建玩家输入设置实例
         skillManager = GetComponent<Player_SkillManager>();
+        statusHandler = GetComponent<Entity_StatusHandler>();
         vfx = GetComponent<Player_VFX>();
+        health = GetComponent<Entity_Health>();
 
+        input = new PlayerInputSet();// 创建玩家输入设置实例
+        
         idleState = new Player_IdleState(this,stateMachine, "idle");// 创建并初始化玩家空闲状态
         moveState = new Player_MoveState(this,stateMachine, "move");// 创建并初始化玩家移动状态
         jumpState = new Player_JumpState(this, stateMachine, "jumpFall");
@@ -67,6 +74,7 @@ public class Player : Entity
         jumpAttackState = new Player_JumpAttackState(this, stateMachine, "jumpAttack");
         deadState = new Player_DeadState(this, stateMachine, "dead");
         counterAttackState = new Player_CounterAttackState(this, stateMachine, "counterAttack");
+        swordThrowState = new Player_SwordThrowState(this,stateMachine,"swordThrow");
     }
     
     // 游戏对象开始时的初始化
@@ -144,6 +152,8 @@ public class Player : Entity
     private void OnEnable()
     {
         input.Enable();// 启用玩家输入系统
+        
+        input.Player.Mouse.performed += ctx => mousePosition = ctx.ReadValue<Vector2>();
 
         input.Player.Movement.performed += ctx => moveInput = ctx.ReadValue<Vector2>();// 监听移动输入事件，按下时读取输入值
         input.Player.Movement.canceled += ctx => moveInput = Vector2.zero;// 监听移动输入取消事件，按下时清空输入值

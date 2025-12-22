@@ -19,7 +19,10 @@ public class Player_GroundedState : PlayerState
         if(input.Player.Attack.WasPressedThisFrame()) // 如果玩家在当前帧内按下攻击按钮，切换到基本攻击状态
             stateMachine.ChangeState(player.basicAttackState);// 切换到基本攻击（BasicAttack）状态
         
-        if(input.Player.CounterAttack.WasPressedThisFrame())
+        if(input.Player.CounterAttack.WasPressedThisFrame())// 检查玩家是否按下反击按钮，如果按下，则切换到反击状态
             stateMachine.ChangeState(player.counterAttackState);
+        
+        if(input.Player.RangeAttack.WasPressedThisFrame())// 检查玩家是否按下远程攻击按钮，如果按下，则切换到投剑状态
+            stateMachine.ChangeState(player.swordThrowState);
     }
 }
