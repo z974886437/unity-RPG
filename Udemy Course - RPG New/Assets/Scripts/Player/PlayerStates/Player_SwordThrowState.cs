@@ -14,6 +14,8 @@ public class Player_SwordThrowState : PlayerState
     {
         base.Enter();
         
+        skillManager.swordThrow.EnableDots(true);
+        
         // 如果 mainCamera 不是主摄像头，设置为主摄像头
         if(mainCamera != Camera.main)
             mainCamera = Camera.main;
@@ -28,11 +30,14 @@ public class Player_SwordThrowState : PlayerState
         
         player.SetVelocity(0,rb.linearVelocity.y);// 设置玩家的速度，保持垂直速度不变
         player.HandleFlip(dirToMouse.x);// 处理玩家角色的翻转（朝向）
+        skillManager.swordThrow.PredictTrajectory(dirToMouse);
 
         if (input.Player.Attack.WasPressedThisFrame())// 如果按下攻击按钮，设置动画参数触发剑投掷
         {
-           
             anim.SetBool("swordThrowPerformed", true);
+            
+            skillManager.swordThrow.EnableDots(false);
+            skillManager.swordThrow.ConfirmTrajectory(dirToMouse);
 
         }
         
@@ -46,6 +51,7 @@ public class Player_SwordThrowState : PlayerState
         base.Exit();
         
         anim.SetBool("swordThrowPerformed", false);// 重置剑投掷的动画参数
+        skillManager.swordThrow.EnableDots(false);
     }
 
     // 计算玩家朝向鼠标的方向

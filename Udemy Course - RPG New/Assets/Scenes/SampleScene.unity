@@ -1634,7 +1634,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 428955378}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45dbef26f189302458df6c29d636bb10, type: 3}
+  m_Script: {fileID: 11500000, guid: 49d3ece1f0e3255498b6e945fdcfe889, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &431427858
@@ -3332,6 +3332,7 @@ GameObject:
   - component: {fileID: 631732892}
   - component: {fileID: 631732893}
   - component: {fileID: 631732894}
+  - component: {fileID: 631732895}
   m_Layer: 7
   m_Name: Skills_Holder
   m_TagString: Untagged
@@ -3381,7 +3382,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea1c9c1cf14f01147ab61d6e8dac32ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillType: 0
+  skillType: 2
   upgradeType: 0
   cooldown: 1
   shardPrefab: {fileID: 6051485509996569552, guid: d6aae18451314a245bd44fc856527194, type: 3}
@@ -3392,6 +3393,26 @@ MonoBehaviour:
   isRecharging: 0
   shardExistDuration: 10
   savedHealthPercent: 0
+--- !u!114 &631732895
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 631732891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10ce988487a6f9e429bb24bd8856a2d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillType: 3
+  upgradeType: 0
+  cooldown: 0
+  throwPower: 5
+  swordGravity: 3.5
+  predictionDot: {fileID: 3338799114340000605, guid: e6cd28ca4632aca41a73baed9cb0494c, type: 3}
+  numberOfDots: 20
+  spaceBetweenDots: 0.05
 --- !u!1 &643186301
 GameObject:
   m_ObjectHideFlags: 0
@@ -4198,12 +4219,12 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 631732892}
   - {fileID: 428955379}
   - {fileID: 243174659}
   - {fileID: 1811148404}
   - {fileID: 440371311}
   - {fileID: 513227829}
-  - {fileID: 631732892}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!70 &763083634

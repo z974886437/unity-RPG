@@ -18,5 +18,11 @@ public enum SkillUpgradeType
     Shard_MoveToEnemy,// Shard will move towards nearest enemy 碎片会朝最近的敌人移动
     Shard_Multicast,// Shard ability can have up to N charges. You can cast them all in a raw 碎片能力最多可以有N次充能。你可以在RAW里全部施放
     Shard_Teleport,// You can swap places with the last shard you created 你可以和你最后创建的碎片交换位置
-    Shard_TeleportHpRewind// When you swap places with shard, your HP % is same as it was when you created shard. 当你用碎片交换位置时，你的生命值百分比和你创建碎片时一样。
+    Shard_TeleportHpRewind,// When you swap places with shard, your HP % is same as it was when you created shard. 当你用碎片交换位置时，你的生命值百分比和你创建碎片时一样。
+    
+    /*-----Sword Throw-----*/
+    SwordThrow,// You can throw sword to damage enemies from range 你可以投掷剑来远距离伤害敌人
+    SwordThrow_Spin,// Your sword will spin at one point and damage enemies,Like a chainsaw 你的剑会在某个点旋转并伤害敌人，就像电锯一样
+    SwordThrow_Pierce,//Pierce sword will pierce N targets 穿刺剑能刺穿N个目标
+    SwordThrow_Bounce,// Bounce sword will bounce between enemies //弹跳剑会在敌人之间弹跳
 }

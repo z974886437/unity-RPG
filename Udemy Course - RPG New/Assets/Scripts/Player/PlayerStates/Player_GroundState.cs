@@ -22,7 +22,7 @@ public class Player_GroundedState : PlayerState
         if(input.Player.CounterAttack.WasPressedThisFrame())// 检查玩家是否按下反击按钮，如果按下，则切换到反击状态
             stateMachine.ChangeState(player.counterAttackState);
         
-        if(input.Player.RangeAttack.WasPressedThisFrame())// 检查玩家是否按下远程攻击按钮，如果按下，则切换到投剑状态
+        if(input.Player.RangeAttack.WasPressedThisFrame() && skillManager.swordThrow.CanUseSkill())// 检查玩家是否按下远程攻击按钮，如果按下，则切换到投剑状态
             stateMachine.ChangeState(player.swordThrowState);
     }
 }
