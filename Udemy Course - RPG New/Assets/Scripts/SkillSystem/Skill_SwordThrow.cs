@@ -2,14 +2,19 @@ using UnityEngine;
 
 public class Skill_SwordThrow : Skill_Base
 {
+    private SkillObject_Sword currentSword;
+   
+    [Header("Regular Sword Upgrade")]
+    [SerializeField] private GameObject swordPrefab;
     [Range(0,10)]
     [SerializeField] private float throwPower = 5;
-    [SerializeField] private float swordGravity = 3.5f;
+    
     
     [Header("Trajectory prediction")]
     [SerializeField] private GameObject predictionDot;//预测点
     [SerializeField] private int numberOfDots = 20;//点数
     [SerializeField] private float spaceBetweenDots = 0.05f;//点之间的空间
+    private float swordGravity;//剑的重力
     private Transform[] dots;
     private Vector2 confirmedDirection;//确认方向
     
@@ -17,14 +22,32 @@ public class Skill_SwordThrow : Skill_Base
     protected override void Awake()
     {
         base.Awake();
+        swordGravity = swordPrefab.GetComponent<Rigidbody2D>().gravityScale;
         dots = GenerateDots();// 生成并缓存轨迹预测用的小圆点，用于后续实时更新位置
+    }
+
+    // 检查技能是否可以使用（重写基类方法）
+    public override bool CanUseSkill()
+    {
+        if (currentSword != null)// 如果当前场上已经有一把飞剑存在
+        {
+            currentSword.GetSwordBackToPlayer();// 告诉现有飞剑回到玩家手中，而不是生成新的飞剑
+            return false;// 返回 false，表示本次技能无法再次释放
+        }
+        
+        return base.CanUseSkill(); // 否则调用基类判断逻辑，继续判断技能是否可用（如冷却、魔力等）
     }
 
     // 对外公开的方法：用于真正执行“丢剑”行为
     public void ThrowSword()
     {
-        Debug.Log("Create new sword!");
+        GameObject newSword = Instantiate(swordPrefab, dots[1].position, Quaternion.identity);
+
+        currentSword = newSword.GetComponent<SkillObject_Sword>();
+        currentSword.SetupSword(this,GetThrowPower());
     }
+
+    private Vector2 GetThrowPower() => confirmedDirection * (throwPower * 10);
     
     // 根据输入方向预测剑的飞行轨迹，并更新所有预测点的位置
     public void PredictTrajectory(Vector2 direction)

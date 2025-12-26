@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class SkillObject_Base : MonoBehaviour
 {
+    [SerializeField] private GameObject onHitVfx;
+    [Space]
     [SerializeField] protected LayerMask whatIsEnemy;
     [SerializeField] protected Transform targetCheck;
     [SerializeField] protected float checkRadius = 1;
@@ -9,6 +11,7 @@ public class SkillObject_Base : MonoBehaviour
     protected Entity_Stats playerStats;
     protected DamageScaleData damageScaleData;
     protected ElementType usedElement;
+    protected bool targetGotHit;
 
 
     // 在指定半径内对所有敌人造成伤害
@@ -21,19 +24,22 @@ public class SkillObject_Base : MonoBehaviour
             if (damgable == null)// 如果敌人不可受伤，跳过当前循环
                 continue;
 
-            AttackData attackData = playerStats.GetAttackData(damageScaleData);
-            Entity_StatusHandler statusHandler = target.GetComponent<Entity_StatusHandler>();
+            AttackData attackData = playerStats.GetAttackData(damageScaleData);// 从玩家属性获取攻击数据（包括物理伤害、元素伤害、暴击等）
+            Entity_StatusHandler statusHandler = target.GetComponent<Entity_StatusHandler>();// 获取敌人的状态管理组件，用于施加元素状态效果
 
             float physDamage = attackData.phyiscalDamage;// 计算物理伤害，并判断是否为暴击
             float elemDamage = attackData.elementalDamage;// 计算元素伤害，并获取元素类型
             ElementType element = attackData.element;
 
-            damgable.TakeDamage(physDamage, elemDamage, element, transform);// 对敌人造成物理伤害和元素伤害，伤害类型为元素类型，伤害来源为当前物体
+            targetGotHit = damgable.TakeDamage(physDamage, elemDamage, element, transform);// 对敌人造成物理伤害和元素伤害，伤害类型为元素类型，伤害来源为当前物体
             
             if(element != ElementType.None)// 如果有元素伤害，应用相应的状态效果
                 statusHandler?.ApplyStatusEffect(element,attackData.effectData);
 
-            usedElement = element;
+            if (targetGotHit)// 如果敌人被成功击中，播放命中特效
+                Instantiate(onHitVfx, target.transform.position, Quaternion.identity);
+
+            usedElement = element;// 记录当前使用的元素类型，可用于技能或特效逻辑
         }
     }
 

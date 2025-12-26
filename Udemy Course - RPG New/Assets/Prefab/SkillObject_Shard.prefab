@@ -156,6 +156,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76b64aab72d31fc4aaee9ed0e53b7878, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onHitVfx: {fileID: 5676477949589676110, guid: 28fe1ad3fc8e58b4285da38f4d5b4d6c, type: 3}
   whatIsEnemy:
     serializedVersion: 2
     m_Bits: 256

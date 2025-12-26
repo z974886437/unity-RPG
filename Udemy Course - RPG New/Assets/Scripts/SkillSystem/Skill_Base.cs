@@ -19,6 +19,7 @@ public class Skill_Base : MonoBehaviour
         skillManager = GetComponentInParent<Player_SkillManager>();
         player = GetComponentInParent<Player>();
         lastTimeUsed = lastTimeUsed - cooldown;// 将 lastTimeUsed 设置为（当前时间 - 冷却时间），以便技能在初始时可以立即使用
+        damageScaleData = new DamageScaleData();
     }
 
     // 尝试使用技能，子类可以重写此方法实现具体逻辑
@@ -36,7 +37,7 @@ public class Skill_Base : MonoBehaviour
     }
 
     // 检查技能是否可以使用
-    public bool CanUseSkill()
+    public virtual bool CanUseSkill()
     {
         if (upgradeType == SkillUpgradeType.None)
             return false;
