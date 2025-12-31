@@ -20,7 +20,7 @@ MonoBehaviour:
   critPower: 150
   armorReduction: 0
   fireDamage: 0
-  iceDamage: 0
+  iceDamage: 10
   lightningDamage: 0
   armor: 0
   evasion: 0

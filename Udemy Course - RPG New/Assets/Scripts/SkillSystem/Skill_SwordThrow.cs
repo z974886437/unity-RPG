@@ -9,6 +9,15 @@ public class Skill_SwordThrow : Skill_Base
     [Range(0,10)]
     [SerializeField] private float throwPower = 5;
     
+    [Header("Pierce Sword Upgrade")]
+    [SerializeField] private GameObject pierceSwordPrefab;
+    public int amountToPierce = 2;
+    
+    [Header("Spin Sword Upgrade")]
+    [SerializeField] private GameObject spinSwordPrefab;
+    public int maxDistance = 5;
+    public float attacksPerSecond = 6;//每秒攻击次数
+    public float maxSpinDuration = 3;
     
     [Header("Trajectory prediction")]
     [SerializeField] private GameObject predictionDot;//预测点
@@ -41,10 +50,27 @@ public class Skill_SwordThrow : Skill_Base
     // 对外公开的方法：用于真正执行“丢剑”行为
     public void ThrowSword()
     {
+        GameObject swordPrefab = GetSwordPrefab();
         GameObject newSword = Instantiate(swordPrefab, dots[1].position, Quaternion.identity);
 
         currentSword = newSword.GetComponent<SkillObject_Sword>();
         currentSword.SetupSword(this,GetThrowPower());
+    }
+
+    private GameObject GetSwordPrefab()
+    {
+        if (Unlocked(SkillUpgradeType.SwordThrow))
+            return swordPrefab;
+
+        if (Unlocked(SkillUpgradeType.SwordThrow_Pierce))
+            return pierceSwordPrefab;
+        
+        if(Unlocked(SkillUpgradeType.SwordThrow_Spin))
+            return spinSwordPrefab;
+
+        Debug.Log("No valid sword upgrade selected!");
+        return null;
+
     }
 
     private Vector2 GetThrowPower() => confirmedDirection * (throwPower * 10);

@@ -12,7 +12,7 @@ public class SkillObject_Sword : SkillObject_Base
     protected float maxAllowedDistance = 25;//最大允许距离
 
     // 每帧调用，用于更新剑的朝向并处理回收逻辑
-    private void Update()
+    protected virtual void Update()
     {
         transform.right = rb.linearVelocity; // 根据刚体当前速度方向旋转剑，使剑头始终朝向飞行方向
         HandleComeback();// 每帧检测并执行飞剑回到玩家的逻辑

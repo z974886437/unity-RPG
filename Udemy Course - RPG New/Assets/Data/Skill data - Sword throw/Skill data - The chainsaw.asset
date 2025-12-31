@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b762983948223141a314ac8e695bfe1, type: 3}
+  m_Name: Skill data - The chainsaw
+  m_EditorClassIdentifier: 
+  displayName: "\u72C2\u5203\u56DE\u65CB"
+  description: "\u5251\u9AD8\u901F\u65CB\u8F6C\uFF0C\u5316\u4F5C\u72C2\u66B4\u7684\u5207\u5272\u98CE\u66B4\uFF0C\u5728
+    N \u79D2\u5185\u6301\u7EED\u65A9\u51FB\u5468\u56F4\u654C\u4EBA\u3002"
+  icon: {fileID: 1339715149, guid: 6f409a212ffb7af468360ec707ab8e42, type: 3}
+  cost: 2
+  unlockedByDefault: 0
+  skillType: 3
+  upgradeData:
+    upgradeType: 12
+    cooldown: 4
+    damageScaleData:
+      phyiscal: 1
+      elemental: 1
+      chillDuration: 3
+      chillSlowMultiplier: 0.2
+      burnDuration: 3
+      burnDamageScale: 1
+      shockDuration: 3
+      shockDamageScale: 1
+      shockCharge: 0.4

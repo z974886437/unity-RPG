@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class SkillObject_Base : MonoBehaviour
@@ -8,11 +9,17 @@ public class SkillObject_Base : MonoBehaviour
     [SerializeField] protected Transform targetCheck;
     [SerializeField] protected float checkRadius = 1;
 
+    protected Animator anim;
     protected Entity_Stats playerStats;
     protected DamageScaleData damageScaleData;
     protected ElementType usedElement;
     protected bool targetGotHit;
 
+
+    protected void Awake()
+    {
+        anim = GetComponentInChildren<Animator>();
+    }
 
     // 在指定半径内对所有敌人造成伤害
     protected void DamageEnemiesInRadius(Transform t, float radius)
