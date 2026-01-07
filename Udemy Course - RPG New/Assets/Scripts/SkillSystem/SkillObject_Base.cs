@@ -24,7 +24,7 @@ public class SkillObject_Base : MonoBehaviour
     // 在指定半径内对所有敌人造成伤害
     protected void DamageEnemiesInRadius(Transform t, float radius)
     {
-        foreach (var target in EnemiesAround(t, radius))// 遍历半径范围内的所有敌人
+        foreach (var target in GetEnemiesAround(t, radius))// 遍历半径范围内的所有敌人
         {
             IDamgable damgable = target.GetComponent<IDamgable>();// 获取敌人是否可受伤（实现IDamgable接口）
 
@@ -57,7 +57,7 @@ public class SkillObject_Base : MonoBehaviour
         float closesDistance = Mathf.Infinity; // 设置初始最小距离为无穷大
 
         // 遍历周围的敌人
-        foreach (var enemy in EnemiesAround(transform, 10))
+        foreach (var enemy in GetEnemiesAround(transform, 10))
         {
             float distance = Vector2.Distance(transform.position, enemy.transform.position);// 计算当前物体与敌人之间的距离
 
@@ -73,7 +73,7 @@ public class SkillObject_Base : MonoBehaviour
     }
 
     // 获取指定transform位置半径范围内的所有敌人
-    protected Collider2D[] EnemiesAround(Transform t, float radius)
+    protected Collider2D[] GetEnemiesAround(Transform t, float radius)
     {
         return Physics2D.OverlapCircleAll(t.position, radius, whatIsEnemy);// 使用OverlapCircleAll方法检测所有敌人
     }

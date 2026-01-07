@@ -3,21 +3,33 @@ using UnityEngine;
 public class Skill_SwordThrow : Skill_Base
 {
     private SkillObject_Sword currentSword;
+    private float currentThrowPower;
    
     [Header("Regular Sword Upgrade")]
     [SerializeField] private GameObject swordPrefab;
     [Range(0,10)]
-    [SerializeField] private float throwPower = 5;
+    [SerializeField] private float regularThrowPower = 5;
     
     [Header("Pierce Sword Upgrade")]
     [SerializeField] private GameObject pierceSwordPrefab;
     public int amountToPierce = 2;
+    [Range(0,10)]
+    [SerializeField] private float pierceThrowPower = 5;
     
     [Header("Spin Sword Upgrade")]
     [SerializeField] private GameObject spinSwordPrefab;
     public int maxDistance = 5;
     public float attacksPerSecond = 6;//每秒攻击次数
     public float maxSpinDuration = 3;
+    [Range(0,10)]
+    [SerializeField] private float spinThrowPower = 5;
+    
+    [Header("Bounce Sword Upgrade")]
+    [SerializeField] private GameObject bounceSwordPrefab;
+    public int bounceCount = 5;//跳出次数
+    public float bounceSpeed = 12;//弹跳速度
+    [Range(0,10)]
+    [SerializeField] private float bounceThrowPower = 5;
     
     [Header("Trajectory prediction")]
     [SerializeField] private GameObject predictionDot;//预测点
@@ -38,6 +50,8 @@ public class Skill_SwordThrow : Skill_Base
     // 检查技能是否可以使用（重写基类方法）
     public override bool CanUseSkill()
     {
+        UpdateThrowPower();
+        
         if (currentSword != null)// 如果当前场上已经有一把飞剑存在
         {
             currentSword.GetSwordBackToPlayer();// 告诉现有飞剑回到玩家手中，而不是生成新的飞剑
@@ -50,30 +64,62 @@ public class Skill_SwordThrow : Skill_Base
     // 对外公开的方法：用于真正执行“丢剑”行为
     public void ThrowSword()
     {
-        GameObject swordPrefab = GetSwordPrefab();
-        GameObject newSword = Instantiate(swordPrefab, dots[1].position, Quaternion.identity);
+        GameObject swordPrefab = GetSwordPrefab(); // 根据当前技能或升级状态，获取要生成的剑预制体
+        GameObject newSword = Instantiate(swordPrefab, dots[1].position, Quaternion.identity);// 在预测轨迹的第二个点生成剑，避免贴脸生成造成视觉或碰撞问题
 
-        currentSword = newSword.GetComponent<SkillObject_Sword>();
-        currentSword.SetupSword(this,GetThrowPower());
+        currentSword = newSword.GetComponent<SkillObject_Sword>(); // 获取新生成剑上的 SkillObject_Sword 组件，用于后续控制
+        currentSword.SetupSword(this,GetThrowPower()); // 初始化剑的行为参数（方向、速度、弹射等），由技能管理器统一控制
     }
 
+    // 根据当前已解锁的剑投掷升级，返回对应的剑预制体
     private GameObject GetSwordPrefab()
     {
-        if (Unlocked(SkillUpgradeType.SwordThrow))
+        if (Unlocked(SkillUpgradeType.SwordThrow))// 如果解锁了基础剑投掷技能，返回普通剑预制体
             return swordPrefab;
 
-        if (Unlocked(SkillUpgradeType.SwordThrow_Pierce))
+        if (Unlocked(SkillUpgradeType.SwordThrow_Pierce)) // 如果解锁了穿透升级，返回穿透剑预制体
             return pierceSwordPrefab;
         
-        if(Unlocked(SkillUpgradeType.SwordThrow_Spin))
+        if(Unlocked(SkillUpgradeType.SwordThrow_Spin))// 如果解锁了旋转升级，返回旋转剑预制体
             return spinSwordPrefab;
 
-        Debug.Log("No valid sword upgrade selected!");
-        return null;
+        if (Unlocked(SkillUpgradeType.SwordThrow_Bounce))// 如果解锁了弹射升级，返回弹射剑预制体
+            return bounceSwordPrefab;
+
+        Debug.Log("No valid sword upgrade selected!");// 如果没有任何合法升级被解锁，输出错误日志用于调试
+        return null;// 返回 null，明确表示当前无法生成剑
 
     }
 
-    private Vector2 GetThrowPower() => confirmedDirection * (throwPower * 10);
+    // 根据当前剑投掷升级类型，更新对应的投掷力度数值
+    private void UpdateThrowPower()
+    {
+        switch (upgradeType)// 根据当前解锁并生效的升级类型进行分支判断
+        {
+            // 普通剑投掷，使用基础投掷力度
+            case SkillUpgradeType.SwordThrow:
+                currentThrowPower = regularThrowPower;
+                break;
+            
+            // 穿透剑投掷，使用穿透专属投掷力度
+            case SkillUpgradeType.SwordThrow_Pierce:
+                currentThrowPower = pierceThrowPower;
+                break;
+            
+            // 旋转剑投掷，使用旋转剑对应的投掷力度
+            case SkillUpgradeType.SwordThrow_Spin:
+                currentThrowPower = spinThrowPower;
+                break;
+            
+            // 弹射剑投掷，使用弹射剑专属的投掷力度
+            case SkillUpgradeType.SwordThrow_Bounce:
+                currentThrowPower = bounceThrowPower;
+                break;
+        }
+    }
+
+    // 根据确认后的方向和投掷力度，计算最终施加给剑的投掷向量
+    private Vector2 GetThrowPower() => confirmedDirection * (currentThrowPower * 10);
     
     // 根据输入方向预测剑的飞行轨迹，并更新所有预测点的位置
     public void PredictTrajectory(Vector2 direction)
@@ -87,7 +133,7 @@ public class Skill_SwordThrow : Skill_Base
     // 根据方向和时间，计算某一时刻剑所在的世界坐标位置
     private Vector2 GetTrajectoryPoint(Vector2 direction, float t)
     {
-        float scaledThrowPower = throwPower * 10;// 对投掷力度进行放大，避免数值过小导致轨迹不明显
+        float scaledThrowPower = currentThrowPower * 10;// 对投掷力度进行放大，避免数值过小导致轨迹不明显
         
         // This gives us the initial velocity - the starting speed and direction of the throw 这给出了初始速度——投掷的起始速度和方向
         Vector2 initialVelocity = direction * scaledThrowPower;// 计算初始速度：方向 × 投掷力度，决定起飞方向和初速度大小
