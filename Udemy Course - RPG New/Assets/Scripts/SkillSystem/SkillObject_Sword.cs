@@ -4,7 +4,7 @@ using UnityEngine;
 public class SkillObject_Sword : SkillObject_Base
 {
     protected Skill_SwordThrow swordManager;
-    protected Rigidbody2D rb;
+    
 
     protected Transform playerTransform;
     protected bool shouldComeback;//应该回归
@@ -21,7 +21,7 @@ public class SkillObject_Sword : SkillObject_Base
     // 初始化飞剑的核心数据（由技能管理器调用）
     public virtual void SetupSword(Skill_SwordThrow swordManager,Vector2 direction)
     {
-        rb = GetComponent<Rigidbody2D>();// 获取飞剑自身的 Rigidbody2D，用于物理移动
+        
         rb.linearVelocity = direction;// 设置飞剑初始飞行速度（方向已在外部归一化或计算）
         
         this.swordManager = swordManager;// 保存技能管理器引用，用于后续交互或回调

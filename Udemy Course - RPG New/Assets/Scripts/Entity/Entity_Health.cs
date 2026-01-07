@@ -30,10 +30,18 @@ public class Entity_Health : MonoBehaviour,IDamgable
         entityStats = GetComponent<Entity_Stats>();
         healthBar = GetComponentInChildren<Slider>();
         
-        currentHealth = entityStats.GetMaxHealth();
-        UpdateHealthBar();
+        SetupHealth();
+    }
+
+    // 初始化实体生命值数据，并启动生命恢复逻辑
+    private void SetupHealth()
+    {
+        if (entityStats == null)// 如果实体属性未初始化，直接返回，避免空引用错误
+            return;
         
-        InvokeRepeating(nameof(RegenerateHealth),0,regenInterval);
+        currentHealth = entityStats.GetMaxHealth();// 将当前生命值设置为最大生命值，保证初始状态为满血
+        UpdateHealthBar();// 刷新生命条显示，使 UI 与当前生命值保持一致
+        InvokeRepeating(nameof(RegenerateHealth),0,regenInterval); // 以固定时间间隔重复调用生命恢复函数，实现持续回血效果
     }
 
     // 处理实体受到伤害的方法
@@ -50,11 +58,10 @@ public class Entity_Health : MonoBehaviour,IDamgable
         
         Entity_Stats attackerStats = damageDealer.GetComponent<Entity_Stats>();// 获取攻击方的属性，计算穿甲伤害的减少量
         float armorReduction = attackerStats != null ? attackerStats.GetArmorReduction() : 0; // 获取攻击者的护甲穿透效果（护甲减免百分比）
+        float mitigation = entityStats != null ? entityStats.GetArmorMitigation(armorReduction) : 0;// 计算护甲的减免效果
+        float resistance = entityStats != null ?entityStats.GetElementalResistance(element) : 0;// 获取当前元素的抗性（每种元素可能有不同的抗性值）
 
-        float mitigation = entityStats.GetArmorMitigation(armorReduction);// 计算护甲的减免效果
         float physicalDamageTaken = damage * (1 - mitigation); // 根据护甲减免计算最终伤害
-
-        float resistance = entityStats.GetElementalResistance(element);// 获取当前元素的抗性（每种元素可能有不同的抗性值）
         float elementalDamageTaken = elementalDamage * (1 - resistance);// 根据元素抗性计算实际承受的元素伤害
         
         TakeKnockback(damageDealer, physicalDamageTaken);// 计算击退效果，根据伤害处理击退（可能是根据物理伤害或其他因素）
@@ -64,7 +71,13 @@ public class Entity_Health : MonoBehaviour,IDamgable
     }
 
     // 判断攻击是否被闪避
-    private bool AttackEvaded() => Random.Range(0, 100) < entityStats.GetEvasion();
+    private bool AttackEvaded()
+    {
+        if (entityStats == null)
+            return false;
+        else
+            return Random.Range(0, 100) < entityStats.GetEvasion();
+    } 
     
     // 恢复生命值的方法
     private void RegenerateHealth()
@@ -101,7 +114,7 @@ public class Entity_Health : MonoBehaviour,IDamgable
     }
 
     // 死亡处理方法
-    private void Die()
+    protected virtual void Die()
     {
         isDead = true;// 标记实体为已死亡
         entity?.EntityDeath();
@@ -147,6 +160,13 @@ public class Entity_Health : MonoBehaviour,IDamgable
 
     //计算持续时间
     private float CalculateDuration(float damage) => IsHeavyDamage(damage) ? heavyKnockbackDuration : knockbackDuration;// 判断是否为重击，选择不同的击退持续时间
-    
-    private bool IsHeavyDamage(float damage) => damage / entityStats.GetMaxHealth() > heavyDamageThreshold;// 判断伤害是否超过重击阈值
+
+    private bool IsHeavyDamage(float damage)
+    {
+        if (entityStats == null)
+            return false;
+        else
+            return damage / entityStats.GetMaxHealth() > heavyDamageThreshold;// 判断伤害是否超过重击阈值
+        
+    } 
 }

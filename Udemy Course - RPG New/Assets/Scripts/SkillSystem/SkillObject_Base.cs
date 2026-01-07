@@ -9,6 +9,8 @@ public class SkillObject_Base : MonoBehaviour
     [SerializeField] protected Transform targetCheck;
     [SerializeField] protected float checkRadius = 1;
 
+    
+    protected Rigidbody2D rb;
     protected Animator anim;
     protected Entity_Stats playerStats;
     protected DamageScaleData damageScaleData;
@@ -19,6 +21,7 @@ public class SkillObject_Base : MonoBehaviour
     protected void Awake()
     {
         anim = GetComponentInChildren<Animator>();
+        rb = GetComponent<Rigidbody2D>();// 获取飞剑自身的 Rigidbody2D，用于物理移动
     }
 
     // 在指定半径内对所有敌人造成伤害

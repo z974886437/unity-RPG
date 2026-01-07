@@ -4,6 +4,7 @@ using UnityEngine;
 public class Enemy_BattleState : EnemyState
 {
     private Transform player;
+    private Transform lastTarget;
     private float lastTimeWasInBattle;//上次是在战斗中
     
     public Enemy_BattleState(Enemy enemy, StateMachine stateMachine, string animBoolName) : base(enemy, stateMachine, animBoolName)
@@ -29,9 +30,12 @@ public class Enemy_BattleState : EnemyState
     public override void Update()
     {
         base.Update();
-        
-        if(enemy.PlayerDetected() == true) // 如果检测到玩家，更新战斗计时器
-           UpdateBattleTimer();
+
+        if (enemy.PlayerDetected() ) // 如果检测到玩家，更新战斗计时器
+        {
+            UpdateTargetIfNeeded();
+            UpdateBattleTimer();
+        }
         
         if(BattleTimeIsOver())// 如果战斗时间结束，切换到空闲状态
             stateMachine.ChangeState(enemy.idleState);
@@ -40,7 +44,21 @@ public class Enemy_BattleState : EnemyState
             stateMachine.ChangeState(enemy.attackState);
         else
             enemy.SetVelocity(enemy.battleMoveSpeed * DirectionToPlayer(),rb.linearVelocity.y);// 如果玩家不在攻击范围内，敌人向玩家移动
+    }
+
+    // 当有需要时更新当前追踪的目标（通常是玩家）
+    private void UpdateTargetIfNeeded()
+    {
+        if (enemy.PlayerDetected() == false)// 如果敌人当前未检测到玩家，直接返回，避免无效计算
+            return;
         
+        Transform newTarget = enemy.PlayerDetected().transform; // 获取检测到的玩家 Transform，用于作为新的追踪目标
+
+        if (newTarget != lastTarget)  // 如果新检测到的目标与上一次目标不同
+        {
+            lastTarget = newTarget; // 记录本次目标，防止重复进入更新逻辑
+            player = newTarget; // 更新当前追踪的玩家引用，供移动或攻击逻辑使用
+        }
     }
     
     // 更新战斗计时器，记录上次进入战斗的时间
