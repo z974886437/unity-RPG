@@ -12,7 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b762983948223141a314ac8e695bfe1, type: 3}
   m_Name: Skill data - Timeless attack
   m_EditorClassIdentifier: 
-  cost: 2
-  displayName: "\u5E7B\u706D\u5E7D\u88AD"
-  description: "\u53EC\u5524\u51FA\u7684\u5206\u8EAB\u5C06\u5728\u77ED\u6682\u7684\u77AC\u95F4\u51DD\u805A\u5168\u529B\uFF0C\u91CA\u653E\u51FA\u81F4\u547D\u4E00\u51FB\u3002\u5176\u653B\u51FB\u643A\u5E26\u865A\u7A7A\u4E4B\u529B\uFF0C\u7A7F\u8D8A\u65F6\u7A7A\u7684\u88C2\u9699\uFF0C\u4EE4\u76EE\u6807\u77AC\u95F4\u611F\u53D7\u5230\u81F4\u547D\u7684\u4F24\u5BB3\u3002\u6B64\u653B\u51FB\u53EA\u6709\u4E00\u6B21\u673A\u4F1A\uFF0C\u5206\u8EAB\u7684\u529B\u91CF\u867D\u77ED\u6682\uFF0C\u5374\u8DB3\u4EE5\u6539\u53D8\u6218\u5C40\uFF0C\u51FB\u4E2D\u654C\u4EBA\u65F6\u53EF\u9020\u6210\u5DE8\u5927\u7684\u4F24\u5BB3"
+  displayName: "\u56DE\u54CD\u5206\u8EAB"
+  description: "\u521B\u9020\u4E00\u4E2A\u4F60\u7684\u65F6\u95F4\u56DE\u54CD\uFF0C\u5438\u5F15\u654C\u4EBA\u6CE8\u610F\u529B\uFF0C\u5E76\u53D1\u52A8\u4E00\u6B21\u653B\u51FB\u3002"
   icon: {fileID: 2073386307, guid: 6f409a212ffb7af468360ec707ab8e42, type: 3}
+  cost: 2
+  unlockedByDefault: 0
+  skillType: 1
+  upgradeData:
+    upgradeType: 16
+    cooldown: 0
+    damageScaleData:
+      phyiscal: 1
+      elemental: 1
+      chillDuration: 3
+      chillSlowMultiplier: 0.2
+      burnDuration: 3
+      burnDamageScale: 1
+      shockDuration: 3
+      shockDamageScale: 1
+      shockCharge: 0.4

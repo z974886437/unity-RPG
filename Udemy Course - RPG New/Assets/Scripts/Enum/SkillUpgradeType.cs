@@ -30,7 +30,7 @@ public enum SkillUpgradeType
     TimeEcho, // Create a clone of a player. It can take damage from enemies. 创建一个玩家的克隆体。它能受到敌人的伤害。
     TimeEcho_SingleAttack,//Time Echo can perform a single attack. 时间回声可以施展一次攻击。
     TimeEcho_MultiAttack,// Time Echo can perform N attacks 时间回声可以发动N次攻击
-    TimeEcho_ChanceToMultiply, // Time Echo has a Chance to create another time echo when attacks 时间回声在攻击时有机会制造另一个时间回声
+    TimeEcho_ChanceToDuplicate, // Time Echo has a Chance to create another time echo when attacks 时间回声在攻击时有机会制造另一个时间回声
     
     TimeEcho_HealWisp,// When time echo dies it creates a wisp that flies towards the player to heal it. 当时间回声消失时，它会产生一道飞向玩家的光芒以治疗它。
                         //Heal is = to percantage of damage taken when died 治疗值=死亡时所受伤害的感知值

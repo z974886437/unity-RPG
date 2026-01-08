@@ -12,7 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b762983948223141a314ac8e695bfe1, type: 3}
   m_Name: Skill data - Quick thinking
   m_EditorClassIdentifier: 
-  cost: 3
-  displayName: "\u5FEB\u901F\u601D\u8003"
-  description: "\u56DE\u751F\u540E\u4F1A\u7F29\u77ED\u6240\u6709\u8D1F\u9762\u72B6\u6001\u7684\u6301\u7EED\u65F6\u95F4\u4E00\u79D2\uFF0C\u51CF\u5C11\u654C\u4EBA\u7684\u538B\u5236\u6548\u679C\u3002"
+  displayName: "\u590D\u82CF\u56DE\u54CD"
+  description: "\u6CBB\u7597\u7CBE\u7075\u4F7F\u4F60\u5176\u4ED6\u6280\u80FD\u7684\u51B7\u5374\u65F6\u95F4\u7F29\u77ED
+    1 \u79D2\u3002"
   icon: {fileID: -351970103, guid: 6f409a212ffb7af468360ec707ab8e42, type: 3}
+  cost: 3
+  unlockedByDefault: 0
+  skillType: 1
+  upgradeData:
+    upgradeType: 21
+    cooldown: 0
+    damageScaleData:
+      phyiscal: 1
+      elemental: 1
+      chillDuration: 3
+      chillSlowMultiplier: 0.2
+      burnDuration: 3
+      burnDamageScale: 1
+      shockDuration: 3
+      shockDamageScale: 1
+      shockCharge: 0.4

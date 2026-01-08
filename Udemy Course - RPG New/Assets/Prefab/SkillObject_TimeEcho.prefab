@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1651446078334532612}
   - component: {fileID: 1331461712581622347}
   - component: {fileID: 4916627618940792090}
+  - component: {fileID: 2990219767554647850}
   m_Layer: 0
   m_Name: Animator
   m_TagString: Untagged
@@ -110,6 +111,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2990219767554647850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 112161332006025961}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5de4bd91c4774814287111fcfe7a50a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4445224244064157273
 GameObject:
   m_ObjectHideFlags: 0
@@ -227,7 +240,7 @@ MonoBehaviour:
   whatIsEnemy:
     serializedVersion: 2
     m_Bits: 256
-  targetCheck: {fileID: 4879685091852888887}
+  targetCheck: {fileID: 7266049890219687837}
   checkRadius: 1
   onDeathVfx: {fileID: 2404679071857109009, guid: a1fe52e9e797e1a49a44e9ec59bdb9eb, type: 3}
   whatIsGround:

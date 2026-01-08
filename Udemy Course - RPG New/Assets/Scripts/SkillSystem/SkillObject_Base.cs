@@ -16,6 +16,7 @@ public class SkillObject_Base : MonoBehaviour
     protected DamageScaleData damageScaleData;
     protected ElementType usedElement;
     protected bool targetGotHit;
+    protected Transform lastTarget;
 
 
     protected void Awake()
@@ -46,8 +47,11 @@ public class SkillObject_Base : MonoBehaviour
             if(element != ElementType.None)// 如果有元素伤害，应用相应的状态效果
                 statusHandler?.ApplyStatusEffect(element,attackData.effectData);
 
-            if (targetGotHit)// 如果敌人被成功击中，播放命中特效
+            if (targetGotHit) // 如果敌人被成功击中，播放命中特效
+            {
+                lastTarget = target.transform;
                 Instantiate(onHitVfx, target.transform.position, Quaternion.identity);
+            }
 
             usedElement = element;// 记录当前使用的元素类型，可用于技能或特效逻辑
         }
