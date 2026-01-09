@@ -25,6 +25,14 @@ public class Entity_StatusHandler : MonoBehaviour
         entityVFX = GetComponent<Entity_VFX>();
     }
 
+    // 清除角色身上的所有负面状态效果（如灼烧、冰冻、中毒等）
+    public void RemoveAllNegativeEffects()
+    {
+        StopAllCoroutines();// 停止所有正在运行的状态协程，防止残留效果继续生效
+        currentEffect = ElementType.None;// 将当前元素状态重置为 None，表示角色处于无异常状态
+        entityVFX.StopAllVfx();  // 停止并清除所有与状态相关的视觉特效，避免视觉与逻辑不同步
+    }
+
     // 应用元素状态效果，根据传入的元素类型和效果数据
     public void ApplyStatusEffect(ElementType element,ElementalEffectData effectData)
     {
@@ -39,7 +47,7 @@ public class Entity_StatusHandler : MonoBehaviour
     }
 
     // 应用电击效果，计算电击积蓄并可能触发雷电攻击
-    public void ApplyShockEffect(float duration,float damage,float charge)
+    private void ApplyShockEffect(float duration,float damage,float charge)
     {
         float lightningResistance = entityStats.GetElementalResistance(ElementType.Lightning);// 获取目标的雷电抗性
         float finalCharge = charge * (1 - lightningResistance);// 根据目标的雷电抗性计算电击积蓄的最终值
@@ -84,7 +92,7 @@ public class Entity_StatusHandler : MonoBehaviour
     }
 
     // 应用燃烧效果，计算总伤害并启动燃烧协程
-    public void ApplyBurnEffect(float duration, float fireDamage)
+    private void ApplyBurnEffect(float duration, float fireDamage)
     {
         float fireResistance = entityStats.GetElementalResistance(ElementType.Fire);// 获取目标的火焰抗性
         float finalDamage = fireDamage * (1 - fireResistance); // 根据目标的火焰抗性计算最终伤害
@@ -115,7 +123,7 @@ public class Entity_StatusHandler : MonoBehaviour
     }
 
     // 应用冰冻效果，持续时间和减速倍数作为参数
-    public void ApplyChillEffect(float duration, float slowMultiplier)
+    private void ApplyChillEffect(float duration, float slowMultiplier)
     {
         float iceResistance = entityStats.GetElementalResistance(ElementType.Ice); // 获取角色的冰霜抗性
         float finalDuration = duration * (1 - iceResistance); // 根据冰霜抗性减少效果持续时间

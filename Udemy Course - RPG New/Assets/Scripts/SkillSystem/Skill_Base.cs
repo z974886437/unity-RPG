@@ -61,7 +61,7 @@ public class Skill_Base : MonoBehaviour
     public void SetSkillOnCooldown() => lastTimeUsed = Time.time;
 
     // 通过减少冷却时间来重置技能冷却（例如减少一定的冷却时间）
-    public void ResetCooldownBy(float cooldownReduction) => lastTimeUsed = lastTimeUsed + cooldownReduction;
+    public void ReduceCooldownBy(float cooldownReduction) => lastTimeUsed = lastTimeUsed + cooldownReduction;
     
     // 重置技能冷却时间，设置为当前时间
     public void ResetCooldown() => lastTimeUsed = Time.time;

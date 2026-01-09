@@ -9,7 +9,44 @@ public class Skill_TimeEcho : Skill_Base
     [SerializeField] private int maxAttacks = 3;
     [SerializeField] private float duplicateChance = 0.3f;//重复机会
 
+    [Header("Heal wisp Upgrades")]
+    [SerializeField] private float damagePercentHealed = 0.3f;//伤害治疗百分比
+    [SerializeField] private float cooldownReducedInSeconds;//冷却时间在几秒内缩短
 
+
+    // 获取回响转化为幽魂后，可按伤害比例转化的治疗百分比
+    public float GetPercentOfDamageHealed()
+    {
+        if (ShouldBeWisp() == false) // 如果当前升级类型不支持幽魂形态，则不提供任何治疗收益
+            return 0;
+        
+        return damagePercentHealed;// 返回幽魂基于伤害值进行治疗的百分比系数
+    }
+
+    // 获取幽魂回收时可减少的技能冷却时间（秒）
+    public float GetCooldownReduceInSeconds()
+    {
+        if (upgradeType != SkillUpgradeType.TimeEcho_CooldownWisp) // 只有冷却型幽魂升级时，才允许提供冷却缩减效果
+            return 0;
+        
+        return cooldownReducedInSeconds;// 返回幽魂回收后实际减少的冷却时间数值
+    }
+
+    // 判断幽魂回收时是否具备清除负面状态的能力
+    public bool CanRemoveNegativeEffects()
+    {
+        return upgradeType == SkillUpgradeType.TimeEcho_CleanseWisp; // 仅当升级为净化型幽魂时，才允许清除负面效果
+    }
+
+    // 判断当前回响在死亡后是否应转化为幽魂形态
+    public bool ShouldBeWisp()
+    {
+        // 只要升级类型属于任意幽魂分支，就进入幽魂逻辑
+        return upgradeType == SkillUpgradeType.TimeEcho_HealWisp
+               || upgradeType == SkillUpgradeType.TimeEcho_CleanseWisp
+               || upgradeType == SkillUpgradeType.TimeEcho_CooldownWisp;
+    }
+    
     //获得重复机会
     public float GetDuplicateChance()
     {

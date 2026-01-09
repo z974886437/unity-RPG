@@ -13,7 +13,9 @@ public class Entity_Health : MonoBehaviour,IDamgable
     [SerializeField] protected bool isDead;
     [Header("Health regen")]
     [SerializeField] private float regenInterval = 1;
-    [SerializeField] private bool canRegenerateHealth = true;
+    [SerializeField] private bool canRegenerateHealth = true;//可以恢复生命值
+    
+    public float lastDamageTaken { get; private set; }//最后一次受损
     
     [Header("On Damage Knockback")]
     [SerializeField] private Vector2 knockbackPower = new Vector2(1.5f,2.5f);//关于伤害击退
@@ -66,6 +68,8 @@ public class Entity_Health : MonoBehaviour,IDamgable
         
         TakeKnockback(damageDealer, physicalDamageTaken);// 计算击退效果，根据伤害处理击退（可能是根据物理伤害或其他因素）
         ReduceHealth(physicalDamageTaken + elementalDamageTaken);// 调用 ReduceHp 方法扣除生命值
+
+        lastDamageTaken = physicalDamageTaken + elementalDamageTaken;
 
         return true;// 返回成功处理伤害
     }

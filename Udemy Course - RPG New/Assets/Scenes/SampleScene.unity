@@ -4532,12 +4532,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillType: 1
-  upgradeType: 18
+  upgradeType: 19
   cooldown: 0
   timeEchoPrefab: {fileID: 4445224244064157273, guid: ce47eb87f4d93ef4e8eb08b8e7182a99, type: 3}
   timeEchoDuration: 15
   maxAttacks: 3
   duplicateChance: 1
+  damagePercentHealed: 0.3
+  cooldownReducedInSeconds: 0
 --- !u!1 &637988775
 GameObject:
   m_ObjectHideFlags: 0
@@ -5683,7 +5685,7 @@ MonoBehaviour:
   defaultStatSetup: {fileID: 11400000, guid: 35a984df80f37f847b566cff16d748d9, type: 2}
   resources:
     maxHealth:
-      baseValue: 100
+      baseValue: 1000
       modifiers: []
     healthRegen:
       baseValue: 0
@@ -6015,6 +6017,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 681547579910231827, guid: d072ec83a23b4f54e81704403692194e, type: 3}
+      propertyPath: offense.damage.baseValue
+      value: 250
+      objectReference: {fileID: 0}
     - target: {fileID: 6330826038331611036, guid: d072ec83a23b4f54e81704403692194e, type: 3}
       propertyPath: m_LocalPosition.x
       value: -7.1875105
@@ -6061,15 +6067,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6535905855003034801, guid: d072ec83a23b4f54e81704403692194e, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9072820441554719144, guid: d072ec83a23b4f54e81704403692194e, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9072820441554719144, guid: d072ec83a23b4f54e81704403692194e, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -8415,10 +8421,10 @@ RectTransform:
   - {fileID: 1069712711}
   - {fileID: 1091779210}
   - {fileID: 972883764}
-  - {fileID: 825390163}
-  - {fileID: 488748852}
   - {fileID: 2077503782}
   - {fileID: 1540472451}
+  - {fileID: 825390163}
+  - {fileID: 488748852}
   m_Father: {fileID: 1207290805}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -9236,7 +9242,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1207290805
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12411,10 +12417,10 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1577930273}
+  - {fileID: 396500347}
   - {fileID: 2037834160}
   - {fileID: 751277170}
   - {fileID: 276094843}
-  - {fileID: 396500347}
   m_Father: {fileID: 1207290805}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -13947,10 +13953,10 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 645789213}
+  - {fileID: 995927546}
   - {fileID: 2028857481}
   - {fileID: 1717825549}
   - {fileID: 1980558327}
-  - {fileID: 995927546}
   m_Father: {fileID: 1207290805}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
