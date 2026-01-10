@@ -26,6 +26,7 @@ public class Player : Entity
     public Player_DeadState deadState { get; private set; }
     public Player_CounterAttackState counterAttackState { get; private set; }
     public Player_SwordThrowState swordThrowState { get; private set; }
+    public Player_DomainExpansionState domainExpansionState { get; private set; }
     
     #endregion
     
@@ -35,6 +36,11 @@ public class Player : Entity
     public float attackVelocityDuration = 0.1f;//攻击速度持续时间
     public float comboResetTime = 1;//组合重置时间
     private Coroutine queuedAttackCo;//排队攻击协程
+    
+    [Header("Ultimate ability details")]
+    public float riseSpeed = 25;//上升速度
+    public float riseMaxDistance = 3;//上升最大距离
+    
 
     [Header("Movement details")] 
     public float moveSpeed;//移动速度
@@ -75,6 +81,7 @@ public class Player : Entity
         deadState = new Player_DeadState(this, stateMachine, "dead");
         counterAttackState = new Player_CounterAttackState(this, stateMachine, "counterAttack");
         swordThrowState = new Player_SwordThrowState(this,stateMachine,"swordThrow");
+        domainExpansionState = new Player_DomainExpansionState(this, stateMachine, "jumpFall");
     }
     
     // 游戏对象开始时的初始化

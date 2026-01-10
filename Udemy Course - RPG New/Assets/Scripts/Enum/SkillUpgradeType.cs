@@ -35,5 +35,10 @@ public enum SkillUpgradeType
     TimeEcho_HealWisp,// When time echo dies it creates a wisp that flies towards the player to heal it. 当时间回声消失时，它会产生一道飞向玩家的光芒以治疗它。
                         //Heal is = to percantage of damage taken when died 治疗值=死亡时所受伤害的感知值
     TimeEcho_CleanseWisp,// Wisp will now remove negative effects from player Wisp现在会移除玩家的负面效果
-    TimeEcho_CooldownWisp // Wisp will reduce cooldown of all skills by N second. 幽灵会让所有技能的冷却时间减少N秒。
+    TimeEcho_CooldownWisp, // Wisp will reduce cooldown of all skills by N second. 幽灵会让所有技能的冷却时间减少N秒。
+    
+    /*----- Domain Expansion ------*/
+    Domain_SlowingDown,// Create an area in which you slow down enemies by 90-100% . You can freely move and fight //创建一个可以使敌人减速 90-100% 的区域。你可以自由移动和战斗
+    Domain_EchoSpan,// You can no longer move, but you spam enemy with Time Echo ability 你不能再移动，但你可以用时间回响能力向敌人发送垃圾邮件
+    Domain_ShardSpan//You can no longer move, but you spam enemy with Time Shard ability 你不能再移动，但你可以用时间碎片能力向敌人发送垃圾邮件
 }

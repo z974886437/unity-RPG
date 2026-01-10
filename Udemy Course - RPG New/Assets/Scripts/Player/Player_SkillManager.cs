@@ -7,6 +7,7 @@ public class Player_SkillManager : MonoBehaviour
     public Skill_Shard shard { get; private set; }
     public Skill_SwordThrow swordThrow { get;private set; }
     public Skill_TimeEcho timeEcho { get;private set; }
+    public Skill_DomainExpansion domainExpansion { get; private set; }//域扩展
 
     private Skill_Base[] allSkills;
 
@@ -17,6 +18,7 @@ public class Player_SkillManager : MonoBehaviour
         shard = GetComponentInChildren<Skill_Shard>(); // 获取碎片技能组件，用于范围伤害或引爆逻辑
         swordThrow = GetComponentInChildren<Skill_SwordThrow>();// 获取飞剑投掷技能组件，用于远程穿透攻击
         timeEcho = GetComponentInChildren<Skill_TimeEcho>();// 获取时间回响技能组件，用于复制或延迟攻击效果
+        domainExpansion = GetComponentInChildren<Skill_DomainExpansion>();
         
         allSkills = GetComponentsInChildren<Skill_Base>();// 获取角色身上所有继承自 Skill_Base 的技能，用于批量操作
     }
@@ -36,6 +38,7 @@ public class Player_SkillManager : MonoBehaviour
             case SkillType.TimeShard: return shard;
             case SkillType.SwordThrow: return swordThrow;
             case SkillType.TimeEcho: return timeEcho;
+            case SkillType.DomainExpansion: return domainExpansion;
             
             default:
                 Debug.Log($"skill type {type} is not implemented yet"); // 如果技能类型未实现，输出警告日志并返回 null
