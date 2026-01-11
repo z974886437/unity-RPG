@@ -4554,8 +4554,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillType: 4
-  upgradeType: 23
+  upgradeType: 22
   cooldown: 0
+  domainPrefab: {fileID: 1746573889141214221, guid: 28ddc7ad27df73a4e9e35fc833280a8a, type: 3}
+  slowDownPercent: 0.8
+  slowDownDomainDuration: 5
+  spellCastingDomainSlowDown: 1
+  spellCastingDomainDuration: 8
+  maxDomainSize: 10
+  expandSpeed: 3
 --- !u!1 &637988775
 GameObject:
   m_ObjectHideFlags: 0
@@ -8437,12 +8444,12 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1069712711}
+  - {fileID: 2077503782}
+  - {fileID: 1540472451}
   - {fileID: 825390163}
   - {fileID: 488748852}
   - {fileID: 1091779210}
   - {fileID: 972883764}
-  - {fileID: 2077503782}
-  - {fileID: 1540472451}
   m_Father: {fileID: 1207290805}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -12435,10 +12442,10 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1577930273}
-  - {fileID: 396500347}
   - {fileID: 2037834160}
   - {fileID: 751277170}
   - {fileID: 276094843}
+  - {fileID: 396500347}
   m_Father: {fileID: 1207290805}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -13972,9 +13979,9 @@ RectTransform:
   m_Children:
   - {fileID: 645789213}
   - {fileID: 995927546}
-  - {fileID: 1980558327}
   - {fileID: 2028857481}
   - {fileID: 1717825549}
+  - {fileID: 1980558327}
   m_Father: {fileID: 1207290805}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}

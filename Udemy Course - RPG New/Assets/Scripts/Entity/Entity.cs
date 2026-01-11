@@ -28,8 +28,8 @@ public class Entity : MonoBehaviour
     public bool wallDetected { get; private set; }//检测到墙壁
 
     private bool isKnocked;
-    private Coroutine knockbackCo;
-    private Coroutine slowDownCo;
+    private Coroutine knockbackCo;//击退
+    private Coroutine slowDownCo;//放慢速度
 
     // 在对象初始化时调用，进行必要的设置
     protected virtual void Awake()
@@ -65,18 +65,29 @@ public class Entity : MonoBehaviour
     }
 
     // 用于使实体减速，启动协程来实现减速效果
-    public virtual void SlowDownEntity(float duration,float slowMultiplier)
+    public virtual void SlowDownEntity(float duration,float slowMultiplier,bool canOverrideSlowEffect = false)
     {
-        if(slowDownCo != null)// 如果已有减速协程在运行，则停止它
-            StopCoroutine(slowDownCo);
+        if (slowDownCo != null) // 如果当前已经有减速协程在运行
+        {
+            if (canOverrideSlowEffect)// 如果允许覆盖已有减速效果
+                StopCoroutine(slowDownCo);// 停止当前正在运行的减速协程
+            else
+                return;// 不允许覆盖时，直接返回，保持原减速效果
+        }
 
-        slowDownCo = StartCoroutine(SlowDownEntityCo(duration,slowMultiplier));// 启动新的减速协程，传入持续时间和减速倍率
+        slowDownCo = StartCoroutine(SlowDownEntityCo(duration,slowMultiplier));// 启动新的减速协程，并保存协程引用用于后续管理
     }
 
     // 实际执行减速效果的协程
     protected virtual IEnumerator SlowDownEntityCo(float duration,float slowMultiplier)
     {
         yield return null;  // 暂时不做任何事情，可以在派生类中重写这个方法实现具体的减速逻辑
+    }
+
+    // 停止减速效果的统一出口
+    public virtual void StopSlowDown()
+    {
+        slowDownCo = null;// 清空协程引用，表示当前没有减速效果在运行
     }
 
     //受到击退

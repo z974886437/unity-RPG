@@ -35,29 +35,51 @@ public class Enemy : Entity
     [SerializeField] private float playerCheckDistance = 10;//检测玩家距离
     
     public Transform player { get; private set; }
+    public float activeSlowMultiplier { get; private set; } = 1;//主动慢速乘法器
 
+    
+    // 获取当前真实移动速度：基础移动速度 × 当前减速倍率
+    public float GetMoveSpeed() => moveSpeed * activeSlowMultiplier;
+    
+    // 获取当前真实战斗移动速度：基础战斗速度 × 当前减速倍率
+    public float GetBattleMoveSpeed() => battleMoveSpeed * activeSlowMultiplier;
 
     // 使实体在指定时间内减速的协程
     protected override IEnumerator SlowDownEntityCo(float duration, float slowMultiplier)
     {
-        // 保存原始的移动速度、战斗速度和动画速度
-        float originalMoveSpeed = moveSpeed; // 记录原始的移动速度
-        float originalBattleSpeed = battleMoveSpeed; // 记录原始的战斗速度
-        float originalAnimSpeed = anim.speed; // 记录原始的动画播放速度
+        #region original
+        // // 保存原始的移动速度、战斗速度和动画速度
+        // float originalMoveSpeed = moveSpeed; // 记录原始的移动速度
+        // float originalBattleSpeed = battleMoveSpeed; // 记录原始的战斗速度
+        // float originalAnimSpeed = anim.speed; // 记录原始的动画播放速度
+        //
+        // // 计算实际减速比例（减速倍率控制）
+        // float speedMultiplier = 1 - slowMultiplier; // 1 减去减速倍率得到新的速度比例
+        //
+        // // 应用减速效果，减缓角色的移动速度、战斗速度和动画速度
+        // moveSpeed = moveSpeed * speedMultiplier; // 角色的移动速度按减速比例调整
+        // battleMoveSpeed = battleMoveSpeed * speedMultiplier; // 角色的战斗移动速度按减速比例调整
+        // anim.speed = anim.speed * speedMultiplier; // 角色的动画速度按减速比例调整
+        //
+        // moveSpeed = originalMoveSpeed; // 恢复原始的移动速度
+        // battleMoveSpeed = originalBattleSpeed; // 恢复原始的战斗速度
+        // anim.speed = originalAnimSpeed;// 恢复原始的动画速度
+        #endregion
+        activeSlowMultiplier = 1 - slowMultiplier;// 根据减速百分比计算最终速度倍率（例如 0.3 表示减速 30%）
 
-        // 计算实际减速比例（减速倍率控制）
-        float speedMultiplier = 1 - slowMultiplier; // 1 减去减速倍率得到新的速度比例
-
-        // 应用减速效果，减缓角色的移动速度、战斗速度和动画速度
-        moveSpeed = moveSpeed * speedMultiplier; // 角色的移动速度按减速比例调整
-        battleMoveSpeed = battleMoveSpeed * speedMultiplier; // 角色的战斗移动速度按减速比例调整
-        anim.speed = anim.speed * speedMultiplier; // 角色的动画速度按减速比例调整
-
+        anim.speed = anim.speed * activeSlowMultiplier; // 同步降低动画播放速度，使动作与移动速度一致
+        
         yield return new WaitForSeconds(duration); // 等待减速效果的持续时间
+        StopSlowDown();// 时间结束后，恢复正常速度
+    }
 
-        moveSpeed = originalMoveSpeed; // 恢复原始的移动速度
-        battleMoveSpeed = originalBattleSpeed; // 恢复原始的战斗速度
-        anim.speed = originalAnimSpeed;// 恢复原始的动画速度
+    // 立即停止减速效果，用于时间结束或离开领域
+    public override void StopSlowDown()
+    {
+        activeSlowMultiplier = 1;// 将减速倍率重置为 1，表示不再减速
+        anim.speed = 1;// 将动画速度重置为 1，恢复正常播放
+        base.StopSlowDown();// 调用父类的停止减速逻辑（用于清理状态或标记）
+        
     }
 
     // 启用或禁用反击窗口（反击窗口决定了是否可以被眩晕或受到控制）

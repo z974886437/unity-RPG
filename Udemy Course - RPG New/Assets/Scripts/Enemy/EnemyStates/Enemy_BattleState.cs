@@ -22,7 +22,8 @@ public class Enemy_BattleState : EnemyState
 
         if (ShouldRetreat())// 如果敌人需要撤退，根据距离判断并设置撤退速度
         {
-            rb.linearVelocity = new Vector2(enemy.retrealVelocity.x * -DirectionToPlayer(), enemy.retrealVelocity.y); // 撤退：根据敌人的撤退速度和方向设置敌人的速度
+            rb.linearVelocity = 
+                new Vector2((enemy.retrealVelocity.x * enemy.activeSlowMultiplier) * -DirectionToPlayer(), enemy.retrealVelocity.y); // 撤退：根据敌人的撤退速度和方向设置敌人的速度
             enemy.HandleFlip(DirectionToPlayer());// 处理敌人的翻转：如果敌人需要撤退，确保它面向撤退的方向
         }
     }
@@ -43,7 +44,7 @@ public class Enemy_BattleState : EnemyState
         if(WithinAttackRange() && enemy.PlayerDetected())// 如果玩家在攻击范围内，并且检测到玩家，切换到攻击状态
             stateMachine.ChangeState(enemy.attackState);
         else
-            enemy.SetVelocity(enemy.battleMoveSpeed * DirectionToPlayer(),rb.linearVelocity.y);// 如果玩家不在攻击范围内，敌人向玩家移动
+            enemy.SetVelocity(enemy.GetBattleMoveSpeed() * DirectionToPlayer(),rb.linearVelocity.y);// 如果玩家不在攻击范围内，敌人向玩家移动
     }
 
     // 当有需要时更新当前追踪的目标（通常是玩家）

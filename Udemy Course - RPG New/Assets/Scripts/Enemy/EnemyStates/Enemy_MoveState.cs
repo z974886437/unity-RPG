@@ -18,7 +18,7 @@ public class Enemy_MoveState : Enemy_GroundedState
     {
         base.Update();
         
-        enemy.SetVelocity(enemy.moveSpeed * enemy.facingDir,rb.linearVelocity.y); // 设置敌人的速度，根据朝向和速度设置水平方向的速度
+        enemy.SetVelocity(enemy.GetMoveSpeed() * enemy.facingDir,rb.linearVelocity.y); // 设置敌人的速度，根据朝向和速度设置水平方向的速度
 
         if (enemy.groundDetected == false || enemy.wallDetected)// 如果敌人未检测到地面或检测到墙壁，切换到空闲状态
             stateMachine.ChangeState(enemy.idleState);
