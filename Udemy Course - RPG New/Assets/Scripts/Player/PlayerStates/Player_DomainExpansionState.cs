@@ -36,8 +36,14 @@ public class Player_DomainExpansionState : PlayerState
 
         if (isLevitating)// 如果已经处于悬浮状态
         {
-            if (stateTimer <= 0)// 当悬浮计时结束后，切回 Idle 状态
+            skillManager.domainExpansion.DoSpellCasting();
+
+            if (stateTimer <= 0) // 当悬浮计时结束后，切回 Idle 状态
+            {
+                createdDomain = false;// 重置领域创建标记，允许下次重新生成
+                rb.gravityScale = originalGravity;// 恢复进入状态前的重力，避免角色永久失重
                 stateMachine.ChangeState(player.idleState);
+            }
         }
     }
 
@@ -45,9 +51,7 @@ public class Player_DomainExpansionState : PlayerState
     public override void Exit()
     {
         base.Exit();
-        rb.gravityScale = originalGravity;// 恢复进入状态前的重力，避免角色永久失重
         isLevitating = false;// 重置悬浮标记，为下次进入状态做准备
-        createdDomain = false;// 重置领域创建标记，允许下次重新生成
     }
 
     // 进入悬浮状态的具体处理逻辑
@@ -57,7 +61,7 @@ public class Player_DomainExpansionState : PlayerState
         rb.linearVelocity = Vector2.zero;// 清空速度，防止角色继续移动
         rb.gravityScale = 0; // 关闭重力，实现悬浮效果
 
-        stateTimer = 2;// 设置悬浮持续时间（秒）
+        stateTimer = skillManager.domainExpansion.GetDomainDuration();// 设置悬浮持续时间（秒）
 
         if (createdDomain == false) // 如果还没有创建领域
         {

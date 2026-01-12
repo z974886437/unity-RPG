@@ -23,9 +23,9 @@ public class SkillObject_Shard : SkillObject_Base
     }
 
     // 移动物体朝最近的目标
-    public void MoveTowardsClosestTarget(float speed)
+    public void MoveTowardsClosestTarget(float speed,Transform newTarget = null)
     {
-        target = FindClosestTarget();// 获取最近的目标
+        target = newTarget == null ? FindClosestTarget() : newTarget;
         this.speed = speed; // 设置物体的移动速度
     }
 
@@ -43,7 +43,7 @@ public class SkillObject_Shard : SkillObject_Base
     }
 
     // 初始化碎片（增强版本：支持移动与自定义引爆时间）
-    public void SetupShard(Skill_Shard shardManager, float detonationTime, bool canMove, float shardSpeed)
+    public void SetupShard(Skill_Shard shardManager, float detonationTime, bool canMove, float shardSpeed,Transform target = null)
     {
         this.shardManager = shardManager;// 缓存碎片所属的技能管理器，确保碎片与技能数据绑定
         playerStats = shardManager.player.stats;// 从技能管理器中获取玩家属性，用于碎片造成的伤害计算
@@ -52,7 +52,7 @@ public class SkillObject_Shard : SkillObject_Base
         Invoke(nameof(Explode),detonationTime); // 使用外部传入的引爆时间调用 Explode，支持升级或特殊逻辑控制
         
         if(canMove)// 如果碎片允许移动，则朝最近的敌人移动
-            MoveTowardsClosestTarget(shardSpeed);
+            MoveTowardsClosestTarget(shardSpeed,target);
     }
     
     // 执行碎片爆炸

@@ -46,8 +46,16 @@ public class SkillObject_DomainExpansion : SkillObject_Base
                 expandSpeed * Time.deltaTime);// 插值速度：速度 * deltaTime，保证帧率无关
         
         // 如果正在收缩，且已经非常接近 0，则销毁该领域对象
-        if(isShrinking && sizeDifference < 0.1f)
-            Destroy(gameObject);
+        if (isShrinking && sizeDifference < 0.1f)
+            TerminateDomain();
+        
+    }
+
+    // 终止领域技能，并清理所有领域相关状态
+    private void TerminateDomain()
+    {
+        domainManager.ClearTargets();// 清空领域中记录的所有目标
+        Destroy(gameObject);// 销毁领域物体本身
     }
 
     // 在领域持续时间结束后调用，用于开始收缩领域
@@ -65,6 +73,7 @@ public class SkillObject_DomainExpansion : SkillObject_Base
         if (enemy == null) // 如果不是敌人，则直接返回，避免空引用
             return;
         
+        domainManager.AddTarget(enemy);
         enemy.SlowDownEntity(duration,slowDownPercent,true);// 对敌人施加减速效果，并标记为领域减速
     }
 

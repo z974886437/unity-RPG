@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Skill_DomainExpansion : Skill_Base
@@ -9,15 +10,82 @@ public class Skill_DomainExpansion : Skill_Base
     [SerializeField] private float slowDownDomainDuration = 5;//减慢域持续时间
     
     [Header("Spell Casting Upgrade")]
+    [SerializeField] private int spellsToCast = 10;
     [SerializeField] private float spellCastingDomainSlowDown = 1;//施法领域减速
     [SerializeField] private float spellCastingDomainDuration = 8;//施法域持续时间
+    private float spellCastTimer;
+    private float spellsPerSecond;
     
     [Header("Domain details")]
     public float maxDomainSize = 10;//最大域大小
     public float expandSpeed = 3;//扩张速度
 
+    private List<Enemy> trappedTargets = new List<Enemy>();//被困目标
+    private Transform currentTarget;
 
+    // 创建领域技能对象，用于生成具体的领域表现与效果
+    public void CreateDomain()
+    {
+        spellsPerSecond = spellsToCast / GetDomainDuration();// 根据领域持续时间计算每秒施法次数，保证在持续时间内均匀释放技能
+        
+        // 在当前物体位置实例化领域预制体，不进行旋转
+        GameObject domain = Instantiate(domainPrefab, // 领域技能的预制体
+            transform.position,// 生成位置：当前物体的位置
+            Quaternion.identity);// 不进行旋转，保持默认朝向
+        
+        domain.GetComponent<SkillObject_DomainExpansion>().SetupDomain(this);// 获取领域脚本并传入当前技能管理器，用于初始化领域参数
+    }
+    
+    // 负责在领域存在期间持续进行施法逻辑
+    public void DoSpellCasting()
+    {
+        spellCastTimer -= Time.deltaTime;// 使用帧时间递减施法计时器，保证与帧率无关
 
+        if (currentTarget == null) // 如果当前没有目标，则尝试从领域内寻找一个
+            currentTarget = FindTargetInDomain();
+
+        if (currentTarget != null && spellCastTimer < 0)// 当存在目标且计时器结束时才进行施法
+        {
+            CastSpell(currentTarget);// 对当前目标释放对应的领域衍生技能
+            spellCastTimer = 1 / spellsPerSecond;// 重置施法计时器，1 / 每秒施法次数 = 两次施法的间隔时间
+            currentTarget = null;// 清空当前目标，确保下次重新随机
+        }
+    }
+
+    // 根据领域升级类型，对目标释放不同的衍生技能
+    private void CastSpell(Transform target)
+    {
+        if (upgradeType == SkillUpgradeType.Domain_EchoSpan)// 若升级为“时间回响扩散”，则在目标附近生成时间回响
+        {
+            Vector3 offset = Random.value < 0.5f ? new Vector3(1, 0) : new Vector3(-1, 0);// 随机选择目标左侧或右侧偏移，避免完全重叠生成
+            
+            skillManager.timeEcho.CreateTimeEcho(target.position + offset); // 在目标附近创建时间回响实例
+        }
+
+        if (upgradeType == SkillUpgradeType.Domain_ShardSpan)// 若升级为“碎片扩散”，则直接对目标生成原始碎片
+        {
+            skillManager.shard.CreateRawShard(target,true); // true 表示该碎片来源于领域，而非普通技能释放
+        }
+    }
+
+    // 从被领域困住的目标列表中随机选取一个
+    private Transform FindTargetInDomain()
+    {
+        if(trappedTargets.Count == 0) // 若当前领域内没有任何目标，则直接返回空
+            return null;
+        
+        int randomIndex = Random.Range(0, trappedTargets.Count);// 在目标列表中随机选择一个索引
+        Transform target = trappedTargets[randomIndex].transform;// 取出对应索引的目标 Transform
+
+        if (target == null) // 若目标已被销毁（例如死亡），则移除并返回空
+        {
+            trappedTargets.RemoveAt(randomIndex);// 及时清理无效引用，避免后续 NullReference
+            return null;
+        }
+        
+        return target;// 返回一个有效的领域内目标
+    }
+    
     // 根据当前升级类型，获取领域的持续时间
     public float GetDomainDuration()
     {
@@ -42,15 +110,19 @@ public class Skill_DomainExpansion : Skill_Base
         return upgradeType != SkillUpgradeType.Domain_EchoSpan// 当升级类型不是“回声扩展”也不是“碎片扩展”时，表示可以立刻生成领域
                && upgradeType != SkillUpgradeType.Domain_ShardSpan;// 排除碎片扩展升级，因为该升级通常需要额外触发条件
     }
-    
-    // 创建领域技能对象，用于生成具体的领域表现与效果
-    public void CreateDomain()
+
+    // 将进入领域的敌人加入“被困目标列表”
+    public void AddTarget(Enemy targetToAdd)
     {
-        // 在当前物体位置实例化领域预制体，不进行旋转
-        GameObject domain = Instantiate(domainPrefab, // 领域技能的预制体
-            transform.position,// 生成位置：当前物体的位置
-            Quaternion.identity);// 不进行旋转，保持默认朝向
-        
-        domain.GetComponent<SkillObject_DomainExpansion>().SetupDomain(this);// 获取领域脚本并传入当前技能管理器，用于初始化领域参数
+        trappedTargets.Add(targetToAdd);// 把敌人加入列表，用于后续领域内的施法与减速控制
+    }
+
+    // 清空领域内的所有目标，并恢复它们的状态
+    public void ClearTargets()
+    {
+        foreach(var enemy in trappedTargets)// 遍历当前所有被领域影响的敌人
+            enemy.StopSlowDown();// 停止敌人身上的减速效果，避免领域消失后仍被影响
+
+        trappedTargets = new List<Enemy>();// 重新创建列表而不是 Clear() 原因：防止其他地方持有旧列表引用导致逻辑错误
     }
 }

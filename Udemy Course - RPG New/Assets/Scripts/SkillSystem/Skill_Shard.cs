@@ -31,6 +31,36 @@ public class Skill_Shard : Skill_Base
         currentCharges = maxCharges;// 初始充能为最大充能
         playerHealth = GetComponentInParent<Entity_Health>();
     }
+    
+    // 创建一个碎片对象，并设置其爆炸时间
+    public void CreateShard()
+    {
+        float detonationTime = GetDetonateTime();// 获取爆炸时间
+        
+        GameObject shard = Instantiate(shardPrefab, transform.position, Quaternion.identity);// 实例化碎片预制体，生成一个碎片对象在当前物体位置
+        currentShard = shard.GetComponent<SkillObject_Shard>();// 获取碎片的组件
+        currentShard.SetupShard(this);// 设置碎片的爆炸时间
+
+        // 如果解锁了相关技能，注册碎片爆炸后的冷却回调
+        if (Unlocked(SkillUpgradeType.Shard_Teleport) || Unlocked(SkillUpgradeType.Shard_TeleportHpRewind))
+            currentShard.OnExplode += ForceCooldown;// 爆炸后回调 ForceCooldown，防止连续滥用传送
+    }
+
+    // 创建一个未附加升级效果的基础碎片
+    public void CreateRawShard(Transform target = null ,bool shardsCanMove = false)
+    {
+        // 判断碎片是否具备移动能力：解锁追踪敌人或多重施法任一升级即可
+        bool canMove = shardsCanMove != false ? shardsCanMove : Unlocked(SkillUpgradeType.Shard_MoveToEnemy) || Unlocked(SkillUpgradeType.Shard_Multicast);
+        
+        GameObject shard = Instantiate(shardPrefab, transform.position, Quaternion.identity);// 实例化碎片预制体，生成一个碎片对象在当前物体位置
+        shard.GetComponent<SkillObject_Shard>().SetupShard(this,detonateTime,canMove,shardSpeed,target);// 初始化碎片参数，传入技能本体、引爆时间、是否可移动以及飞行速度
+    }
+
+    // 专用于“领域技能”生成的碎片 与普通碎片区分，避免触发玩家本体的升级联动
+    public void CreateDomainShard(Transform target)
+    {
+        
+    }
 
     // 尝试使用技能
     public override void TryUseSkill()
@@ -141,29 +171,7 @@ public class Skill_Shard : Skill_Base
         SetSkillOnCooldown();// 设置技能进入冷却状态
     }
 
-    // 创建一个碎片对象，并设置其爆炸时间
-    public void CreateShard()
-    {
-        float detonationTime = GetDetonateTime();// 获取爆炸时间
-        
-        GameObject shard = Instantiate(shardPrefab, transform.position, Quaternion.identity);// 实例化碎片预制体，生成一个碎片对象在当前物体位置
-        currentShard = shard.GetComponent<SkillObject_Shard>();// 获取碎片的组件
-        currentShard.SetupShard(this);// 设置碎片的爆炸时间
-
-        // 如果解锁了相关技能，注册碎片爆炸后的冷却回调
-        if (Unlocked(SkillUpgradeType.Shard_Teleport) || Unlocked(SkillUpgradeType.Shard_TeleportHpRewind))
-            currentShard.OnExplode += ForceCooldown;
-    }
-
-    // 创建一个未附加升级效果的基础碎片
-    public void CreateRawShard()
-    {
-        // 判断碎片是否具备移动能力：解锁追踪敌人或多重施法任一升级即可
-        bool canMove = Unlocked(SkillUpgradeType.Shard_MoveToEnemy) || Unlocked(SkillUpgradeType.Shard_Multicast);
-        
-        GameObject shard = Instantiate(shardPrefab, transform.position, Quaternion.identity);// 实例化碎片预制体，生成一个碎片对象在当前物体位置
-        shard.GetComponent<SkillObject_Shard>().SetupShard(this,detonateTime,canMove,shardSpeed);// 初始化碎片参数，传入技能本体、引爆时间、是否可移动以及飞行速度
-    }
+    
 
     // 获取碎片的爆炸时间
     public float GetDetonateTime()
