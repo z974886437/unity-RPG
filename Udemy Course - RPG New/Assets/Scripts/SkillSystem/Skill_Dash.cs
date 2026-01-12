@@ -37,6 +37,6 @@ public class Skill_Dash : Skill_Base
     // 创建时间回声
     private void CreateClone()
     {
-        Debug.Log("Create time echo!");
+        skillManager.timeEcho.CreateTimeEcho();
     }
 }

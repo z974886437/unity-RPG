@@ -23,6 +23,7 @@ public class Player_DomainExpansionState : PlayerState
         maxDistanceToGoUp = GetAvailableRiseDistance();// 根据头顶空间计算本次最多可以上升的距离，防止穿模
         
         player.SetVelocity(0,player.riseSpeed);// 给角色一个向上的初速度，开始上升
+        player.health.SetCanTakeDamage(false); // 允许玩家不受到伤害
     }
 
     // 每一帧更新状态逻辑
@@ -52,6 +53,7 @@ public class Player_DomainExpansionState : PlayerState
     {
         base.Exit();
         isLevitating = false;// 重置悬浮标记，为下次进入状态做准备
+        player.health.SetCanTakeDamage(true); // 允许玩家再次受到伤害
     }
 
     // 进入悬浮状态的具体处理逻辑

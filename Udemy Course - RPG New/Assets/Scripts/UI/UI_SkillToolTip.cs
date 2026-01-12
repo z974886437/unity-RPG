@@ -10,6 +10,7 @@ public class UI_SkillToolTip : UI_ToolTip
     
     [SerializeField] private TextMeshProUGUI skillName;
     [SerializeField] private TextMeshProUGUI skillDescription;//技能描述
+    [SerializeField] private TextMeshProUGUI skillCooldown;
     [SerializeField] private TextMeshProUGUI skillRequirements;//技能要求
 
     [Space]
@@ -44,9 +45,10 @@ public class UI_SkillToolTip : UI_ToolTip
 
         skillName.text = node.skillData.displayName;// 设置技能名称
         skillDescription.text = node.skillData.description;// 设置技能描述
+        skillCooldown.text = "冷却时间：" + node.skillData.upgradeData.cooldown + "秒";// 设置技能冷却文本，拼接“冷却时间 + 秒”
 
-        string skillLockedText = GetColoredText(importantInfoHex, lockedSkillText);
-        string requirements = node.isLocked ? skillLockedText : GetRequirements(node.skillData.cost,node.neededNodes,node.conflictNodes);
+        string skillLockedText = GetColoredText(importantInfoHex, lockedSkillText);// 准备显示技能锁定提示文本 如果技能锁定，显示带颜色的提示文本；否则显示技能消耗/前置条件等要求
+        string requirements = node.isLocked ? skillLockedText : GetRequirements(node.skillData.cost,node.neededNodes,node.conflictNodes); // 根据技能是否解锁选择显示内容
         
         skillRequirements.text = requirements;// 设置技能要求
 

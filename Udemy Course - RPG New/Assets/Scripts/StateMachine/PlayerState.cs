@@ -61,7 +61,7 @@ public abstract class PlayerState : EntityState
       if (player.wallDetected)// 如果检测到玩家接触到墙壁，不能执行冲刺
          return false;
       
-      if(stateMachine.currentState == player.dashState) // 如果当前状态已经是冲刺状态，不能再次执行冲刺
+      if(stateMachine.currentState == player.dashState || stateMachine.currentState == player.domainExpansionState) // 如果当前状态已经是冲刺状态，不能再次执行冲刺
          return false;
 
       return true;// 如果以上条件都不满足，允许执行冲刺

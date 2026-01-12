@@ -24,6 +24,8 @@ public class Player_DashState : PlayerState
         // 禁用重力，使得冲刺期间不受重力影响
         originalGravityScale = rb.gravityScale; // 保存原始的重力比例
         rb.gravityScale = 0;// 将重力比例设置为 0，禁用重力
+        
+        player.health.SetCanTakeDamage(false); // 允许玩家不受到伤害
     }
 
     public override void Update()
@@ -47,6 +49,7 @@ public class Player_DashState : PlayerState
         
         skillManager.dash.OnEndEffect();
         
+        player.health.SetCanTakeDamage(true); // 允许玩家再次受到伤害
         // 重置玩家速度和恢复重力
         player.SetVelocity(0,0);// 将玩家的速度设置为 0，停止移动
         rb.gravityScale = originalGravityScale;// 恢复原始的重力比例

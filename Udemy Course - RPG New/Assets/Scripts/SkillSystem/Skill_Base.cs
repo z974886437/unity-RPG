@@ -34,6 +34,7 @@ public class Skill_Base : MonoBehaviour
         upgradeType = upgrade.upgradeType;// 设置技能的升级类型
         cooldown = upgrade.cooldown;// 设置技能的冷却时间
         damageScaleData = upgrade.damageScaleData;
+        ResetCooldown();
     }
 
     // 检查技能是否可以使用
@@ -64,5 +65,5 @@ public class Skill_Base : MonoBehaviour
     public void ReduceCooldownBy(float cooldownReduction) => lastTimeUsed = lastTimeUsed + cooldownReduction;
     
     // 重置技能冷却时间，设置为当前时间
-    public void ResetCooldown() => lastTimeUsed = Time.time;
+    public void ResetCooldown() => lastTimeUsed = Time.time - cooldown;
 }

@@ -69,6 +69,8 @@ public class Skill_SwordThrow : Skill_Base
 
         currentSword = newSword.GetComponent<SkillObject_Sword>(); // 获取新生成剑上的 SkillObject_Sword 组件，用于后续控制
         currentSword.SetupSword(this,GetThrowPower()); // 初始化剑的行为参数（方向、速度、弹射等），由技能管理器统一控制
+        
+        SetSkillOnCooldown();
     }
 
     // 根据当前已解锁的剑投掷升级，返回对应的剑预制体

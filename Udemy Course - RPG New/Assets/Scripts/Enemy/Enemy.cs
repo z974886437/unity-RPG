@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Enemy : Entity
 {
+    public Enemy_Health health { get; private set; }
     public Enemy_IdleState idleState;//空闲状态
     public Enemy_MoveState moveState;//移动状态
     public Enemy_AttackState attackState;//攻击状态
@@ -43,6 +44,12 @@ public class Enemy : Entity
     
     // 获取当前真实战斗移动速度：基础战斗速度 × 当前减速倍率
     public float GetBattleMoveSpeed() => battleMoveSpeed * activeSlowMultiplier;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        health = GetComponent<Enemy_Health>();
+    }
 
     // 使实体在指定时间内减速的协程
     protected override IEnumerator SlowDownEntityCo(float duration, float slowMultiplier)

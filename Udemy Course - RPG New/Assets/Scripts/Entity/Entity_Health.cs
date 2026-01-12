@@ -10,12 +10,13 @@ public class Entity_Health : MonoBehaviour,IDamgable
     private Entity_Stats entityStats;
     
     [SerializeField] protected float currentHealth;
-    [SerializeField] protected bool isDead;
     [Header("Health regen")]
     [SerializeField] private float regenInterval = 1;
     [SerializeField] private bool canRegenerateHealth = true;//可以恢复生命值
     
     public float lastDamageTaken { get; private set; }//最后一次受损
+    public bool isDead { get; private set; }
+    protected bool canTakeDamage = true;
     
     [Header("On Damage Knockback")]
     [SerializeField] private Vector2 knockbackPower = new Vector2(1.5f,2.5f);//关于伤害击退
@@ -49,7 +50,7 @@ public class Entity_Health : MonoBehaviour,IDamgable
     // 处理实体受到伤害的方法
     public virtual bool TakeDamage(float damage,float elementalDamage,ElementType element,Transform damageDealer)
     {
-        if (isDead) // 如果实体已经死亡，直接返回，不再处理伤害
+        if (isDead || canTakeDamage == false) // 如果实体已经死亡，直接返回，不再处理伤害
             return false;
 
         if (AttackEvaded())// 检查攻击是否被闪避 
@@ -73,6 +74,9 @@ public class Entity_Health : MonoBehaviour,IDamgable
 
         return true;// 返回成功处理伤害
     }
+    
+    // 允许玩家受到伤害
+    public void SetCanTakeDamage(bool canTakeDamage) => this.canTakeDamage = canTakeDamage;
 
     // 判断攻击是否被闪避
     private bool AttackEvaded()

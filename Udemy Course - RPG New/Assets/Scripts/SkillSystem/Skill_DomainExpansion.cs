@@ -9,12 +9,18 @@ public class Skill_DomainExpansion : Skill_Base
     [SerializeField] private float slowDownPercent = 0.8f;//减慢百分比
     [SerializeField] private float slowDownDomainDuration = 5;//减慢域持续时间
     
-    [Header("Spell Casting Upgrade")]
-    [SerializeField] private int spellsToCast = 10;
-    [SerializeField] private float spellCastingDomainSlowDown = 1;//施法领域减速
-    [SerializeField] private float spellCastingDomainDuration = 8;//施法域持续时间
+    [Header("Shard cast Upgrade")]
+    [SerializeField] private int shardsToCast = 10;
+    [SerializeField] private float shardCastDomainSlow = 1;//施法领域减速
+    [SerializeField] private float shardCastDomainDuration = 8;//施法域持续时间
     private float spellCastTimer;
     private float spellsPerSecond;
+    
+    [Header("Time echo cast Upgrade")]
+    [SerializeField] private int echoToCast = 8;
+    [SerializeField] private float echoCastDomainSlow = 1;
+    [SerializeField] private float echoCastDomainDuration = 6;
+    [SerializeField] private float healthToRestoreWithEcho = 0.05f;
     
     [Header("Domain details")]
     public float maxDomainSize = 10;//最大域大小
@@ -26,7 +32,7 @@ public class Skill_DomainExpansion : Skill_Base
     // 创建领域技能对象，用于生成具体的领域表现与效果
     public void CreateDomain()
     {
-        spellsPerSecond = spellsToCast / GetDomainDuration();// 根据领域持续时间计算每秒施法次数，保证在持续时间内均匀释放技能
+        spellsPerSecond = GetSpellToCast() / GetDomainDuration();// 根据领域持续时间计算每秒施法次数，保证在持续时间内均匀释放技能
         
         // 在当前物体位置实例化领域预制体，不进行旋转
         GameObject domain = Instantiate(domainPrefab, // 领域技能的预制体
@@ -71,37 +77,51 @@ public class Skill_DomainExpansion : Skill_Base
     // 从被领域困住的目标列表中随机选取一个
     private Transform FindTargetInDomain()
     {
-        if(trappedTargets.Count == 0) // 若当前领域内没有任何目标，则直接返回空
-            return null;
+        // 移除所有无效目标（已被销毁或死亡）
+        trappedTargets.RemoveAll(target => target == null || target.health.isDead);
         
-        int randomIndex = Random.Range(0, trappedTargets.Count);// 在目标列表中随机选择一个索引
-        Transform target = trappedTargets[randomIndex].transform;// 取出对应索引的目标 Transform
+        if(trappedTargets.Count == 0)// 如果列表为空，则返回 null，表示当前领域没有可攻击目标
+            return null;
 
-        if (target == null) // 若目标已被销毁（例如死亡），则移除并返回空
-        {
-            trappedTargets.RemoveAt(randomIndex);// 及时清理无效引用，避免后续 NullReference
-            return null;
-        }
-        
-        return target;// 返回一个有效的领域内目标
+        int randomIndex = Random.Range(0, trappedTargets.Count); // 从有效目标列表中随机选择一个索引
+        return trappedTargets[randomIndex].transform;// 返回选中目标的 Transform，用于后续施法逻辑
     }
     
     // 根据当前升级类型，获取领域的持续时间
     public float GetDomainDuration()
     {
-        if (upgradeType == SkillUpgradeType.Domain_SlowingDown)// 如果是减速领域升级
-            return slowDownDomainDuration;// 返回减速领域的持续时间
-        else
-            return spellCastingDomainDuration;// 否则返回施法领域的持续时间
+        if (upgradeType == SkillUpgradeType.Domain_SlowingDown)// 若当前升级为“减速领域”，则使用对应的持续时间
+            return slowDownDomainDuration;
+        else if(upgradeType == SkillUpgradeType.Domain_ShardSpan)// 若当前升级为“碎片扩散领域”，则使用碎片施法领域持续时间
+            return shardCastDomainDuration;
+        else if (upgradeType == SkillUpgradeType.Domain_EchoSpan)// 若当前升级为“回响扩散领域”，则使用回响施法领域持续时间
+            return echoCastDomainDuration;
+
+        return 0;// 若未匹配任何领域升级类型，则返回 0，表示无效领域
     }
 
     // 根据当前升级类型，获取领域的减速百分比
     public float GetSlowPercentage()
     {
-        if (upgradeType == SkillUpgradeType.Domain_SlowingDown) // 如果是减速领域升级
-            return slowDownPercent; // 返回减速领域的减速比例
-        else
-            return spellCastingDomainSlowDown;// 否则返回施法领域的减速比例
+        if (upgradeType == SkillUpgradeType.Domain_SlowingDown)// 若为减速领域，则返回其专属减速百分比
+            return slowDownPercent;
+        else if(upgradeType == SkillUpgradeType.Domain_ShardSpan) // 若为碎片施法领域，则返回该领域附带的减速效果
+            return shardCastDomainSlow;
+        else if (upgradeType == SkillUpgradeType.Domain_EchoSpan)// 若为回响施法领域，则返回该领域附带的减速效果
+            return echoCastDomainSlow;
+
+        return 0; // 未匹配到领域升级类型时，不附加减速
+    }
+
+    // 根据当前领域升级类型，获取领域期间施法的总次数
+    private int GetSpellToCast()
+    {
+        if(upgradeType == SkillUpgradeType.Domain_ShardSpan)// 若为碎片扩散领域，则返回碎片施法次数
+            return shardsToCast;
+        else if (upgradeType == SkillUpgradeType.Domain_EchoSpan)// 若为回响扩散领域，则返回回响施法次数
+            return echoToCast;
+
+        return 0;// 非施法类领域不进行施法
     }
 
     // 判断当前领域技能是否需要“立刻生成”，用于区分不同升级分支的行为
